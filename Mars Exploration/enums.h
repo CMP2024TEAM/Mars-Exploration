@@ -13,3 +13,17 @@ enum class roverstatus
 	InCheckUp,
 	InMaintenance
 };
+
+enum class MissionType
+{
+	Emergency,
+	Mountainous,
+	Polar
+};
+
+enum class MissionStatus
+{
+	Waiting,
+	InExecution,
+	Completed
+};
