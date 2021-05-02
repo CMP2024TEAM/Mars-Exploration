@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataStructures\node.h" />
+    <ClInclude Include="DataStructures\pair.h" />
     <ClInclude Include="DataStructures\QueueInterface.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
