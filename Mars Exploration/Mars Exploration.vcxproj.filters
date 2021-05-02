@@ -33,9 +33,18 @@
     <ClInclude Include="DataStructures\PriorityQueue.h">
       <Filter>DataStructures</Filter>
     </ClInclude>
+    <ClInclude Include="rover.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DataStructures\Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rover.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
