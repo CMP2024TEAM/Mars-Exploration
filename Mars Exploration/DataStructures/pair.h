@@ -4,8 +4,13 @@ struct pair {
     T first;
     U second;
 
-    pair(const T& First_, const U& Second_) :
-        first(First_),
-        second(Second_)
+    pair() :
+        first(),
+        second()
+    {}
+
+    pair(const T& First, const U& Second) :
+        first(First),
+        second(Second)
     {}
 };

@@ -21,8 +21,12 @@
   <ItemGroup>
     <ClInclude Include="DataStructures\node.h" />
     <ClInclude Include="DataStructures\pair.h" />
+    <ClInclude Include="DataStructures\PriorityQueue.h" />
     <ClInclude Include="DataStructures\Queue.h" />
     <ClInclude Include="DataStructures\QueueInterface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DataStructures\Test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

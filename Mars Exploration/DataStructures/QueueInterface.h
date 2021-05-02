@@ -9,10 +9,12 @@ public:
     /* Adds a new entry to the back of this queue*/
     virtual bool enqueue(const ItemType& newEntry) = 0;
 
-    /* Removes the front of this queue.
-    stores removed item in newEntry */
+    /* Removes the front entry of this queue.
+    stores removed item in frontEntry*/
     virtual bool dequeue(ItemType& frontEntry) = 0;
     
-    /* Returns the front of this queue*/
-    virtual ItemType peekFront() const = 0;
+    /* stores front item in frontEntry*/
+    virtual bool peekFront(ItemType& frontEntry) const = 0;
+
+    virtual ~QueueInterface() = 0 {};
 }; // end QueueInterface

@@ -1,7 +1,7 @@
 #pragma once
 template<class T>
 struct node {
-    T* val;
+    T val;
     node<T>* next;
 
     node() :
