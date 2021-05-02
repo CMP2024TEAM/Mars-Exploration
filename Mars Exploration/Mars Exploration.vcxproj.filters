@@ -13,5 +13,13 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="DataStructures">
+      <UniqueIdentifier>{e57e0934-d02a-4dbc-a270-62d94ab3e95c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DataStructures\QueueInterface.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
