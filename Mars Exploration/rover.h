@@ -4,7 +4,8 @@ class rover
 {
 public:
 	static int LastId;
-	rover(rovertype,int,int);
+	static int CheckupDuration[3];
+	rover(rovertype,int);
 	~rover();
 	void setType(rovertype);
 	rovertype getType() const;
@@ -21,7 +22,6 @@ public:
 private:
 	int Id;
 	rovertype Type;
-	int CheckUpDuration;
 	int Speed;
 	int CompletedMissions;
 	int AvailableAt;

@@ -1,6 +1,6 @@
 #pragma once
 
-enum class rovertype
+enum rovertype
 {
 	Emergency,
 	Mountainous,
@@ -26,4 +26,11 @@ enum class MissionStatus
 	Waiting,
 	InExecution,
 	Completed
+};
+
+enum EventType
+{
+	FORMULATION,
+	CANCELLATION,
+	PROMOTION,
 };

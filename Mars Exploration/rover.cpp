@@ -1,13 +1,14 @@
 #pragma once
 #include "rover.h"
 int rover::LastId = 0;
-rover::rover(rovertype type,int checkup, int speed)
+int rover::CheckupDuration[3] = 0;
+
+rover::rover(rovertype type,int speed)
 {
 	Id = ++LastId;
 	Type = type;
 	Status = roverstatus::Available;
 	CompletedMissions = 0;
-	CheckUpDuration = checkup;
 	Speed = speed;
 	AvailableAt = 0;
 }
