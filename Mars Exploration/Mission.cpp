@@ -4,11 +4,10 @@
 
 int Mission::ID=0;
 
-Mission::Mission(int FD,int TL,int ML,int S,int MD,int WD,MissionType T)
+Mission::Mission(int FD,int TL,int S,int MD,int WD,MissionType T)
 {
 	SetFormulationDay(FD);
 	SetTargetLocation(TL);
-	SetMissionLocation(ML);
 	SetSignificance(S);
 	SetMissionDuration(MD);
 	SetWaitingDays(WD);
@@ -25,7 +24,7 @@ int Mission::GetFormulationDay()			const
 
 void Mission::SetFormulationDay(int FD)
 {
-	FormulationDay=FD>0?FD:1;
+	FormulationDay = FD > 0 ? FD : 1;
 }
 
 int Mission::GetTargetLocation()		const
@@ -36,16 +35,6 @@ int Mission::GetTargetLocation()		const
 void Mission::SetTargetLocation(int TL)
 {
 	TargetLocation=TL>0?TL:1;
-}
-
-int Mission::GetMissionLocation()		const
-{
-	return MissionLocation;
-}
-
-void Mission::SetMissionLocation(int ML)
-{
-	MissionLocation=ML>0?ML:1;
 }
 
 int Mission::GetSignificance()		const
@@ -65,7 +54,7 @@ int Mission::GetMissionDuration()		const
 
 void Mission::SetMissionDuration(int MD)
 {
-	MissionDuration=MD>0?MD:1;
+	MissionDuration = MD > 0 ? MD : 1;
 }
 
 int Mission::GetID()		const
@@ -80,15 +69,15 @@ int Mission::GetWaitingDays()		const
 
 void Mission::SetWaitingDays(int WD)
 {
-	WaitingDays=WD>0?WD:1;
+	WaitingDays = WD > 0 ? WD : 1;
 }
 
 int Mission::GetED()		const
 {
-	if (Rover==nullptr)
+	if (Rover == nullptr)
 		return 0;
 	else
-		return 2*(TargetLocation/Rover->getSpeed())+MissionDuration;
+		return 2 * (TargetLocation / Rover->getSpeed()) + MissionDuration;
 }
 
 void Mission::AssingRover(rover* R)
@@ -108,7 +97,7 @@ rover* Mission::GetRover()		const
 
 int	Mission::GetCD()		const
 {
-	return FormulationDay+GetED()+WaitingDays;
+	return FormulationDay + GetED() + WaitingDays;
 }
 
 void Mission::SetMissionStatus(MissionStatus status)

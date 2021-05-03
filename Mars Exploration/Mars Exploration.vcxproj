@@ -25,11 +25,17 @@
     <ClInclude Include="DataStructures\Queue.h" />
     <ClInclude Include="DataStructures\QueueInterface.h" />
     <ClInclude Include="enums.h" />
+    <ClInclude Include="MarsStation.h" />
+    <ClInclude Include="Mission.h" />
     <ClInclude Include="rover.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DataStructures\Test.cpp" />
+    <ClCompile Include="MarsStation.cpp" />
+    <ClCompile Include="Mission.cpp" />
     <ClCompile Include="rover.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

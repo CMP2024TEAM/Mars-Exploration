@@ -17,13 +17,11 @@ private:
 	
 public:
 
-	Mission(int FD,int TL,int ML,int S,int MD,int WD,MissionType T);
+	Mission(int FD,int TL,int S,int MD,int WD,MissionType T);
 	int GetFormulationDay()		const;
 	void SetFormulationDay(int FD);
 	int GetTargetLocation ()		const;
 	void SetTargetLocation (int TL);
-	int GetMissionLocation ()		const;
-	void SetMissionLocation (int ML);
 	int GetSignificance()		const;
 	void SetSignificance(int S);
 	int GetMissionDuration()		const;
