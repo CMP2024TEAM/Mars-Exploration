@@ -19,21 +19,29 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CancellationEvent.h" />
     <ClInclude Include="DataStructures\node.h" />
     <ClInclude Include="DataStructures\pair.h" />
     <ClInclude Include="DataStructures\PriorityQueue.h" />
     <ClInclude Include="DataStructures\Queue.h" />
     <ClInclude Include="DataStructures\QueueInterface.h" />
     <ClInclude Include="enums.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="FormulationEvent.h" />
     <ClInclude Include="MarsStation.h" />
     <ClInclude Include="Mission.h" />
+    <ClInclude Include="PromotionEvent.h" />
     <ClInclude Include="Rover.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CancellationEvent.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="FormulationEvent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarsStation.cpp" />
     <ClCompile Include="Mission.cpp" />
+    <ClCompile Include="PromotionEvent.cpp" />
     <ClCompile Include="Rover.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>

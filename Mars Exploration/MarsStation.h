@@ -3,12 +3,16 @@
 #include"UI.h"
 #include"DataStructures/PriorityQueue.h"
 #include"DataStructures/Queue.h"
+#include "Event.h"
+#include "FormulationEvent.h"
+#include "CancellationEvent.h"
+#include "PromotionEvent.h"
 
 class MarsStation
 {
 private:
 	UI* InOut;
-	Queue<Event> EventList;
+	Queue<Event*> EventList;
 	Queue<Rover*> EmergencyRover;
 	Queue<Rover*> MountainousRover;
 	Queue<Rover*> PolarRover;
@@ -59,7 +63,7 @@ public:
 	//create Events
 	void CreateFormulationEvent(MissionType mType,int ED,int ID,int TLOC,int MDUR,int SIG)
 	{
-		Event *E= new FormulationEvent(mType,ED,ID,TLOC,MDUR,SIG);
+		Event* E= new FormulationEvent(mType,ED,ID,TLOC,MDUR,SIG);
 		EventList.enqueue(E);
 	}
 	void CreateCancellationEvent(int ED, int ID)
