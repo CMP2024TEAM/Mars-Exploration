@@ -1,6 +1,15 @@
 #include "UI.h"
 #include "enums.h"
 
+MissionType::MissionType UI::ParseMissionType(char c_type)
+{
+    switch (c_type) {
+    case 'E': return MissionType::Emergency;
+    case 'M': return MissionType::Mountainous;
+    case 'P': return MissionType::Polar;
+    }
+}
+
 UI::UI()
 {
     IFile.open("input.txt");
@@ -8,7 +17,7 @@ UI::UI()
 
 inline void UI::ReadRoverData(MarsStation* Station)
 {
-    for (int rType = 0; rType < RoverCount; ++rType) {
+    for (int rType = 0; rType < rovertype::RoverCount; ++rType) {
         //Number of rovers in each rover type
         int n;
         IFile >> n;
@@ -17,7 +26,7 @@ inline void UI::ReadRoverData(MarsStation* Station)
         int rSpeed;
         for (int j = 0; j < n; ++j) {
             IFile >> rSpeed;
-            Station->CreateRover(rovertype(rType), rSpeed);
+            Station->CreateRover(rovertype::rovertype(rType), rSpeed);
         }
     }
 }
@@ -26,10 +35,10 @@ inline void UI::ReadCheckupInfo(MarsStation* Station)
 {
     int CheckupDays;
     IFile >> CheckupDays;
-    Station.set(CheckupDays);
-    for (int rType = 0; rType < RoverCount; ++rType) {
+    Station->SetNumberOfMissionsTheRoverCompletesBeforeCheckup(CheckupDays);
+    for (int rType = 0; rType < rovertype::RoverCount; ++rType) {
         IFile >> CheckupDays;
-        Station.setCheckupDuration(rovertype(rType), CheckupDays);
+        Station->SetCheckupDuration(rovertype::rovertype(rType), CheckupDays);
     }
 }
 
@@ -37,7 +46,7 @@ inline void UI::ReadAutoPromotion(MarsStation* Station)
 {
     int AutoP;
     IFile >> AutoP;
-    Station.setAutoP(AutoP);
+    Station->SetAutoP(AutoP);
 }
 
 inline void UI::ReadEvents(MarsStation* Station)
@@ -53,17 +62,17 @@ inline void UI::ReadEvents(MarsStation* Station)
         switch (EventType) {
         case 'F': {
             IFile >> FormulationType >> ED >> ID >> TLOC >> MDUR >> SIG;
-            Station.CreateFormulationEvent(FormulationType, ED, ID, TLOC, MDUR, SIG);
+            Station->CreateFormulationEvent(ParseMissionType(FormulationType), ED, ID, TLOC, MDUR, SIG);
             break;
         }
         case 'X': {
             IFile >> ED >> ID;
-            Station.CreateCancellationEvent(ED, ID);
+            Station->CreateCancellationEvent(ED, ID);
             break;
         }
         case 'P': {
             IFile >> ED >> ID;
-            Station.CreatePromotionEvent(ED, ID);
+            Station->CreatePromotionEvent(ED, ID);
             break;
         }
         }

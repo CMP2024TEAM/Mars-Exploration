@@ -1,11 +1,13 @@
 #pragma once
 
-enum rovertype
-{
-	Emergency,
-	Mountainous,
-	Polar
-};
+namespace rovertype {
+	enum rovertype {
+		Emergency,
+		Mountainous,
+		Polar,
+		RoverCount
+	};
+}
 
 enum class roverstatus
 {
@@ -14,12 +16,13 @@ enum class roverstatus
 	InMaintenance
 };
 
-enum class MissionType
-{
-	Emergency,
-	Mountainous,
-	Polar
-};
+namespace MissionType {
+	enum MissionType {
+		Emergency,
+		Mountainous,
+		Polar
+	};
+}
 
 enum class MissionStatus
 {
