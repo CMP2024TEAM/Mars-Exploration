@@ -1,7 +1,7 @@
 #include "UI.h"
 #include "enums.h"
 
-MissionType::MissionType UI::ParseMissionType(char c_type)
+MissionType UI::ParseMissionType(char c_type)
 {
     switch (c_type) {
     case 'E': return MissionType::Emergency;
@@ -17,7 +17,7 @@ UI::UI()
 
 inline void UI::ReadRoverData(MarsStation* Station)
 {
-    for (int rType = 0; rType < rovertype::RoverCount; ++rType) {
+    for (int rType = 0; rType < (int)RoverType::RoverType_MAX; ++rType) {
         //Number of rovers in each rover type
         int n;
         IFile >> n;
@@ -26,7 +26,7 @@ inline void UI::ReadRoverData(MarsStation* Station)
         int rSpeed;
         for (int j = 0; j < n; ++j) {
             IFile >> rSpeed;
-            Station->CreateRover(rovertype::rovertype(rType), rSpeed);
+            Station->CreateRover(RoverType(rType), rSpeed);
         }
     }
 }
@@ -36,9 +36,9 @@ inline void UI::ReadCheckupInfo(MarsStation* Station)
     int CheckupDays;
     IFile >> CheckupDays;
     Station->SetNumberOfMissionsTheRoverCompletesBeforeCheckup(CheckupDays);
-    for (int rType = 0; rType < rovertype::RoverCount; ++rType) {
+    for (int rType = 0; rType < (int)RoverType::RoverType_MAX; ++rType) {
         IFile >> CheckupDays;
-        Station->SetCheckupDuration(rovertype::rovertype(rType), CheckupDays);
+        Station->SetCheckupDuration(RoverType(rType), CheckupDays);
     }
 }
 

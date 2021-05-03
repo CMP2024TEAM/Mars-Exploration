@@ -1,78 +1,78 @@
 #pragma once
-#include "rover.h"
-int rover::LastId = 0;
-int rover::CheckupDuration[3] = 0;
+#include "Rover.h"
+int Rover::LastId = 0;
+int Rover::CheckupDuration[3] = {0};
 
-rover::rover(rovertype type,int speed)
+Rover::Rover(RoverType type,int speed)
 {
 	Id = ++LastId;
 	Type = type;
-	Status = roverstatus::Available;
+	Status = RoverStatus::Available;
 	CompletedMissions = 0;
 	Speed = speed;
 	AvailableAt = 0;
 }
-rover::~rover()
+Rover::~Rover()
 {
 
 }
 
-void rover::setType(rovertype type)
+void Rover::setType(RoverType type)
 {
 	Type = type;
 }
 
-rovertype rover::getType() const
+RoverType Rover::getType() const
 {
 	return Type;
 }
 
-void rover::setCheckUpDuration(int c)
+void Rover::setCheckUpDuration(int c)
 {
-	CheckUpDuration = c;
+	CheckupDuration[(int)Type] = c;
 }
 
-int rover::getCheckUpDuration() const
+int Rover::getCheckUpDuration()
 {
-	return CheckUpDuration;
+	return CheckupDuration[(int)Type];
 }
 
-void rover::setSpeed(int s)
+void Rover::setSpeed(int s)
 {
 	Speed = s;
 }
 
-int rover::getSpeed() const
+int Rover::getSpeed() const
 {
 	return Speed;
 }
 
-void rover::increaseCompletedMissions(int by)
+void Rover::increaseCompletedMissions(int by)
 {
 	CompletedMissions += by;
 }
 
-int rover::getCompletedMissions() const
+int Rover::getCompletedMissions() const
 {
 	return CompletedMissions;
 }
 
-void rover::setAvailableAt(int at)
+void Rover::setAvailableAt(int at)
 {
 	AvailableAt = at;
 }
 
-int rover::getAvailableAt() const
+int Rover::getAvailableAt() const
 {
 	return AvailableAt;
 }
 
-void rover::setStatus(roverstatus status)
+void Rover::setStatus(RoverStatus status)
 {
 	Status = status;
 }
 
-roverstatus rover::getStatus() const
+RoverStatus Rover::getStatus() const
 {
 	return Status;
 }

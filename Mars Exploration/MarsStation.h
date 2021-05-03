@@ -1,5 +1,5 @@
 #include"Mission.h"
-#include"rover.h"
+#include"Rover.h"
 #include"UI.h"
 #include"DataStructures/PriorityQueue.h"
 #include"DataStructures/Queue.h"
@@ -9,9 +9,9 @@ class MarsStation
 private:
 	UI* InOut;
 	Queue<Event> EventList;
-	Queue<rover*> EmergencyRover;
-	Queue<rover*> MountainousRover;
-	Queue<rover*> PolarRover;
+	Queue<Rover*> EmergencyRover;
+	Queue<Rover*> MountainousRover;
+	Queue<Rover*> PolarRover;
 	int AutoP;
 	int NumberOfMissionsTheRoverCompletesBeforeCheckup;
 public:
@@ -21,31 +21,31 @@ public:
 		InOut->Read();
 	}
 	//Initialize Rovar Queues
-	void CreateRover(rovertype type, int speed)
+	void CreateRover(RoverType type, int speed)
 	{
-		rover * R = new rover(type, speed);
-		if (type == Emergency)
+		Rover * R = new Rover(type, speed);
+		if (type == RoverType::Emergency)
 		{
 			EmergencyRover.enqueue(R);
 		}
-		if (type == Mountainous)
+		if (type == RoverType::Mountainous)
 		{
 			MountainousRover.enqueue(R);
 		}
-		if (type == Polar)
+		if (type == RoverType::Polar)
 		{
 			PolarRover.enqueue(R);
 		}
 	}
 	//SetCheckupDuration for each rovar tyoe
-	void SetCheckupDuration(rovertype type, int Duration)
+	void SetCheckupDuration(RoverType type, int Duration)
 	{
-		if (type == Emergency)
-			rover::CheckupDuration[0] = Duration;
-		if (type == Mountainous)
-			rover::CheckupDuration[1] = Duration;
-		if (type == Polar)
-			rover::CheckupDuration[2] = Duration;	
+		if (type == RoverType::Emergency)
+			Rover::CheckupDuration[0] = Duration;
+		if (type == RoverType::Mountainous)
+			Rover::CheckupDuration[1] = Duration;
+		if (type == RoverType::Polar)
+			Rover::CheckupDuration[2] = Duration;	
 	}
 	//set autopromosion
 	void SetAutoP(int apDuration)
@@ -74,7 +74,7 @@ public:
 	}
 	~MarsStation()
 	{
-		rover *R;
+		Rover *R;
 		Event *E;
 		delete InOut;
 		while (EmergencyRover.dequeue(R))

@@ -9,7 +9,7 @@ private:
     ifstream IFile;
     //ostream OFile;
 
-    MissionType::MissionType ParseMissionType(char c_type);
+    MissionType ParseMissionType(char c_type);
 public:
     UI();
 

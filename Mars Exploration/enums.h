@@ -1,28 +1,24 @@
 #pragma once
 
-namespace rovertype {
-	enum rovertype {
-		Emergency,
-		Mountainous,
-		Polar,
-		RoverCount
-	};
-}
+enum class RoverType {
+	Emergency,
+	Mountainous,
+	Polar,
+	RoverType_MAX
+};
 
-enum class roverstatus
+enum class RoverStatus
 {
 	Available,
 	InCheckUp,
 	InMaintenance
 };
 
-namespace MissionType {
-	enum MissionType {
-		Emergency,
-		Mountainous,
-		Polar
-	};
-}
+enum class MissionType {
+	Emergency,
+	Mountainous,
+	Polar
+};
 
 enum class MissionStatus
 {
@@ -31,9 +27,9 @@ enum class MissionStatus
 	Completed
 };
 
-enum EventType
+enum class EventType
 {
-	FORMULATION,
-	CANCELLATION,
-	PROMOTION,
+	Formulation,
+	Cancelation,
+	Promotion,
 };

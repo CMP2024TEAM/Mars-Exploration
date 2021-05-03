@@ -1,6 +1,6 @@
 #pragma once
 #include "enums.h"
-#include "rover.h"
+#include "Rover.h"
 class Mission
 {
 private:
@@ -13,7 +13,7 @@ private:
 	int WaitingDays;
 	MissionType Type;
 	MissionStatus Status;
-	rover* Rover;
+	Rover* AssignedRover;
 	
 public:
 
@@ -31,8 +31,8 @@ public:
 	void SetWaitingDays(int WD);
 	int GetED()		const;			//execution days=2*(Target location/Rover Speed)+Mission Duration
 	int GetCD()		const;			//Compeleting days=FD+WD+ED
-	void AssingRover(rover* R);
-	rover* GetRover()		const;
+	void AssignRover(Rover* R);
+	Rover* GetRover()		const;
 	void DismissRover();
 	void SetMissionStatus(MissionStatus status);
 	MissionStatus GetMissionStatus ()		const;

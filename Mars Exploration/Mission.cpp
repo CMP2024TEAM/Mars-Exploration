@@ -1,6 +1,4 @@
 #include "Mission.h"
-#include "enums.h"
-#include "rover.h"
 
 int Mission::ID=0;
 
@@ -11,9 +9,9 @@ Mission::Mission(int FD,int TL,int S,int MD,int WD,MissionType T)
 	SetSignificance(S);
 	SetMissionDuration(MD);
 	SetWaitingDays(WD);
-	Type=T;
-	Status=MissionStatus::Waiting;
-	Rover=nullptr;
+	Type = T;
+	Status = MissionStatus::Waiting;
+	AssignedRover = nullptr;
 	ID++;
 }
 
@@ -74,25 +72,25 @@ void Mission::SetWaitingDays(int WD)
 
 int Mission::GetED()		const
 {
-	if (Rover == nullptr)
+	if (AssignedRover == nullptr)
 		return 0;
 	else
-		return 2 * (TargetLocation / Rover->getSpeed()) + MissionDuration;
+		return 2 * (TargetLocation / AssignedRover->getSpeed()) + MissionDuration;
 }
 
-void Mission::AssingRover(rover* R)
+void Mission::AssignRover(Rover* R)
 {
-	Rover=R;
+	AssignedRover = R;
 }
 
 void Mission::DismissRover()
 {
-	Rover=nullptr;
+	AssignedRover = nullptr;
 }
 
-rover* Mission::GetRover()		const
+Rover* Mission::GetRover()		const
 {
-	return Rover;
+	return AssignedRover;
 }
 
 int	Mission::GetCD()		const
