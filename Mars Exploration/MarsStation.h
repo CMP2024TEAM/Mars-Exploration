@@ -50,7 +50,7 @@ public:
 	//set autopromosion
 	void SetAutoP(int apDuration)
 	{
-		AutoP = (apDuration>0) ?apDuration :0 ;
+		AutoP = (apDuration > 0) ? apDuration : 0;
 	}
 	void SetNumberOfMissionsTheRoverCompletesBeforeCheckup(int cNum)
 	{

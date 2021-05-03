@@ -66,4 +66,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CMPN102-Project-S2021.pdf" />
+  </ItemGroup>
 </Project>

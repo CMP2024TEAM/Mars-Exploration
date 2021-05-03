@@ -37,6 +37,9 @@
     <ClCompile Include="Rover.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CMPN102-Project-S2021.pdf" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
