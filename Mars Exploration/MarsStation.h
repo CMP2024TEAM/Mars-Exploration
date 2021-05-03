@@ -12,6 +12,8 @@ private:
 	Queue<rover*> EmergencyRover;
 	Queue<rover*> MountainousRover;
 	Queue<rover*> PolarRover;
+	int AutoP;
+	int NumberOfMissionsTheRoverCompletesBeforeCheckup;
 public:
 	MarsStation()
 	{
@@ -44,6 +46,15 @@ public:
 			rover::CheckupDuration[1] = Duration;
 		if (type == Polar)
 			rover::CheckupDuration[2] = Duration;	
+	}
+	//set autopromosion
+	void SetAutoP(int apDuration)
+	{
+		AutoP = (apDuration>0) ?apDuration :0 ;
+	}
+	void SetNumberOfMissionsTheRoverCompletesBeforeCheckup(int cNum)
+	{
+		NumberOfMissionsTheRoverCompletesBeforeCheckup = (cNum > 0) ? cNum : 0;
 	}
 	//create Events
 	void CreateFormulationEvent(MissionType mType,int ED,int ID,int TLOC,int MDUR,int SIG)
