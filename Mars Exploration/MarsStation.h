@@ -9,7 +9,6 @@
 #include "PromotionEvent.h"
 #include"UI.h"
 
-class UI;
 class MarsStation
 {
 private:
@@ -24,7 +23,7 @@ public:
 	MarsStation()
 	{
 		//this should be allocated outside and then return its pointer
-		//InOut = new UI;
+		InOut = new UI;
 		//InOut->Read();
 	}
 	//Initialize Rovar Queues
@@ -83,7 +82,7 @@ public:
 	{
 		Rover *R;
 		Event *E;
-		//delete InOut;
+		delete InOut;
 		while (EmergencyRover.dequeue(R))
 		{
 			delete R;

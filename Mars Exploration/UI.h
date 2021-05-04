@@ -1,8 +1,9 @@
 #pragma once
 #include<iostream>
 #include<fstream>
-#include"MarsStation.h"
+#include "enums.h"
 
+class MarsStation;
 using namespace std;
 class UI {
 private:

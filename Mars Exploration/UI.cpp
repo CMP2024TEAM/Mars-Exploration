@@ -1,5 +1,5 @@
 #include "UI.h"
-#include "enums.h"
+#include "MarsStation.h"
 
 MissionType UI::ParseMissionType(char c_type)
 {

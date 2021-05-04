@@ -7,17 +7,17 @@
 Priority is determined through an integer that is passed with each queue
 object in a pair struct. */
 template<class T>
-class PriorityQueue : public QueueInterface<pair<T, int>> {
+class PriorityQueue : public QueueInterface<MyPair<T, int>> {
 private:
     /*Head pointer to sorted linked chain
     the chain is sorted descedingly according to pair.second*/
-    node<pair<T, int>>* FrontPtr;
+    node<MyPair<T, int>>* FrontPtr;
 
     //Delete all nodes in linked chain
     void clearAll();
 
     //Clone from an exisiting linked list
-    void cloneFromOther(node<pair<T, int>>* otherHead);
+    void cloneFromOther(node<MyPair<T, int>>* otherHead);
 public:
     PriorityQueue();
 
@@ -30,16 +30,16 @@ public:
 
     /* Insert element into queue. 
     O(n)*/
-    bool enqueue(const pair<T, int>& newEntry);
+    bool enqueue(const MyPair<T, int>& newEntry);
 
     /* Remove element from front of queue if possible. 
     the removed element is stored in frontEntry
     O(1)*/
-    bool dequeue(pair<T, int>& frontEntry);
+    bool dequeue(MyPair<T, int>& frontEntry);
 
     /* Store the front entry in frontEntry if available
     O(1)*/
-    bool peekFront(pair<T, int>& frontEntry) const;
+    bool peekFront(MyPair<T, int>& frontEntry) const;
 
     ~PriorityQueue();
 };
@@ -49,7 +49,7 @@ public:
 template<class T>
 inline void PriorityQueue<T>::clearAll()
 {
-    node<pair<T, int>>* Temp;
+    node<MyPair<T, int>>* Temp;
     while (FrontPtr != nullptr) {
         Temp = FrontPtr;
         FrontPtr = FrontPtr->next;
@@ -58,18 +58,18 @@ inline void PriorityQueue<T>::clearAll()
 }
 
 template<class T>
-inline void PriorityQueue<T>::cloneFromOther(node<pair<T, int>>* otherHead)
+inline void PriorityQueue<T>::cloneFromOther(node<MyPair<T, int>>* otherHead)
 {
     if (otherHead == nullptr) {
         FrontPtr = nullptr;
         return;
     }
 
-    FrontPtr = new node<pair<T, int>>(otherHead->val);
-    node<pair<T, int>>* ToBeCopied = otherHead->next;
-    node<pair<T, int>>* Curr = FrontPtr;
+    FrontPtr = new node<MyPair<T, int>>(otherHead->val);
+    node<MyPair<T, int>>* ToBeCopied = otherHead->next;
+    node<MyPair<T, int>>* Curr = FrontPtr;
     while (ToBeCopied != nullptr) {
-        Curr->next = new node<pair<T, int>>(ToBeCopied->val);
+        Curr->next = new node<MyPair<T, int>>(ToBeCopied->val);
         Curr = Curr->next;
         ToBeCopied = ToBeCopied->next;
     }
@@ -101,17 +101,17 @@ inline bool PriorityQueue<T>::isEmpty() const
 }
 
 template<class T>
-inline bool PriorityQueue<T>::enqueue(const pair<T, int>& newEntry)
+inline bool PriorityQueue<T>::enqueue(const MyPair<T, int>& newEntry)
 {
     //Queue was empty. Element is inserted at the begining
     if (FrontPtr == nullptr) {
-        FrontPtr = new node<pair<T, int>>(newEntry);
+        FrontPtr = new node<MyPair<T, int>>(newEntry);
         return FrontPtr == nullptr;
     }
 
     //Element is inserted at the begining
     if (FrontPtr->val.second < newEntry.second) {
-        if (node<pair<T, int>>* Temp = new node<pair<T, int>>(newEntry, FrontPtr)) {
+        if (node<MyPair<T, int>>* Temp = new node<MyPair<T, int>>(newEntry, FrontPtr)) {
             FrontPtr = Temp;
             return true;
         }
@@ -120,10 +120,10 @@ inline bool PriorityQueue<T>::enqueue(const pair<T, int>& newEntry)
     }
 
     //Element is inserted in the middle
-    node<pair<T, int>>* Curr = FrontPtr;
+    node<MyPair<T, int>>* Curr = FrontPtr;
     while (Curr->next != nullptr) {
         if (Curr->next->val.second < newEntry.second) {
-            if (node<pair<T, int>>* Temp = new node<pair<T, int>>(newEntry, Curr->next)) {
+            if (node<MyPair<T, int>>* Temp = new node<MyPair<T, int>>(newEntry, Curr->next)) {
                 Curr->next = Temp;
                 return true;
             }
@@ -134,7 +134,7 @@ inline bool PriorityQueue<T>::enqueue(const pair<T, int>& newEntry)
     }
 
     //Element is inserted at the end
-    if (node<pair<T, int>>* Temp = new node<pair<T, int>>(newEntry)) {
+    if (node<MyPair<T, int>>* Temp = new node<MyPair<T, int>>(newEntry)) {
         Curr->next = Temp;
         return true;
     }
@@ -143,7 +143,7 @@ inline bool PriorityQueue<T>::enqueue(const pair<T, int>& newEntry)
 }
 
 template<class T>
-inline bool PriorityQueue<T>::dequeue(pair<T, int>& frontEntry)
+inline bool PriorityQueue<T>::dequeue(MyPair<T, int>& frontEntry)
 {
     if (FrontPtr == nullptr)
         return false;
@@ -152,7 +152,7 @@ inline bool PriorityQueue<T>::dequeue(pair<T, int>& frontEntry)
     frontEntry = FrontPtr->val;
 
     //Delete front entry
-    node<pair<T, int>>* Temp = FrontPtr;
+    node<MyPair<T, int>>* Temp = FrontPtr;
     FrontPtr = FrontPtr->next;
     delete Temp;
 
@@ -160,7 +160,7 @@ inline bool PriorityQueue<T>::dequeue(pair<T, int>& frontEntry)
 }
 
 template<class T>
-inline bool PriorityQueue<T>::peekFront(pair<T, int>& frontEntry) const
+inline bool PriorityQueue<T>::peekFront(MyPair<T, int>& frontEntry) const
 {
     if (FrontPtr == nullptr)
         return false;

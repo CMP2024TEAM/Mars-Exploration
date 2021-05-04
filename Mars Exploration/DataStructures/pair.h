@@ -1,15 +1,15 @@
 #pragma once
 template<class T, class U>
-struct pair {
+struct MyPair {
     T first;
     U second;
 
-    pair() :
+    MyPair() :
         first(),
         second()
     {}
 
-    pair(const T& First, const U& Second) :
+    MyPair(const T& First, const U& Second) :
         first(First),
         second(Second)
     {}
