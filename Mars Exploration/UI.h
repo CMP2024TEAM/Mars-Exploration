@@ -4,10 +4,10 @@
 #include "enums.h"
 
 class MarsStation;
-using namespace std;
+
 class UI {
 private:
-    ifstream IFile;
+    std::ifstream IFile;
     //ostream OFile;
 
     MissionType ParseMissionType(char c_type);

@@ -31,15 +31,18 @@ public:
     /* Insert element into queue. 
     O(n)*/
     bool enqueue(const MyPair<T, int>& newEntry);
+    bool enqueue(const T& newEntry, int priority);
 
     /* Remove element from front of queue if possible. 
     the removed element is stored in frontEntry
     O(1)*/
     bool dequeue(MyPair<T, int>& frontEntry);
+    bool dequeue(T& frontEntry);
 
     /* Store the front entry in frontEntry if available
     O(1)*/
     bool peekFront(MyPair<T, int>& frontEntry) const;
+    bool peekFront(T& frontEntry) const;
 
     ~PriorityQueue();
 };
@@ -143,6 +146,12 @@ inline bool PriorityQueue<T>::enqueue(const MyPair<T, int>& newEntry)
 }
 
 template<class T>
+inline bool PriorityQueue<T>::enqueue(const T& newEntry, int priority)
+{
+    return PriorityQueue<T>::enqueue(MyPair<T, int>(newEntry, priority));
+}
+
+template<class T>
 inline bool PriorityQueue<T>::dequeue(MyPair<T, int>& frontEntry)
 {
     if (FrontPtr == nullptr)
@@ -160,6 +169,23 @@ inline bool PriorityQueue<T>::dequeue(MyPair<T, int>& frontEntry)
 }
 
 template<class T>
+inline bool PriorityQueue<T>::dequeue(T& frontEntry)
+{
+    if (FrontPtr == nullptr)
+        return false;
+
+    //Assign current front entry to passed object
+    frontEntry = FrontPtr->val.first;
+
+    //Delete front entry
+    node<MyPair<T, int>>* Temp = FrontPtr;
+    FrontPtr = FrontPtr->next;
+    delete Temp;
+
+    return true;
+}
+
+template<class T>
 inline bool PriorityQueue<T>::peekFront(MyPair<T, int>& frontEntry) const
 {
     if (FrontPtr == nullptr)
@@ -167,6 +193,18 @@ inline bool PriorityQueue<T>::peekFront(MyPair<T, int>& frontEntry) const
 
     //Assign current front entry to passed object
     frontEntry = FrontPtr->val;
+
+    return true;
+}
+
+template<class T>
+inline bool PriorityQueue<T>::peekFront(T& frontEntry) const
+{
+    if (FrontPtr == nullptr)
+        return false;
+
+    //Assign current front entry to passed object
+    frontEntry = FrontPtr->val.first;
 
     return true;
 }
