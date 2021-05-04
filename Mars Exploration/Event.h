@@ -1,5 +1,5 @@
 #pragma once
-#include "MarsStation.h"
+class MarsStation;
 class Event
 {
 public:

@@ -1,13 +1,13 @@
-#include"Mission.h"
-#include"Rover.h"
-#include"UI.h"
-#include"DataStructures/PriorityQueue.h"
-#include"DataStructures/Queue.h"
+#pragma once
+#include "Mission.h"
+#include "Rover.h"
+#include "DataStructures/PriorityQueue.h"
+#include "DataStructures/Queue.h"
 #include "Event.h"
 #include "FormulationEvent.h"
 #include "CancellationEvent.h"
 #include "PromotionEvent.h"
-
+class UI;
 class MarsStation
 {
 private:
@@ -22,7 +22,7 @@ public:
 	MarsStation()
 	{
 		InOut = new UI;
-		InOut->Read();
+		//InOut->Read();
 	}
 	//Initialize Rovar Queues
 	void CreateRover(RoverType type, int speed)
