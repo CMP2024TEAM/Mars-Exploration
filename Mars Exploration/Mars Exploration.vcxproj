@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CancellationEvent.h" />
+    <ClInclude Include="DataStructures\Stack.h" />
     <ClInclude Include="DataStructures\node.h" />
     <ClInclude Include="DataStructures\pair.h" />
     <ClInclude Include="DataStructures\PriorityQueue.h" />
     <ClInclude Include="DataStructures\Queue.h" />
     <ClInclude Include="DataStructures\QueueInterface.h" />
+    <ClInclude Include="DataStructures\StackInterface.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FormulationEvent.h" />
