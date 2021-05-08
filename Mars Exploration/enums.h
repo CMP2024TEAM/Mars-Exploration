@@ -1,30 +1,39 @@
 #pragma once
+/*============================================================================
+					   DO NOT CHANGE THE ORDER OF ENUMS
+	You may only add extra items while keeping MAX as the last item in Enum
+============================================================================*/
 
-enum class RoverType {
-	Emergency,
-	Mountainous,
-	Polar,
-	RoverType_MAX
+enum class RoverType
+{
+    Emergency,
+    Mountainous,
+    Polar,
+    MAX
 };
 
 enum class RoverStatus
 {
 	Available,
 	InCheckUp,
-	InMaintenance
+	InMaintenance,
+	MAX
 };
 
-enum class MissionType {
+enum class MissionType 
+{
 	Emergency,
 	Mountainous,
-	Polar
+	Polar,
+	MAX
 };
 
 enum class MissionStatus
 {
 	Waiting,
 	InExecution,
-	Completed
+	Completed,
+	MAX
 };
 
 enum class EventType
@@ -32,4 +41,13 @@ enum class EventType
 	Formulation,
 	Cancelation,
 	Promotion,
+	MAX
+};
+
+enum class OutputType 
+{
+	Interactive,
+	StepByStep,
+	Silent,
+	MAX
 };

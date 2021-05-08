@@ -33,7 +33,7 @@ public:
 	{
 		//this should be allocated outside and then return its pointer
 		InOut = new UI;
-		//InOut->Read();
+		InOut->RealAll(this);
 	}
 	//Initialize Rovar Queues
 	void CreateRover(RoverType type, int speed)
