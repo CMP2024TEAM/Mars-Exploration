@@ -20,9 +20,16 @@ private:
 	PriorityQueue<Mission*> InExceution;
 	int AutoP;
 	int NumberOfMissionsTheRoverCompletesBeforeCheckup;
+	// for while stop condition
 	int cInExcecution;
+	//for Stats
+	int cAutop;
+	int cRovers;
+	int cMissions;
+	int cExcecuteTime;
+	int cWaitTime;
 public:
-	MarsStation():cInExcecution(0)
+	MarsStation() :cInExcecution(0),cRovers(0),cMissions(0),cExcecuteTime(0),cWaitTime(0)
 	{
 		//this should be allocated outside and then return its pointer
 		InOut = new UI;
@@ -34,7 +41,7 @@ public:
 		Rover* R = new Rover(type, speed);
 		if (type == RoverType::Emergency)
 		{
-			EmergencyRover.enqueue(MyPair<Rover*,int>(R,speed));
+			EmergencyRover.enqueue(MyPair<Rover*, int>(R, speed));
 		}
 		if (type == RoverType::Mountainous)
 		{
@@ -44,6 +51,7 @@ public:
 		{
 			PolarRover.enqueue(MyPair<Rover*, int>(R, speed));
 		}
+		cRovers++;
 	}
 	//SetCheckupDuration for each rovar tyoe
 	void SetCheckupDuration(RoverType type, int Duration)
@@ -174,12 +182,11 @@ public:
 
 
 	}
-
 	~MarsStation()
 	{
 		Rover* R;
 		Event* E;
-		Mission *M;
+		Mission* M;
 		delete InOut;
 		while (EmergencyRover.dequeue(R))
 		{
