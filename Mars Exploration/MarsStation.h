@@ -14,13 +14,15 @@ class MarsStation
 private:
 	UI* InOut;
 	Queue<Event*> EventList;
-	Queue<Rover*> EmergencyRover;
-	Queue<Rover*> MountainousRover;
-	Queue<Rover*> PolarRover;
+	PriorityQueue<Rover*> EmergencyRover;
+	PriorityQueue<Rover*> MountainousRover;
+	PriorityQueue<Rover*> PolarRover;
+	PriorityQueue<Mission*> InExceution;
 	int AutoP;
 	int NumberOfMissionsTheRoverCompletesBeforeCheckup;
+	int cInExcecution;
 public:
-	MarsStation()
+	MarsStation():cInExcecution(0)
 	{
 		//this should be allocated outside and then return its pointer
 		InOut = new UI;
@@ -29,18 +31,18 @@ public:
 	//Initialize Rovar Queues
 	void CreateRover(RoverType type, int speed)
 	{
-		Rover * R = new Rover(type, speed);
+		Rover* R = new Rover(type, speed);
 		if (type == RoverType::Emergency)
 		{
-			EmergencyRover.enqueue(R);
+			EmergencyRover.enqueue(MyPair<Rover*,int>(R,speed));
 		}
 		if (type == RoverType::Mountainous)
 		{
-			MountainousRover.enqueue(R);
+			MountainousRover.enqueue(MyPair<Rover*, int>(R, speed));
 		}
 		if (type == RoverType::Polar)
 		{
-			PolarRover.enqueue(R);
+			PolarRover.enqueue(MyPair<Rover*, int>(R, speed));
 		}
 	}
 	//SetCheckupDuration for each rovar tyoe
@@ -51,7 +53,7 @@ public:
 		if (type == RoverType::Mountainous)
 			Rover::CheckupDuration[1] = Duration;
 		if (type == RoverType::Polar)
-			Rover::CheckupDuration[2] = Duration;	
+			Rover::CheckupDuration[2] = Duration;
 	}
 	//set autopromosion
 	void SetAutoP(int apDuration)
@@ -63,9 +65,9 @@ public:
 		NumberOfMissionsTheRoverCompletesBeforeCheckup = (cNum > 0) ? cNum : 0;
 	}
 	//create Events
-	void CreateFormulationEvent(MissionType mType,int ED,int ID,int TLOC,int MDUR,int SIG)
+	void CreateFormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG)
 	{
-		Event* E= new FormulationEvent(mType,ED,ID,TLOC,MDUR,SIG);
+		Event* E = new FormulationEvent(mType, ED, ID, TLOC, MDUR, SIG);
 		EventList.enqueue(E);
 	}
 	void CreateCancellationEvent(int ED, int ID)
@@ -78,10 +80,106 @@ public:
 		Event* E = new PromotionEvent(ED, ID);
 		EventList.enqueue(E);
 	}
+	void AssignMissions() // Call this function at the start of every new day
+	{
+		Mission* Emergent;
+		Mission* Mount;
+		Mission* Pol;
+		Rover* RovEmergent;
+		Rover* RovMount;
+		Rover* RovPol;
+		// Assigning Emergency Missions
+		while (!EmergencyWaiting.isEmpty())
+		{
+			if (!EmergencyRover.isEmpty())
+			{
+				EmergencyWaiting.dequeue(Emergent);
+				EmergencyRover.dequeue(RovEmergent);
+				Emergent->AssignRover(RovEmergent);
+				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+				Emergent->SetMissionStatus(MissionStatus::InExecution);
+				cInExcecution++;
+			}
+			else if (!MountainousRover.isEmpty())
+			{
+				EmergencyWaiting.dequeue(Emergent);
+				MountainousRover.dequeue(RovMount);
+				Emergent->AssignRover(RovMount);
+				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+				Emergent->SetMissionStatus(MissionStatus::InExecution);
+				cInExcecution++;
+			}
+			else if (!PolarRover.isEmpty())
+			{
+				EmergencyWaiting.dequeue(Emergent);
+				EmergencyRover.dequeue(RovPol);
+				Emergent->AssignRover(RovPol);
+				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+				Emergent->SetMissionStatus(MissionStatus::InExecution);
+				cInExcecution++;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		//Assigning Polar Missions
+
+		while (!MountainousWaiting.isEmpty())
+		{
+			if (!PolarRover.isEmpty())
+			{
+				EmergencyWaiting.dequeue(Pol);
+				EmergencyRover.dequeue(RovPol);
+				Pol->AssignRover(RovPol);
+				InExceution.enqueue(MyPair<Mission*, int>(Pol, Pol->GetCD()));
+				Pol->SetMissionStatus(MissionStatus::InExecution);
+				cInExcecution++;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		//Assigning Mountinous Missions
+
+		while (!MountainousWaiting.isEmpty())
+		{
+			if (!MountainousRover.isEmpty())
+			{
+				MountainousWaiting.dequeue(Mount);
+				MountainousRover.dequeue(RovMount);
+				Mount->AssignRover(RovMount);
+				InExceution.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
+				Mount->SetMissionStatus(MissionStatus::InExecution);
+				cInExcecution++;
+
+			}
+			else if (!EmergencyRover.isEmpty())
+			{
+				MountainousWaiting.dequeue(Mount);
+				EmergencyRover.dequeue(RovEmergent);
+				Mount->AssignRover(RovEmergent);
+				InExceution.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
+				Mount->SetMissionStatus(MissionStatus::InExecution);
+				cInExcecution++;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+
+	}
+
 	~MarsStation()
 	{
-		Rover *R;
-		Event *E;
+		Rover* R;
+		Event* E;
+		Mission *M;
 		delete InOut;
 		while (EmergencyRover.dequeue(R))
 		{
@@ -98,6 +196,10 @@ public:
 		while (EventList.dequeue(E))
 		{
 			delete E;
+		}
+		while (InExceution.dequeue(M))
+		{
+			delete M;
 		}
 	}
 
