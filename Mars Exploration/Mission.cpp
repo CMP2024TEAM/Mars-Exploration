@@ -2,13 +2,12 @@
 
 int Mission::ID=0;
 
-Mission::Mission(int FD,int TL,int S,int MD,int WD,MissionType T)
+Mission::Mission(int FD,int TL,int S,int MD,MissionType T)
 {
 	SetFormulationDay(FD);
 	SetTargetLocation(TL);
 	SetSignificance(S);
 	SetMissionDuration(MD);
-	SetWaitingDays(WD);
 	Type = T;
 	Status = MissionStatus::Waiting;
 	AssignedRover = nullptr;

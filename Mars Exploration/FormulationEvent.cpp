@@ -1,4 +1,5 @@
 #include "FormulationEvent.h"
+#include "Mission.h"
 
 FormulationEvent::FormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG) : Event(ED,ID)
 {
@@ -12,7 +13,9 @@ FormulationEvent::~FormulationEvent()
 {
 }
 
-void FormulationEvent::Execute(MarsStation* Mission) const
+void FormulationEvent::Execute(MarsStation* Station) const
 {
-	// TODO : Call Mission Create Mission
+	// Create Mission And Add it To The Station
+	Mission* mission= new Mission(EventDay,TargetLocation,Significance,Duration,mType);
+	Station->AddMission(mission);
 }

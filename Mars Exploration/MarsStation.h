@@ -14,28 +14,39 @@ class MarsStation
 private:
 	UI* InOut;
 	Queue<Event*> EventList;
+	PriorityQueue<Mission*> WaitingEmergencyMissions;
+	Queue<Mission*> WaitingPolarMissions;
+	Queue<Mission*> WaitingMountainousMissions;
 	PriorityQueue<Rover*> EmergencyRover;
 	PriorityQueue<Rover*> MountainousRover;
 	PriorityQueue<Rover*> PolarRover;
 	PriorityQueue<Mission*> InExceution;
 	int AutoP;
 	int NumberOfMissionsTheRoverCompletesBeforeCheckup;
-	// for while stop condition
+	// For while stop condition
 	int cInExcecution;
-	//for Stats
+	// Counts
+	int WaitingEmergencyMissionCount;
+	int WaitingMountainousMissionCount;
+	int WaitingPolarMissionCount;
+	// For Stats
 	int cAutop;
 	int cRovers;
 	int cMissions;
 	int cExcecuteTime;
 	int cWaitTime;
 public:
+	// Constructor
 	MarsStation() :cInExcecution(0),cRovers(0),cMissions(0),cExcecuteTime(0),cWaitTime(0)
 	{
 		//this should be allocated outside and then return its pointer
-		InOut = new UI;
+		InOut = new UI(OutputType::Silent);
 		InOut->RealAll(this);
+		WaitingEmergencyMissionCount = 0;
+		WaitingMountainousMissionCount = 0;
+		WaitingPolarMissionCount = 0;
 	}
-	//Initialize Rovar Queues
+	// Initialize Rovar Queues
 	void CreateRover(RoverType type, int speed)
 	{
 		Rover* R = new Rover(type, speed);
@@ -53,7 +64,7 @@ public:
 		}
 		cRovers++;
 	}
-	//SetCheckupDuration for each rovar tyoe
+	// SetCheckupDuration for each rovar tyoe
 	void SetCheckupDuration(RoverType type, int Duration)
 	{
 		if (type == RoverType::Emergency)
@@ -63,7 +74,7 @@ public:
 		if (type == RoverType::Polar)
 			Rover::CheckupDuration[2] = Duration;
 	}
-	//set autopromosion
+	// Set autopromosion
 	void SetAutoP(int apDuration)
 	{
 		AutoP = (apDuration > 0) ? apDuration : 0;
@@ -72,7 +83,7 @@ public:
 	{
 		NumberOfMissionsTheRoverCompletesBeforeCheckup = (cNum > 0) ? cNum : 0;
 	}
-	//create Events
+	// Create Events
 	void CreateFormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG)
 	{
 		Event* E = new FormulationEvent(mType, ED, ID, TLOC, MDUR, SIG);
@@ -88,7 +99,8 @@ public:
 		Event* E = new PromotionEvent(ED, ID);
 		EventList.enqueue(E);
 	}
-	void AssignMissions() // Call this function at the start of every new day
+	// Call this function at the start of every new day
+	void AssignMissions() 
 	{
 		Mission* Emergent;
 		Mission* Mount;
@@ -97,11 +109,11 @@ public:
 		Rover* RovMount;
 		Rover* RovPol;
 		// Assigning Emergency Missions
-		while (!EmergencyWaiting.isEmpty())
+		while (!WaitingEmergencyMissions.isEmpty())
 		{
 			if (!EmergencyRover.isEmpty())
 			{
-				EmergencyWaiting.dequeue(Emergent);
+				WaitingEmergencyMissions.dequeue(Emergent);
 				EmergencyRover.dequeue(RovEmergent);
 				Emergent->AssignRover(RovEmergent);
 				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
@@ -110,7 +122,7 @@ public:
 			}
 			else if (!MountainousRover.isEmpty())
 			{
-				EmergencyWaiting.dequeue(Emergent);
+				WaitingEmergencyMissions.dequeue(Emergent);
 				MountainousRover.dequeue(RovMount);
 				Emergent->AssignRover(RovMount);
 				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
@@ -119,7 +131,7 @@ public:
 			}
 			else if (!PolarRover.isEmpty())
 			{
-				EmergencyWaiting.dequeue(Emergent);
+				WaitingEmergencyMissions.dequeue(Emergent);
 				EmergencyRover.dequeue(RovPol);
 				Emergent->AssignRover(RovPol);
 				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
@@ -134,11 +146,11 @@ public:
 
 		//Assigning Polar Missions
 
-		while (!MountainousWaiting.isEmpty())
+		while (!WaitingPolarMissions.isEmpty())
 		{
 			if (!PolarRover.isEmpty())
 			{
-				EmergencyWaiting.dequeue(Pol);
+				WaitingPolarMissions.dequeue(Pol);
 				EmergencyRover.dequeue(RovPol);
 				Pol->AssignRover(RovPol);
 				InExceution.enqueue(MyPair<Mission*, int>(Pol, Pol->GetCD()));
@@ -153,11 +165,11 @@ public:
 
 		//Assigning Mountinous Missions
 
-		while (!MountainousWaiting.isEmpty())
+		while (!WaitingMountainousMissions.isEmpty())
 		{
 			if (!MountainousRover.isEmpty())
 			{
-				MountainousWaiting.dequeue(Mount);
+				WaitingMountainousMissions.dequeue(Mount);
 				MountainousRover.dequeue(RovMount);
 				Mount->AssignRover(RovMount);
 				InExceution.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
@@ -167,7 +179,7 @@ public:
 			}
 			else if (!EmergencyRover.isEmpty())
 			{
-				MountainousWaiting.dequeue(Mount);
+				WaitingMountainousMissions.dequeue(Mount);
 				EmergencyRover.dequeue(RovEmergent);
 				Mount->AssignRover(RovEmergent);
 				InExceution.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
@@ -179,9 +191,62 @@ public:
 				break;
 			}
 		}
-
-
 	}
+	// Add Mission To its corresponding list
+	void AddMission(Mission* mission)
+	{
+		// Check Type Of Mission Then Add To Corrersponding List
+		switch (mission->GetMissionType())
+		{
+		case MissionType::Emergency :
+			WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, mission->GetSignificance()));
+			WaitingEmergencyMissionCount++;
+			break;
+		case MissionType::Polar:
+			WaitingPolarMissions.enqueue(mission);
+			WaitingPolarMissionCount++;
+			break;
+		case MissionType::Mountainous:
+			WaitingMountainousMissions.enqueue(mission);
+			WaitingMountainousMissionCount++;
+			break;
+		default:
+			break;
+		}
+	}
+	// Get Waiting Mountainous Mission With Certain ID (USed In Events Execution)
+	bool GetMountainouMission(Mission*& mission, int ID)
+	{
+		mission = nullptr;
+		Mission* m;
+		Queue<Mission*> temp;
+		// Search For A Mission With This ID
+		while (WaitingMountainousMissions.dequeue(m))
+		{
+			if (m->GetID() == ID)
+			{
+				mission = m;
+			}
+			else
+			{
+				temp.enqueue(m);
+			}
+		}
+		// Return List As It Was
+		while (temp.dequeue(m))
+		{
+			WaitingMountainousMissions.enqueue(m);
+		}
+		// Not Found
+		if (mission == nullptr)
+		{
+			return false;
+		}
+		// If Found Decrease Count And Return True 
+		WaitingMountainousMissionCount--;
+		return true;
+	}
+	// Destructor
 	~MarsStation()
 	{
 		Rover* R;
@@ -209,7 +274,4 @@ public:
 			delete M;
 		}
 	}
-
-
-
 };

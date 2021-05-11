@@ -6,7 +6,7 @@ public:
 	Event(int,int);
 	~Event();
 	virtual void Execute(MarsStation*) const = 0;
-private:
+protected:
 	int EventDay;
 	int MissionId;
 };
