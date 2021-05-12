@@ -417,6 +417,34 @@ public:
 		{
 			delete R;
 		}
+		while (EmergencyRoverCheckUp.dequeue(R))
+		{
+			delete R;
+		}
+		while (MountinousRoverCheckUp.dequeue(R))
+		{
+			delete R;
+		}	
+		while (PolarRoverCheckUp.dequeue(R))
+		{
+			delete R;
+		}
+		while (WaitingEmergencyMissions.dequeue(M))
+		{
+			delete M;
+		}
+		while (WaitingPolarMissions.dequeue(M))
+		{
+			delete M;
+		}
+		while (WaitingMountainousMissions.dequeue(M))
+		{
+			delete M;
+		}
+		while (CompletedMissions.pop(M))
+		{
+			delete M;
+		}
 		while (EventList.dequeue(E))
 		{
 			delete E;
