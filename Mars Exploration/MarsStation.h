@@ -3,6 +3,7 @@
 #include "Rover.h"
 #include "DataStructures/PriorityQueue.h"
 #include "DataStructures/Queue.h"
+#include "DataStructures/Stack.h"
 #include "Event.h"
 #include "FormulationEvent.h"
 #include "CancellationEvent.h"
@@ -21,6 +22,10 @@ private:
 	PriorityQueue<Rover*> MountainousRover;
 	PriorityQueue<Rover*> PolarRover;
 	PriorityQueue<Mission*> InExceution;
+	Queue<Rover*> EmergencyRoverCheckUp;
+	Queue<Rover*> MountinousRoverCheckUp;
+	Queue<Rover*> PolarRoverCheckUp;
+	Stack<Mission*> CompletedMissions;
 	int AutoP;
 	int NumberOfMissionsTheRoverCompletesBeforeCheckup;
 	// For while stop condition
@@ -35,9 +40,10 @@ private:
 	int cMissions;
 	int cExcecuteTime;
 	int cWaitTime;
+	int Day;
 public:
 	// Constructor
-	MarsStation() :cInExcecution(0),cRovers(0),cMissions(0),cExcecuteTime(0),cWaitTime(0)
+	MarsStation() :cInExcecution(0), cRovers(0), cMissions(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
 	{
 		//this should be allocated outside and then return its pointer
 		InOut = new UI(OutputType::Silent);
@@ -100,7 +106,7 @@ public:
 		EventList.enqueue(E);
 	}
 	// Call this function at the start of every new day
-	void AssignMissions() 
+	void AssignMissions()
 	{
 		Mission* Emergent;
 		Mission* Mount;
@@ -198,7 +204,7 @@ public:
 		// Check Type Of Mission Then Add To Corrersponding List
 		switch (mission->GetMissionType())
 		{
-		case MissionType::Emergency :
+		case MissionType::Emergency:
 			WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, mission->GetSignificance()));
 			WaitingEmergencyMissionCount++;
 			break;
@@ -246,6 +252,152 @@ public:
 		WaitingMountainousMissionCount--;
 		return true;
 	}
+
+	//start a new day
+	void IncreaseDay()
+	{
+		Day++;
+	}
+
+	int GetCurrentDay()
+	{
+		return Day;
+	}
+
+	//Execute events stored in Queue
+	void ExecuteEvent()
+	{
+		Event* execute;
+		//loop on the events queue if it is the time to execute event then do it else end the function
+		while (true)	
+		{
+			execute = nullptr;
+			EventList.peekFront(execute);			
+			//remove this event from the queue after execute it
+			if (execute&&execute->GetEventDay() == Day)
+			{
+				execute->Execute(this);
+				EventList.dequeue(execute);
+			}
+			else
+				break;
+		}
+	}
+
+	//Move rovers in check up to be available to assign a mission 
+	void MoveCheckUpToAvail()
+	{
+		Rover* Erover = nullptr;
+		Rover* Mrover = nullptr;
+		Rover* Prover = nullptr;
+		//check the first rover in each list if it is the day to move it then do it else end the function
+		while (true)
+		{
+			EmergencyRoverCheckUp.peekFront(Erover);
+			MountinousRoverCheckUp.peekFront(Mrover);
+			PolarRoverCheckUp.peekFront(Prover);
+			//condition to exit the loop
+			//exit if there is no rover in check up or there is no rover has finished its check up duration
+			if ((!Erover&&!Mrover&&!Prover)||Erover->getAvailableAt() > Day && Mrover->getAvailableAt() > Day && Prover->getAvailableAt() > Day)
+				break;
+			if (Erover&&Erover->getAvailableAt() == Day)
+			{
+				EmergencyRoverCheckUp.dequeue(Erover);
+				EmergencyRover.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+			}
+			if (Mrover&&Mrover->getAvailableAt() == Day)
+			{
+				MountinousRoverCheckUp.dequeue(Mrover);
+				MountainousRover.enqueue(MyPair<Rover*, int>(Mrover, Mrover->getSpeed()));
+			}
+			if (Prover&&Prover->getAvailableAt() == Day)
+			{
+				PolarRoverCheckUp.dequeue(Prover);
+				PolarRover.enqueue(MyPair<Rover*, int>(Prover, Prover->getSpeed()));
+			}
+		}
+	}
+
+	//remove the link between the mission and the rover
+	//check if this rover needs to have a checkup or not 
+	void DismissMissions(Mission* M)
+	{
+		Rover* ReturnRover;
+		ReturnRover = M->GetRover();
+		//remove the link between the mission and the rover
+		M->DismissRover();
+		ReturnRover->increaseCompletedMissions();
+		//check if this rover needs to have a check up or not
+		if (NumberOfMissionsTheRoverCompletesBeforeCheckup <= ReturnRover->getCompletedMissions())
+		{
+			ReturnRover->setStatus(RoverStatus::InCheckUp);
+			//detemine the type of the rover and put it in the appropiate queue
+			switch (ReturnRover->getType())
+			{
+			case RoverType::Emergency:EmergencyRoverCheckUp.enqueue(ReturnRover); break;
+			case RoverType::Mountainous:MountinousRoverCheckUp.enqueue(ReturnRover); break;
+			case RoverType::Polar:PolarRoverCheckUp.enqueue(ReturnRover); break;
+			}
+		}
+		//the rover do not need to have a check up
+		else
+		{
+			ReturnRover->setStatus(RoverStatus::Available);
+			//detemine the type of the rover and put it in the appropiate queue
+			switch (ReturnRover->getType())
+			{
+			case RoverType::Emergency:EmergencyRover.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
+			case RoverType::Mountainous:MountainousRover.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
+			case RoverType::Polar:PolarRover.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
+			}
+		}
+	}
+
+	//remove the mission from in-exectution queue then add it to the complete missions after doing its fulfill mission requirements
+	void MoveInExcecutiontoComplete()
+	{
+		Mission* M;
+		while (true)
+		{
+			M = nullptr;
+			InExceution.peekFront(M);
+			//check if there is any in execution missions, if any,check if this day is the day on which a certain mission will complete its requirements
+			if (M&&M->GetCD() == Day)
+			{
+				InExceution.dequeue(M);
+				cInExcecution--;
+				M->SetMissionStatus(MissionStatus::Completed);
+				CompletedMissions.push(M);
+				//remove the link between the mission and the rover. Put the rover in the appropiate list
+				DismissMissions(M);
+			}
+			else
+				break;
+		}
+	}
+
+	//check if there is any mountainous mission that has been waiting more than the auto promotion duration
+	//if there is, remove it from the queue of the mountainous then enqeue it in the emergency waiting missions
+	void CheckUpAutoP()
+	{
+		Mission* M;
+		while (true)
+		{
+			M = nullptr;
+			WaitingMountainousMissions.peekFront(M);
+			//check if there is any mountainous mission , if any , compare the waiting days with the autoP
+			if (M&&M->GetWaitingDays() > AutoP)
+			{
+				WaitingMountainousMissions.dequeue(M);
+				M->SetMissionType(MissionType::Emergency);
+				WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(M, M->GetSignificance()));
+				cAutop++;	//used to calculate the percentage of automatically-promoted missions (relative to the total number of mountainous missions)
+			}
+			else
+				break;
+		}
+	}
+
 	// Destructor
 	~MarsStation()
 	{

@@ -6,6 +6,11 @@ Event::Event(int ED, int ID)
 	MissionId = ID;
 }
 
+int Event::GetEventDay()
+{
+	return EventDay;
+}
+
 Event::~Event()
 {
 }
