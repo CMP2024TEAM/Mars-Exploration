@@ -124,6 +124,7 @@ public:
 				Emergent->AssignRover(RovEmergent);
 				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
 				Emergent->SetMissionStatus(MissionStatus::InExecution);
+				Emergent->SetWaitingDays(Day-Emergent->GetFormulationDay());
 				cInExcecution++;
 			}
 			else if (!MountainousRover.isEmpty())
@@ -133,6 +134,7 @@ public:
 				Emergent->AssignRover(RovMount);
 				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
 				Emergent->SetMissionStatus(MissionStatus::InExecution);
+				Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 				cInExcecution++;
 			}
 			else if (!PolarRover.isEmpty())
@@ -142,6 +144,7 @@ public:
 				Emergent->AssignRover(RovPol);
 				InExceution.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
 				Emergent->SetMissionStatus(MissionStatus::InExecution);
+				Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 				cInExcecution++;
 			}
 			else
@@ -161,6 +164,7 @@ public:
 				Pol->AssignRover(RovPol);
 				InExceution.enqueue(MyPair<Mission*, int>(Pol, Pol->GetCD()));
 				Pol->SetMissionStatus(MissionStatus::InExecution);
+				Pol->SetWaitingDays(Day - Pol->GetFormulationDay());
 				cInExcecution++;
 			}
 			else
@@ -180,6 +184,7 @@ public:
 				Mount->AssignRover(RovMount);
 				InExceution.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
 				Mount->SetMissionStatus(MissionStatus::InExecution);
+				Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 				cInExcecution++;
 
 			}
@@ -190,6 +195,7 @@ public:
 				Mount->AssignRover(RovEmergent);
 				InExceution.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
 				Mount->SetMissionStatus(MissionStatus::InExecution);
+				Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 				cInExcecution++;
 			}
 			else
