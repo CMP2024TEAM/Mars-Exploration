@@ -5,10 +5,10 @@
 
 // Constructor
 
-MarsStation::MarsStation() :cInExcecution(0), cRovers(0), cMissions(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
+MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cRovers(0), cMissions(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
 {
 	//this should be allocated outside and then return its pointer
-	InOut = new UI(OutputType::Silent);
+	InOut = tInOut;
 	InOut->ReadAll(this);
 	WaitingEmergencyMissionCount = 0;
 	WaitingMountainousMissionCount = 0;
@@ -95,30 +95,30 @@ void MarsStation::AssignMissions()
 			WaitingEmergencyMissions.dequeue(Emergent);
 			EmergencyRovers.dequeue(RovEmergent);
 			Emergent->AssignRover(RovEmergent);
-			InExceutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
-			cInExcecution++;
+			cInExecution++;
 		}
 		else if (!MountainousRovers.isEmpty())
 		{
 			WaitingEmergencyMissions.dequeue(Emergent);
 			MountainousRovers.dequeue(RovMount);
 			Emergent->AssignRover(RovMount);
-			InExceutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
-			cInExcecution++;
+			cInExecution++;
 		}
 		else if (!PolarRovers.isEmpty())
 		{
 			WaitingEmergencyMissions.dequeue(Emergent);
 			EmergencyRovers.dequeue(RovPol);
 			Emergent->AssignRover(RovPol);
-			InExceutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
-			cInExcecution++;
+			cInExecution++;
 		}
 		else
 		{
@@ -135,10 +135,10 @@ void MarsStation::AssignMissions()
 			WaitingPolarMissions.dequeue(Pol);
 			EmergencyRovers.dequeue(RovPol);
 			Pol->AssignRover(RovPol);
-			InExceutionMissions.enqueue(MyPair<Mission*, int>(Pol, Pol->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Pol, Pol->GetCD()));
 			Pol->SetMissionStatus(MissionStatus::InExecution);
 			Pol->SetWaitingDays(Day - Pol->GetFormulationDay());
-			cInExcecution++;
+			cInExecution++;
 		}
 		else
 		{
@@ -155,10 +155,10 @@ void MarsStation::AssignMissions()
 			WaitingMountainousMissions.dequeue(Mount);
 			MountainousRovers.dequeue(RovMount);
 			Mount->AssignRover(RovMount);
-			InExceutionMissions.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
-			cInExcecution++;
+			cInExecution++;
 
 		}
 		else if (!EmergencyRovers.isEmpty())
@@ -166,10 +166,10 @@ void MarsStation::AssignMissions()
 			WaitingMountainousMissions.dequeue(Mount);
 			EmergencyRovers.dequeue(RovEmergent);
 			Mount->AssignRover(RovEmergent);
-			InExceutionMissions.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
-			cInExcecution++;
+			cInExecution++;
 		}
 		else
 		{
@@ -343,18 +343,18 @@ void MarsStation::DismissMissions(Mission* M)
 
 //remove the mission from in-exectution queue then add it to the complete missions after doing its fulfill mission requirements
 
-void MarsStation::MoveInExcecutiontoComplete()
+void MarsStation::MoveInExecutiontoComplete()
 {
 	Mission* M;
 	while (true)
 	{
 		M = nullptr;
-		InExceutionMissions.peekFront(M);
+		InExecutionMissions.peekFront(M);
 		//check if there is any in execution missions, if any,check if this day is the day on which a certain mission will complete its requirements
 		if (M && M->GetCD() == Day)
 		{
-			InExceutionMissions.dequeue(M);
-			cInExcecution--;
+			InExecutionMissions.dequeue(M);
+			cInExecution--;
 			M->SetMissionStatus(MissionStatus::Completed);
 			CompletedMissions.push(M);
 			//remove the link between the mission and the rover. Put the rover in the appropiate list
@@ -390,6 +390,20 @@ void MarsStation::CheckUpAutoP()
 
 // Getters For UI 
 
+void MarsStation::Simulate()
+{
+	while (WaitingEmergencyMissionCount||WaitingMountainousMissionCount||WaitingPolarMissionCount)
+	{
+		ExecuteEvent();
+		MoveCheckUpToAvail();
+		MoveInExecutiontoComplete();
+		CheckUpAutoP();
+		AssignMissions();
+		IncreaseDay();
+		InOut->Print(this);
+	}
+}
+
 Queue<Mission*> MarsStation::GetWaitingMissions(MissionType mType)
 {
 	switch (mType)
@@ -407,7 +421,7 @@ Queue<Mission*> MarsStation::GetWaitingMissions(MissionType mType)
 
 PriorityQueue<Mission*> MarsStation::GetInExecutionMissions()
 {
-	return InExceutionMissions;
+	return InExecutionMissions;
 }
 
 PriorityQueue<Rover*> MarsStation::GetAvailableRovers(RoverType rType)
@@ -497,7 +511,7 @@ MarsStation::~MarsStation()
 	{
 		delete E;
 	}
-	while (InExceutionMissions.dequeue(M))
+	while (InExecutionMissions.dequeue(M))
 	{
 		delete M;
 	}

@@ -23,7 +23,7 @@ private:
 	PriorityQueue<Rover*> EmergencyRovers;
 	PriorityQueue<Rover*> MountainousRovers;
 	PriorityQueue<Rover*> PolarRovers;
-	PriorityQueue<Mission*> InExceutionMissions;
+	PriorityQueue<Mission*> InExecutionMissions;
 	Queue<Rover*> EmergencyRoversCheckUp;
 	Queue<Rover*> MountinousRoverCheckUp;
 	Queue<Rover*> PolarRoversCheckUp;
@@ -31,7 +31,7 @@ private:
 	int AutoP;
 	int MissionsBeforeCheckup;
 	// For while stop condition
-	int cInExcecution;
+	int cInExecution;
 	// Counts
 	int WaitingEmergencyMissionCount;
 	int WaitingMountainousMissionCount;
@@ -45,7 +45,7 @@ private:
 	int Day;
 public:
 	// Constructor
-	MarsStation();
+	MarsStation(UI*);
 	
 	// Initialize Rovar Queues
 	void CreateRover(RoverType type, int speed);
@@ -88,12 +88,14 @@ public:
 	void DismissMissions(Mission* M);
 
 	//remove the mission from in-exectution queue then add it to the complete missions after doing its fulfill mission requirements
-	void MoveInExcecutiontoComplete();
+	void MoveInExecutiontoComplete();
 
 	// Check if there is any mountainous mission that has been waiting more than the auto promotion duration
 	// If there is, remove it from the queue of the mountainous then enqeue it in the emergency waiting missions
 	void CheckUpAutoP();
 
+	//Simulate: This should iterate all neccessary function 
+	void Simulate();
 	// Getters For UI 
 	Queue<Mission*> GetWaitingMissions(MissionType mType);
 	PriorityQueue<Mission*> GetInExecutionMissions();
