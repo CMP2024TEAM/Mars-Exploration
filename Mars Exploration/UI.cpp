@@ -4,7 +4,7 @@
 
 #define BR_LENGTH 25
 
-const char EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
+const char UI::EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
    //Emergency
    {'[',']'},
    //Mountainous
@@ -13,7 +13,7 @@ const char EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
    {'(',')'}
 };
 
-const std::string LineBreak(BR_LENGTH, '-');
+const std::string UI::LineBreak(BR_LENGTH, '-');
 
 inline MissionType UI::ParseMissionType(char c_type)
 {
@@ -45,7 +45,7 @@ inline void UI::ReadCheckupInfo(MarsStation* Station)
 {
     int CheckupDays;
     IFile >> CheckupDays;
-    Station->SetNumberOfMissionsTheRoverCompletesBeforeCheckup(CheckupDays);
+    Station->SetMissionsBeforeCheckup(CheckupDays);
     for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
         IFile >> CheckupDays;
         Station->SetCheckupDuration(RoverType(rType), CheckupDays);
@@ -96,7 +96,7 @@ void UI::FillBuffersFromStation(MarsStation* Station)
 
     int mType;
     for (mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
-        Queue<Mission*> Waiting_Missions = Station->GetWaitingMissions(mType);
+        Queue<Mission*> Waiting_Missions = Station->GetWaitingMissions(static_cast<MissionType>(mType));
         while (Waiting_Missions.dequeue(MissionPtr))
             WaitingMission_Buf[mType] += std::to_string(MissionPtr->GetID()) + ", ";
     }
@@ -109,8 +109,8 @@ void UI::FillBuffersFromStation(MarsStation* Station)
 
 
     for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
-        Queue<Rover*> Available_Rovers = Station->GetAvailableRovers(rType);
-        Queue<Rover*> InCheckup_Rovers = Station->GetInCheckupRovers(rType);
+        PriorityQueue<Rover*> Available_Rovers = Station->GetAvailableRovers(static_cast<RoverType>(rType));
+        Queue<Rover*> InCheckup_Rovers = Station->GetInCheckupRovers(static_cast<RoverType>(rType));
         while (Available_Rovers.dequeue(RoverPtr))
             AvailableRovers_Buf[rType] += std::to_string(RoverPtr->GetID()) + ", ";
         while (InCheckup_Rovers.dequeue(RoverPtr))
@@ -204,7 +204,7 @@ UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
     OFile.open(OFileName + ".txt");
 }
 
-void UI::RealAll(MarsStation* Station)
+void UI::ReadAll(MarsStation* Station)
 {
     ReadRoverData(Station);
     ReadCheckupInfo(Station);

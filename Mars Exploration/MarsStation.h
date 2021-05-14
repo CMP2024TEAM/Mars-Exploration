@@ -29,7 +29,7 @@ private:
 	Queue<Rover*> PolarRoversCheckUp;
 	Stack<Mission*> CompletedMissions;
 	int AutoP;
-	int NumberOfMissionsTheRoverCompletesBeforeCheckup;
+	int MissionsBeforeCheckup;
 	// For while stop condition
 	int cInExcecution;
 	// Counts
@@ -59,7 +59,7 @@ public:
 	
 	// Set autopromosion
 	void SetAutoP(int apDuration);
-	void SetNumberOfMissionsTheRoverCompletesBeforeCheckup(int cNum);
+	void SetMissionsBeforeCheckup(int cNum);
 	
 	// Create Events
 	void CreateFormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG);
@@ -99,10 +99,10 @@ public:
 	void CheckUpAutoP();
 
 	// Getters For UI 
-	Queue<Mission*> GetWaitingMissions(int mType);
+	Queue<Mission*> GetWaitingMissions(MissionType mType);
 	PriorityQueue<Mission*> GetInExecutionMissions();
-	Queue<Rover*> GetAvailableRovers(int rType);
-	Queue<Rover*> GetInCheckupRovers(int rType);
+	PriorityQueue<Rover*> GetAvailableRovers(RoverType rType);
+	Queue<Rover*> GetInCheckupRovers(RoverType rType);
 	Stack<Mission*> GetCompletedMissions();
 
 	// Create Queue Of elements Stored In Priority Queue
