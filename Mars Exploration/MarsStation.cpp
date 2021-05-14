@@ -261,6 +261,7 @@ void MarsStation::ExecuteEvent()
 		{
 			execute->Execute(this);
 			EventList.dequeue(execute);
+			delete execute;
 		}
 		else
 			break;
@@ -387,7 +388,7 @@ void MarsStation::CheckUpAutoP()
 
 void MarsStation::Simulate()
 {
-	while (WaitingEmergencyMissionCount||WaitingMountainousMissionCount||WaitingPolarMissionCount||!EventList.isEmpty())
+	while (WaitingEmergencyMissionCount || WaitingMountainousMissionCount || WaitingPolarMissionCount||!EventList.isEmpty())
 	{
 		ExecuteEvent();
 		MoveCheckUpToAvail();
