@@ -41,7 +41,7 @@ Stack(const Stack<T>& aStack)
 		// Point to first node in new chain
 		node<T>* newChainPtr = topPtr;
 		// Copy remaining nodes
-		while (origChainPtr != nullptr)
+		while (origChainPtr != nullptr&& origChainPtr->next !=nullptr)
 		{
 			// Advance original-chain pointer
 			origChainPtr = origChainPtr->next;

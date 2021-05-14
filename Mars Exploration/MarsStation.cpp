@@ -92,7 +92,7 @@ void MarsStation::AssignMissions()
 			WaitingEmergencyMissions.dequeue(Emergent);
 			EmergencyRovers.dequeue(RovEmergent);
 			Emergent->AssignRover(RovEmergent);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cInExecution++;
@@ -102,7 +102,7 @@ void MarsStation::AssignMissions()
 			WaitingEmergencyMissions.dequeue(Emergent);
 			MountainousRovers.dequeue(RovMount);
 			Emergent->AssignRover(RovMount);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cInExecution++;
@@ -112,7 +112,7 @@ void MarsStation::AssignMissions()
 			WaitingEmergencyMissions.dequeue(Emergent);
 			EmergencyRovers.dequeue(RovPol);
 			Emergent->AssignRover(RovPol);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, Emergent->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cInExecution++;
@@ -132,7 +132,7 @@ void MarsStation::AssignMissions()
 			WaitingPolarMissions.dequeue(Pol);
 			EmergencyRovers.dequeue(RovPol);
 			Pol->AssignRover(RovPol);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Pol, Pol->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Pol, -1 * Pol->GetCD()));
 			Pol->SetMissionStatus(MissionStatus::InExecution);
 			Pol->SetWaitingDays(Day - Pol->GetFormulationDay());
 			cInExecution++;
@@ -152,7 +152,7 @@ void MarsStation::AssignMissions()
 			WaitingMountainousMissions.dequeue(Mount);
 			MountainousRovers.dequeue(RovMount);
 			Mount->AssignRover(RovMount);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, -1 * Mount->GetCD()));
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 			cInExecution++;
@@ -163,7 +163,7 @@ void MarsStation::AssignMissions()
 			WaitingMountainousMissions.dequeue(Mount);
 			EmergencyRovers.dequeue(RovEmergent);
 			Mount->AssignRover(RovEmergent);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, Mount->GetCD()));
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, -1 * Mount->GetCD()));
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 			cInExecution++;
