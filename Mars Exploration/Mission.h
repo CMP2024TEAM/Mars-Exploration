@@ -6,7 +6,6 @@ class Mission
 private:
 	int FormulationDay;	
 	int TargetLocation;		//The distance (in kilometers)
-	int MissionLocation;		
 	int Significance;		//representing the importance of the mission
 	static int ID;
 	int MissionDuration;
