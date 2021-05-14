@@ -30,7 +30,7 @@ Stack<T>::
 Stack(const Stack<T>& aStack)
 {
 	// Point to nodes in original chain
-	node<T>* origChainPtr = aStack->topPtr;
+	node<T>* origChainPtr = aStack.topPtr;
 	if (origChainPtr == nullptr)
 		topPtr = nullptr; // Original bag is empty
 	else
