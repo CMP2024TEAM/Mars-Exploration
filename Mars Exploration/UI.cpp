@@ -104,7 +104,7 @@ void UI::FillBuffersFromStation(MarsStation* Station)
     PriorityQueue<Mission*> InExec_Missions = Station->GetInExecutionMissions();
     while (InExec_Missions.dequeue(MissionPtr)) {
         mType = static_cast<int>(MissionPtr->GetMissionType());
-        InExecutionMiss_Rov_Buf[mType] += std::to_string(MissionPtr->GetID()) + '/' + std::to_string(MissionPtr->GetRover()->getID()) + ", ";
+        InExecutionMiss_Rov_Buf[mType] += std::to_string(MissionPtr->GetID()) + '/' + std::to_string(MissionPtr->GetRover()->GetID()) + ", ";
     }
 
 
@@ -211,8 +211,6 @@ void UI::RealAll(MarsStation* Station)
     ReadAutoPromotion(Station);
     ReadEvents(Station);
 }
-
-
 
 void UI::Print(MarsStation* Station)
 {

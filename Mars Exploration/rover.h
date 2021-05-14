@@ -7,6 +7,7 @@ public:
 	static int CheckupDuration[3];
 	Rover(RoverType,int);
 	~Rover();
+	int GetID();
 	void setType(RoverType);
 	RoverType getType() const;
 	void setCheckUpDuration(int);
