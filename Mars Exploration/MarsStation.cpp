@@ -277,23 +277,31 @@ void MarsStation::ExecuteEvent()
 // Move rovers in check up to be available to assign a mission 
 void MarsStation::MoveCheckUpToAvail()
 {
-	Rover* Erover = nullptr;
-	Rover* Mrover = nullptr;
-	Rover* Prover = nullptr;
+	Rover* Erover;
+	Rover* Mrover;
+	Rover* Prover;
 	//check the first rover in each list if it is the day to move it then do it else end the function
 	while (true)
 	{
-		bool Echeck = EmergencyRoversCheckUp.peekFront(Erover);
+		/*bool Echeck = EmergencyRoversCheckUp.peekFront(Erover);
 		bool Mcheck = MountinousRoverCheckUp.peekFront(Mrover);
-		bool Pcheck = PolarRoversCheckUp.peekFront(Prover);
+		bool Pcheck = PolarRoversCheckUp.peekFront(Prover);*/
+		Erover = nullptr;
+		Mrover = nullptr;
+		Prover = nullptr;
+		EmergencyRoversCheckUp.peekFront(Erover);
+		MountinousRoverCheckUp.peekFront(Mrover);
+		PolarRoversCheckUp.peekFront(Prover);
 		//condition to exit the loop
 		//exit if there is no rover in check up or there is no rover has finished its check up duration
+		/*
 		if (Echeck == false && Mcheck == false && Pcheck == false)
 		{
 			break;
 		}
-		//if ((!Erover && !Mrover && !Prover) || (Erover->getAvailableAt() > Day && Mrover->getAvailableAt() > Day && Prover->getAvailableAt() > Day))
-		//	break;
+		*/
+		if ((!Erover && !Mrover && !Prover) || (Erover->getAvailableAt() > Day && Mrover->getAvailableAt() > Day && Prover->getAvailableAt() > Day))
+			break;
 		if (Erover && Erover->getAvailableAt() == Day)
 		{
 			EmergencyRoversCheckUp.dequeue(Erover);
@@ -325,6 +333,7 @@ void MarsStation::DismissMissions(Mission* M)
 	if (MissionsBeforeCheckup <= ReturnRover->getCompletedMissions())
 	{
 		ReturnRover->setStatus(RoverStatus::InCheckUp);
+		ReturnRover->setAvailableAt(Day + ReturnRover->getCheckUpDuration());
 		//detemine the type of the rover and put it in the appropiate queue
 		switch (ReturnRover->getType())
 		{
