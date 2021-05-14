@@ -17,6 +17,11 @@ Rover::~Rover()
 
 }
 
+int Rover::GetID()
+{
+	return Id;
+}
+
 void Rover::setType(RoverType type)
 {
 	Type = type;
