@@ -426,7 +426,13 @@ void MarsStation::CheckUpAutoP()
 
 void MarsStation::Simulate()
 {
-	while (WaitingEmergencyMissionCount || WaitingMountainousMissionCount || WaitingPolarMissionCount || !EventList.isEmpty())
+	while (
+		WaitingEmergencyMissionCount ||
+		WaitingMountainousMissionCount || 
+		WaitingPolarMissionCount || 
+		!EventList.isEmpty()||
+		!InExecutionMissions.isEmpty()
+		)
 	{
 		ExecuteEvent();
 		MoveCheckUpToAvail();
