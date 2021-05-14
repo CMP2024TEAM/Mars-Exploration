@@ -387,7 +387,7 @@ void MarsStation::CheckUpAutoP()
 
 void MarsStation::Simulate()
 {
-	while (WaitingEmergencyMissionCount||WaitingMountainousMissionCount||WaitingPolarMissionCount)
+	while (WaitingEmergencyMissionCount||WaitingMountainousMissionCount||WaitingPolarMissionCount||!EventList.isEmpty())
 	{
 		ExecuteEvent();
 		MoveCheckUpToAvail();
@@ -460,7 +460,6 @@ MarsStation::~MarsStation()
 	Rover* R;
 	Event* E;
 	Mission* M;
-	delete InOut;
 	while (EmergencyRovers.dequeue(R))
 	{
 		delete R;
