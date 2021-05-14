@@ -112,7 +112,7 @@ void MarsStation::AssignMissions()
 		else if (!PolarRovers.isEmpty())
 		{
 			WaitingEmergencyMissions.dequeue(Emergent);
-			EmergencyRovers.dequeue(RovPol);
+			PolarRovers.dequeue(RovPol);
 			Emergent->AssignRover(RovPol);
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
@@ -300,7 +300,7 @@ void MarsStation::MoveCheckUpToAvail()
 			break;
 		}
 		*/
-		if ((!Erover && !Mrover && !Prover) || (Erover->getAvailableAt() > Day && Mrover->getAvailableAt() > Day && Prover->getAvailableAt() > Day))
+		if (!Erover && !Mrover && !Prover)
 			break;
 		if (Erover && Erover->getAvailableAt() == Day)
 		{
@@ -366,7 +366,7 @@ void MarsStation::MoveInExecutiontoComplete()
 		M = nullptr;
 		InExecutionMissions.peekFront(M);
 		//check if there is any in execution missions, if any,check if this day is the day on which a certain mission will complete its requirements
-		if (M && -1 * M->GetCD() <= Day)
+		if (M && M->GetCD() <= Day)
 		{
 			InExecutionMissions.dequeue(M);
 			cInExecution--;
