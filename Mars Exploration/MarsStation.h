@@ -38,10 +38,14 @@ private:
 	int WaitingPolarMissionCount;
 	// For Stats
 	int cAutop;
-	int cRovers;
-	int cMissions;
+	int cEmergencyMissions;
+	int cMountainousMissions;
+	int cPolarMissions;
 	int cExcecuteTime;
 	int cWaitTime;
+	int cEmergencyRovers;
+	int cPolarRovers;
+	int cMountainousRovers;
 	int Day;
 public:
 	// Constructor
