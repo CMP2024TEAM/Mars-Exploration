@@ -12,6 +12,7 @@ Mission::Mission(int FD,int TL,int S,int MD,MissionType T)
 	Status = MissionStatus::Waiting;
 	AssignedRover = nullptr;
 	ID++;
+	Id = ID;
 }
 
 int Mission::GetFormulationDay()			const
@@ -41,7 +42,7 @@ int Mission::GetSignificance()		const
 
 void Mission::SetSignificance(int S)
 {
-	Significance=S>0?S:1;
+	Significance = S > 0 ? S : 1;
 }
 
 int Mission::GetMissionDuration()		const
@@ -56,7 +57,7 @@ void Mission::SetMissionDuration(int MD)
 
 int Mission::GetID()		const
 {
-	return ID;
+	return Id;
 }
 
 int Mission::GetWaitingDays()		const

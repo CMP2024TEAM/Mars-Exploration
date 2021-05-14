@@ -4,6 +4,7 @@
 class Mission
 {
 private:
+	int Id;
 	int FormulationDay;	
 	int TargetLocation;		//The distance (in kilometers)
 	int MissionLocation;		

@@ -167,6 +167,7 @@ void UI::FormatBuffersToConsole()
             std::cout << EnclosingChar[mType][0] << CompletedMission_Buf[mType] << EnclosingChar[mType][1] << ' ';
         }
     }
+    std::cout << "\n" << "\n";
 }
 
 inline void UI::ClearBuffers()
