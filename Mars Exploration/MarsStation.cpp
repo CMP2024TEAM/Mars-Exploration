@@ -96,6 +96,7 @@ void MarsStation::AssignMissions()
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cInExecution++;
+			WaitingEmergencyMissionCount--;
 		}
 		else if (!MountainousRovers.isEmpty())
 		{
@@ -106,6 +107,7 @@ void MarsStation::AssignMissions()
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cInExecution++;
+			WaitingEmergencyMissionCount--;
 		}
 		else if (!PolarRovers.isEmpty())
 		{
@@ -116,6 +118,7 @@ void MarsStation::AssignMissions()
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cInExecution++;
+			WaitingEmergencyMissionCount--;
 		}
 		else
 		{
@@ -136,6 +139,7 @@ void MarsStation::AssignMissions()
 			Pol->SetMissionStatus(MissionStatus::InExecution);
 			Pol->SetWaitingDays(Day - Pol->GetFormulationDay());
 			cInExecution++;
+			WaitingPolarMissionCount--;
 		}
 		else
 		{
@@ -156,6 +160,7 @@ void MarsStation::AssignMissions()
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 			cInExecution++;
+			WaitingMountainousMissionCount--;
 
 		}
 		else if (!EmergencyRovers.isEmpty())
@@ -167,6 +172,7 @@ void MarsStation::AssignMissions()
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 			cInExecution++;
+			WaitingMountainousMissionCount--;
 		}
 		else
 		{
