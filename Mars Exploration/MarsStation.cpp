@@ -133,7 +133,7 @@ void MarsStation::AssignMissions()
 		if (!PolarRovers.isEmpty())
 		{
 			WaitingPolarMissions.dequeue(Pol);
-			EmergencyRovers.dequeue(RovPol);
+			PolarRovers.dequeue(RovPol);
 			Pol->AssignRover(RovPol);
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Pol, -1 * Pol->GetCD()));
 			Pol->SetMissionStatus(MissionStatus::InExecution);
