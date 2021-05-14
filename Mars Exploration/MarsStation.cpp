@@ -283,13 +283,17 @@ void MarsStation::MoveCheckUpToAvail()
 	//check the first rover in each list if it is the day to move it then do it else end the function
 	while (true)
 	{
-		EmergencyRoversCheckUp.peekFront(Erover);
-		MountinousRoverCheckUp.peekFront(Mrover);
-		PolarRoversCheckUp.peekFront(Prover);
+		bool Echeck = EmergencyRoversCheckUp.peekFront(Erover);
+		bool Mcheck = MountinousRoverCheckUp.peekFront(Mrover);
+		bool Pcheck = PolarRoversCheckUp.peekFront(Prover);
 		//condition to exit the loop
 		//exit if there is no rover in check up or there is no rover has finished its check up duration
-		if ((!Erover && !Mrover && !Prover) || Erover->getAvailableAt() > Day && Mrover->getAvailableAt() > Day && Prover->getAvailableAt() > Day)
+		if (Echeck == false && Mcheck == false && Pcheck == false)
+		{
 			break;
+		}
+		//if ((!Erover && !Mrover && !Prover) || (Erover->getAvailableAt() > Day && Mrover->getAvailableAt() > Day && Prover->getAvailableAt() > Day))
+		//	break;
 		if (Erover && Erover->getAvailableAt() == Day)
 		{
 			EmergencyRoversCheckUp.dequeue(Erover);
@@ -353,7 +357,7 @@ void MarsStation::MoveInExecutiontoComplete()
 		M = nullptr;
 		InExecutionMissions.peekFront(M);
 		//check if there is any in execution missions, if any,check if this day is the day on which a certain mission will complete its requirements
-		if (M && M->GetCD() <= Day)
+		if (M && -1 * M->GetCD() <= Day)
 		{
 			InExecutionMissions.dequeue(M);
 			cInExecution--;
