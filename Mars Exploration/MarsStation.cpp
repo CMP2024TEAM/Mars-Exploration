@@ -9,7 +9,7 @@ MarsStation::MarsStation() :cInExcecution(0), cRovers(0), cMissions(0), cExcecut
 {
 	//this should be allocated outside and then return its pointer
 	InOut = new UI(OutputType::Silent);
-	InOut->RealAll(this);
+	InOut->ReadAll(this);
 	WaitingEmergencyMissionCount = 0;
 	WaitingMountainousMissionCount = 0;
 	WaitingPolarMissionCount = 0;
@@ -52,9 +52,9 @@ void MarsStation::SetAutoP(int apDuration)
 	AutoP = (apDuration > 0) ? apDuration : 0;
 }
 
-void MarsStation::SetNumberOfMissionsTheRoverCompletesBeforeCheckup(int cNum)
+void MarsStation::SetMissionsBeforeCheckup(int cNum)
 {
-	NumberOfMissionsTheRoverCompletesBeforeCheckup = (cNum > 0) ? cNum : 0;
+	MissionsBeforeCheckup = (cNum > 0) ? cNum : 0;
 }
 
 // Create Events
@@ -316,7 +316,7 @@ void MarsStation::DismissMissions(Mission* M)
 	M->DismissRover();
 	ReturnRover->increaseCompletedMissions();
 	//check if this rover needs to have a check up or not
-	if (NumberOfMissionsTheRoverCompletesBeforeCheckup <= ReturnRover->getCompletedMissions())
+	if (MissionsBeforeCheckup <= ReturnRover->getCompletedMissions())
 	{
 		ReturnRover->setStatus(RoverStatus::InCheckUp);
 		//detemine the type of the rover and put it in the appropiate queue
@@ -390,15 +390,15 @@ void MarsStation::CheckUpAutoP()
 
 // Getters For UI 
 
-Queue<Mission*> MarsStation::GetWaitingMissions(int mType)
+Queue<Mission*> MarsStation::GetWaitingMissions(MissionType mType)
 {
 	switch (mType)
 	{
-	case (int)MissionType::Emergency:
+	case MissionType::Emergency:
 		return GetPriorityQueueAsQueue(WaitingEmergencyMissions);
-	case (int)MissionType::Mountainous:
+	case MissionType::Mountainous:
 		return WaitingMountainousMissions;
-	case (int)MissionType::Polar:
+	case MissionType::Polar:
 		return WaitingPolarMissions;
 	default:
 		throw("Unknow Mission Type");
@@ -410,30 +410,30 @@ PriorityQueue<Mission*> MarsStation::GetInExecutionMissions()
 	return InExceutionMissions;
 }
 
-Queue<Rover*> MarsStation::GetAvailableRovers(int rType)
+PriorityQueue<Rover*> MarsStation::GetAvailableRovers(RoverType rType)
 {
 	switch (rType)
 	{
-	case (int)RoverType::Emergency:
-		return GetPriorityQueueAsQueue(EmergencyRovers);
-	case (int)RoverType::Mountainous:
-		return GetPriorityQueueAsQueue(MountainousRovers);
-	case (int)RoverType::Polar:
-		return GetPriorityQueueAsQueue(PolarRovers);
+	case RoverType::Emergency:
+		return EmergencyRovers;
+	case RoverType::Mountainous:
+		return MountainousRovers;
+	case RoverType::Polar:
+		return PolarRovers;
 	default:
 		throw("Unkonwn Rover Type");
 	}
 }
 
-Queue<Rover*> MarsStation::GetInCheckupRovers(int rType)
+Queue<Rover*> MarsStation::GetInCheckupRovers(RoverType rType)
 {
 	switch (rType)
 	{
-	case (int)RoverType::Emergency:
+	case RoverType::Emergency:
 		return EmergencyRoversCheckUp;
-	case (int)RoverType::Mountainous:
+	case RoverType::Mountainous:
 		return MountinousRoverCheckUp;
-	case (int)RoverType::Polar:
+	case RoverType::Polar:
 		return PolarRoversCheckUp;
 	default:
 		throw("Unkonwn Rover Type");
