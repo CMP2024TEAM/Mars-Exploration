@@ -1,7 +1,7 @@
 #include "MarsStation.h"
 
 // Constructor
-MarsStation::MarsStation(UI * tInOut) :cInExecution(0), cEmergencyMissions(0), cMountainousMissions(0), cPolarMissions(0), cEmergencyRovers(0), cPolarRovers(0), cMountainousRovers(0),cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
+MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cEmergencyMissions(0), cMountainousMissions(0), cPolarMissions(0), cEmergencyRovers(0), cPolarRovers(0), cMountainousRovers(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
 {
 	//this should be allocated outside and then return its pointer
 	InOut = tInOut;
@@ -280,43 +280,62 @@ void MarsStation::MoveCheckUpToAvail()
 	Rover* Erover;
 	Rover* Mrover;
 	Rover* Prover;
+	bool Eflag = true, Mflag = true, Pflag = true;		//determine if the Available day of the rover is less than the current day
 	//check the first rover in each list if it is the day to move it then do it else end the function
-	while (true)
+	while (Eflag || Mflag || Pflag)
 	{
-		/*bool Echeck = EmergencyRoversCheckUp.peekFront(Erover);
-		bool Mcheck = MountinousRoverCheckUp.peekFront(Mrover);
-		bool Pcheck = PolarRoversCheckUp.peekFront(Prover);*/
 		Erover = nullptr;
 		Mrover = nullptr;
 		Prover = nullptr;
 		EmergencyRoversCheckUp.peekFront(Erover);
 		MountinousRoverCheckUp.peekFront(Mrover);
 		PolarRoversCheckUp.peekFront(Prover);
+
 		//condition to exit the loop
-		//exit if there is no rover in check up or there is no rover has finished its check up duration
-		/*
-		if (Echeck == false && Mcheck == false && Pcheck == false)
-		{
-			break;
-		}
-		*/
+		//exit if there is no rover in check up
 		if (!Erover && !Mrover && !Prover)
 			break;
-		if (Erover && Erover->getAvailableAt() == Day)
+
+		//determine if there is a queue that its rover's available day < current Day
+		if (Eflag && Erover && Erover->getAvailableAt() < Day)
+			Eflag = false;
+		else if (Erover)
 		{
 			EmergencyRoversCheckUp.dequeue(Erover);
 			EmergencyRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
 		}
-		if (Mrover && Mrover->getAvailableAt() == Day)
+		else
+			Eflag = false;
+
+		if (Mflag && Mrover && Mrover->getAvailableAt() < Day)
+			Mflag = false;
+		else if (Mrover)
 		{
-			MountinousRoverCheckUp.dequeue(Mrover);
-			MountainousRovers.enqueue(MyPair<Rover*, int>(Mrover, Mrover->getSpeed()));
+			MountinousRoverCheckUp.dequeue(Erover);
+			MountainousRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
 		}
-		if (Prover && Prover->getAvailableAt() == Day)
+		else
+			Mflag = false;
+
+		if (Pflag && Prover && Prover->getAvailableAt() < Day)
+			Pflag = false;
+		else if (Prover)
 		{
-			PolarRoversCheckUp.dequeue(Prover);
-			PolarRovers.enqueue(MyPair<Rover*, int>(Prover, Prover->getSpeed()));
+			PolarRoversCheckUp.dequeue(Erover);
+			PolarRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
 		}
+		else
+			Pflag = false;
+
+		//Todo Check this statements 
+		/*if (Eflag && !Erover || Erover->getAvailableAt() < Day)
+			Eflag = false;
+		else if (Eflag)
+		{
+			EmergencyRoversCheckUp.dequeue(Erover);
+			EmergencyRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+		}*/
+
 	}
 }
 
@@ -407,7 +426,7 @@ void MarsStation::CheckUpAutoP()
 
 void MarsStation::Simulate()
 {
-	while (WaitingEmergencyMissionCount || WaitingMountainousMissionCount || WaitingPolarMissionCount||!EventList.isEmpty())
+	while (WaitingEmergencyMissionCount || WaitingMountainousMissionCount || WaitingPolarMissionCount || !EventList.isEmpty())
 	{
 		ExecuteEvent();
 		MoveCheckUpToAvail();
