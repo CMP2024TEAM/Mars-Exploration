@@ -1,4 +1,3 @@
-#pragma once
 #include "Rover.h"
 int Rover::LastId = 0;
 int Rover::CheckupDuration[3] = {0};

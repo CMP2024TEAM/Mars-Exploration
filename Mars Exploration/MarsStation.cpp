@@ -5,7 +5,7 @@
 
 // Constructor
 
-inline MarsStation::MarsStation() :cInExcecution(0), cRovers(0), cMissions(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
+MarsStation::MarsStation() :cInExcecution(0), cRovers(0), cMissions(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
 {
 	//this should be allocated outside and then return its pointer
 	InOut = new UI(OutputType::Silent);
@@ -15,7 +15,7 @@ inline MarsStation::MarsStation() :cInExcecution(0), cRovers(0), cMissions(0), c
 	WaitingPolarMissionCount = 0;
 }
 
-inline void MarsStation::CreateRover(RoverType type, int speed)
+void MarsStation::CreateRover(RoverType type, int speed)
 {
 	Rover* R = new Rover(type, speed);
 	if (type == RoverType::Emergency)
@@ -35,7 +35,7 @@ inline void MarsStation::CreateRover(RoverType type, int speed)
 
 // SetCheckupDuration for each rovar tyoe
 
-inline void MarsStation::SetCheckupDuration(RoverType type, int Duration)
+void MarsStation::SetCheckupDuration(RoverType type, int Duration)
 {
 	if (type == RoverType::Emergency)
 		Rover::CheckupDuration[0] = Duration;
@@ -47,31 +47,31 @@ inline void MarsStation::SetCheckupDuration(RoverType type, int Duration)
 
 // Set autopromosion
 
-inline void MarsStation::SetAutoP(int apDuration)
+void MarsStation::SetAutoP(int apDuration)
 {
 	AutoP = (apDuration > 0) ? apDuration : 0;
 }
 
-inline void MarsStation::SetNumberOfMissionsTheRoverCompletesBeforeCheckup(int cNum)
+void MarsStation::SetNumberOfMissionsTheRoverCompletesBeforeCheckup(int cNum)
 {
 	NumberOfMissionsTheRoverCompletesBeforeCheckup = (cNum > 0) ? cNum : 0;
 }
 
 // Create Events
 
-inline void MarsStation::CreateFormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG)
+void MarsStation::CreateFormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG)
 {
 	Event* E = new FormulationEvent(mType, ED, ID, TLOC, MDUR, SIG);
 	EventList.enqueue(E);
 }
 
-inline void MarsStation::CreateCancellationEvent(int ED, int ID)
+void MarsStation::CreateCancellationEvent(int ED, int ID)
 {
 	Event* E = new CancellationEvent(ED, ID);
 	EventList.enqueue(E);
 }
 
-inline void MarsStation::CreatePromotionEvent(int ED, int ID)
+void MarsStation::CreatePromotionEvent(int ED, int ID)
 {
 	Event* E = new PromotionEvent(ED, ID);
 	EventList.enqueue(E);
@@ -79,7 +79,7 @@ inline void MarsStation::CreatePromotionEvent(int ED, int ID)
 
 // Call this function at the start of every new day
 
-inline void MarsStation::AssignMissions()
+void MarsStation::AssignMissions()
 {
 	Mission* Emergent;
 	Mission* Mount;
@@ -180,7 +180,7 @@ inline void MarsStation::AssignMissions()
 
 // Add Mission To its corresponding list
 
-inline void MarsStation::AddMission(Mission* mission)
+void MarsStation::AddMission(Mission* mission)
 {
 	// Check Type Of Mission Then Add To Corrersponding List
 	switch (mission->GetMissionType())
@@ -203,8 +203,7 @@ inline void MarsStation::AddMission(Mission* mission)
 }
 
 // Get Waiting Mountainous Mission With Certain ID (USed In Events Execution)
-
-inline bool MarsStation::GetMountainouMission(Mission*& mission, int ID)
+bool MarsStation::GetMountainouMission(Mission*& mission, int ID)
 {
 	mission = nullptr;
 	Mission* m;
@@ -238,21 +237,21 @@ inline bool MarsStation::GetMountainouMission(Mission*& mission, int ID)
 
 // Start a new day
 
-inline void MarsStation::IncreaseDay()
+void MarsStation::IncreaseDay()
 {
 	Day++;
 }
 
 // Get Current day
 
-inline int MarsStation::GetCurrentDay()
+int MarsStation::GetCurrentDay()
 {
 	return Day;
 }
 
 // Execute events stored in Queue
 
-inline void MarsStation::ExecuteEvent()
+void MarsStation::ExecuteEvent()
 {
 	Event* execute;
 	//loop on the events queue if it is the time to execute event then do it else end the function
@@ -273,7 +272,7 @@ inline void MarsStation::ExecuteEvent()
 
 // Move rovers in check up to be available to assign a mission 
 
-inline void MarsStation::MoveCheckUpToAvail()
+void MarsStation::MoveCheckUpToAvail()
 {
 	Rover* Erover = nullptr;
 	Rover* Mrover = nullptr;
@@ -309,7 +308,7 @@ inline void MarsStation::MoveCheckUpToAvail()
 // Remove the link between the mission and the rover
 // Check if this rover needs to have a checkup or not 
 
-inline void MarsStation::DismissMissions(Mission* M)
+void MarsStation::DismissMissions(Mission* M)
 {
 	Rover* ReturnRover;
 	ReturnRover = M->GetRover();
@@ -344,7 +343,7 @@ inline void MarsStation::DismissMissions(Mission* M)
 
 //remove the mission from in-exectution queue then add it to the complete missions after doing its fulfill mission requirements
 
-inline void MarsStation::MoveInExcecutiontoComplete()
+void MarsStation::MoveInExcecutiontoComplete()
 {
 	Mission* M;
 	while (true)
@@ -369,7 +368,7 @@ inline void MarsStation::MoveInExcecutiontoComplete()
 // Check if there is any mountainous mission that has been waiting more than the auto promotion duration
 // If there is, remove it from the queue of the mountainous then enqeue it in the emergency waiting missions
 
-inline void MarsStation::CheckUpAutoP()
+void MarsStation::CheckUpAutoP()
 {
 	Mission* M;
 	while (true)
@@ -391,7 +390,7 @@ inline void MarsStation::CheckUpAutoP()
 
 // Getters For UI 
 
-inline Queue<Mission*> MarsStation::GetWaitingMissions(int mType)
+Queue<Mission*> MarsStation::GetWaitingMissions(int mType)
 {
 	switch (mType)
 	{
@@ -406,12 +405,12 @@ inline Queue<Mission*> MarsStation::GetWaitingMissions(int mType)
 	}
 }
 
-inline PriorityQueue<Mission*> MarsStation::GetInExecutionMissions()
+PriorityQueue<Mission*> MarsStation::GetInExecutionMissions()
 {
 	return InExceutionMissions;
 }
 
-inline Queue<Rover*> MarsStation::GetAvailableRovers(int rType)
+Queue<Rover*> MarsStation::GetAvailableRovers(int rType)
 {
 	switch (rType)
 	{
@@ -426,7 +425,7 @@ inline Queue<Rover*> MarsStation::GetAvailableRovers(int rType)
 	}
 }
 
-inline Queue<Rover*> MarsStation::GetInCheckupRovers(int rType)
+Queue<Rover*> MarsStation::GetInCheckupRovers(int rType)
 {
 	switch (rType)
 	{
@@ -441,14 +440,14 @@ inline Queue<Rover*> MarsStation::GetInCheckupRovers(int rType)
 	}
 }
 
-inline Stack<Mission*> MarsStation::GetCompletedMissions()
+Stack<Mission*> MarsStation::GetCompletedMissions()
 {
 	return CompletedMissions;
 }
 
 // Destructor
 
-inline MarsStation::~MarsStation()
+MarsStation::~MarsStation()
 {
 	Rover* R;
 	Event* E;

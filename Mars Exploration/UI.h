@@ -24,11 +24,6 @@ private:
     std::string AvailableRovers_Buf[static_cast<size_t>(RoverType::MAX)];
     std::string InCheckupRovers_Buf[static_cast<size_t>(RoverType::MAX)];
     /*=================================================
-                         Constants
-    =================================================*/
-    static const char EnclosingChar[static_cast<size_t>(MissionType::MAX)][2];
-    static const std::string LineBreak;
-    /*=================================================
                        Input Utility
     =================================================*/
     MissionType ParseMissionType(char c_type);
@@ -48,6 +43,12 @@ private:
     //Print final statistics at the end of the simulation
     void PrintStatistics(MarsStation* Station);
 public:
+    /*=================================================
+                     Constants
+    =================================================*/
+    //static const char EnclosingChar[static_cast<size_t>(MissionType::MAX)][2];
+    //static const std::string LineBreak;
+
     UI(OutputType OutputT);
     UI(OutputType OutputT, std::string IFileName, std::string OFileName);
     

@@ -52,7 +52,7 @@ Stack(const Stack<T>& aStack)
 			// Link new node to end of new chain
 			newChainPtr->next = (newnodePtr);
 			// Advance pointer to new last node
-			newChainPtr = newChainPtr->getNext();
+			newChainPtr = newChainPtr->next;
 		} // end while
 		newChainPtr->next = (nullptr); // Flag end of chain
 	} // end if

@@ -5,12 +5,12 @@
 #define BR_LENGTH 25
 
 const char EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
-    //Emergency
-    {'[',']'},
-    //Mountainous
-    {'{','}'},
-    //Polar
-    {'(',')'}
+   //Emergency
+   {'[',']'},
+   //Mountainous
+   {'{','}'},
+   //Polar
+   {'(',')'}
 };
 
 const std::string LineBreak(BR_LENGTH, '-');

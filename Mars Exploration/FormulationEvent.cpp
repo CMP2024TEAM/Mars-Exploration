@@ -1,5 +1,6 @@
 #include "FormulationEvent.h"
 #include "Mission.h"
+#include "MarsStation.h"
 
 FormulationEvent::FormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG) : Event(ED,ID)
 {
