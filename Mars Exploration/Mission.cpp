@@ -74,7 +74,7 @@ int Mission::GetED()		const
 	if (AssignedRover == nullptr)
 		return 0;
 	else
-		return 2 * (TargetLocation / AssignedRover->getSpeed()) + MissionDuration;
+		return 2 * ((TargetLocation / AssignedRover->getSpeed())/24) + MissionDuration;
 }
 
 void Mission::AssignRover(Rover* R)

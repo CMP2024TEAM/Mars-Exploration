@@ -346,7 +346,7 @@ void MarsStation::MoveInExecutiontoComplete()
 		M = nullptr;
 		InExecutionMissions.peekFront(M);
 		//check if there is any in execution missions, if any,check if this day is the day on which a certain mission will complete its requirements
-		if (M && M->GetCD() == Day)
+		if (M && M->GetCD() <= Day)
 		{
 			InExecutionMissions.dequeue(M);
 			cInExecution--;
@@ -394,8 +394,8 @@ void MarsStation::Simulate()
 		MoveInExecutiontoComplete();
 		CheckUpAutoP();
 		AssignMissions();
-		IncreaseDay();
 		InOut->Print(this);
+		IncreaseDay();
 	}
 }
 
