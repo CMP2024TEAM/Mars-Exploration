@@ -189,6 +189,8 @@ inline void UI::FormatBuffersToConsole()
         if (!CompletedMission_Buf[mType].empty()) {
             CompletedMission_Buf[mType].pop_back(); CompletedMission_Buf[mType].pop_back();
             std::cout << EnclosingChar[mType][0] << CompletedMission_Buf[mType] << EnclosingChar[mType][1] << ' ';
+            //Keep buffer in a consistent state
+            CompletedMission_Buf[mType] += ", ";
         }
     }
 
@@ -200,7 +202,8 @@ inline void UI::ClearBuffers()
     for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
         WaitingMission_Buf[mType].clear();
         InExecutionMiss_Rov_Buf[mType].clear();
-        CompletedMission_Buf[mType].clear();
+        //Completed missions are not cleared from buffer
+        //CompletedMission_Buf[mType].clear();
     }
 
     for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
