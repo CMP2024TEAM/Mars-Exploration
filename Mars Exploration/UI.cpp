@@ -1,8 +1,14 @@
+#include <chrono>
+#include <thread>
 #include "UI.h"
 #include "MarsStation.h"
 #include "DataStructures/Stack.h"
 
-#define BR_LENGTH 25
+/*=================================================
+                    Constants
+=================================================*/
+constexpr auto BreakLine_Length = 50;
+constexpr auto StepByStep_WaitingTime = 1;
 
 const char UI::EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
    //Emergency
@@ -13,7 +19,12 @@ const char UI::EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
    {'(',')'}
 };
 
-const std::string UI::LineBreak(BR_LENGTH, '-');
+const std::string UI::LineBreak(BreakLine_Length, '-');
+
+
+/*=================================================
+                   Input Utility
+=================================================*/
 
 inline MissionType UI::ParseMissionType(char c_type)
 {
@@ -89,8 +100,16 @@ inline void UI::ReadEvents(MarsStation* Station)
     }
 }
 
-void UI::FillBuffersFromStation(MarsStation* Station)
+inline void UI::FillBuffersFromStation(MarsStation* Station)
 {
+    //TODO: Getters for counts from mars station
+    /*
+    WaitingCount = Station->GetWaitingMissionsCount();
+    InExecutionCount = Station->GetInExecitionMissionsCount();
+    AvailableCount = Station->GetAvailableRoversCount();
+    CheckUpCount = Station->GetInCheckupRoversCount();
+    CompletedCount = Station->GetCompletedMissionsCount();
+    */
     Mission* MissionPtr;
     Rover* RoverPtr;
 
@@ -118,9 +137,14 @@ void UI::FillBuffersFromStation(MarsStation* Station)
     }
 }
 
-void UI::FormatBuffersToConsole()
+
+/*=================================================
+                  Output Utility
+=================================================*/
+
+inline void UI::FormatBuffersToConsole()
 {
-    std::cout << " Waiting Misions: ";
+    std::cout << WaitingCount << " Waiting Misions: ";
     for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
         if (!WaitingMission_Buf[mType].empty()) {
             WaitingMission_Buf[mType].pop_back(); WaitingMission_Buf[mType].pop_back();
@@ -130,7 +154,7 @@ void UI::FormatBuffersToConsole()
 
     std::cout << '\n' << LineBreak << '\n';
 
-    std::cout << " In-Execution Missions/Rovers: ";
+    std::cout << InExecutionCount << " In-Execution Missions/Rovers: ";
     for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
         if (!InExecutionMiss_Rov_Buf[mType].empty()) {
             InExecutionMiss_Rov_Buf[mType].pop_back(); InExecutionMiss_Rov_Buf[mType].pop_back();
@@ -140,7 +164,7 @@ void UI::FormatBuffersToConsole()
 
     std::cout << '\n' << LineBreak << '\n';
 
-    std::cout << " Available Rovers: ";
+    std::cout << AvailableCount << " Available Rovers: ";
     for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
         if (!AvailableRovers_Buf[rType].empty()) {
             AvailableRovers_Buf[rType].pop_back(); AvailableRovers_Buf[rType].pop_back();
@@ -150,7 +174,7 @@ void UI::FormatBuffersToConsole()
 
     std::cout << '\n' << LineBreak << '\n';
 
-    std::cout << " In-Checkup Rovers: ";
+    std::cout << CheckUpCount << " In-Checkup Rovers: ";
     for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
         if (!InCheckupRovers_Buf[rType].empty()) {
             InCheckupRovers_Buf[rType].pop_back(); InCheckupRovers_Buf[rType].pop_back();
@@ -160,14 +184,17 @@ void UI::FormatBuffersToConsole()
 
     std::cout << '\n' << LineBreak << '\n';
 
-    std::cout << " Completed Missions: ";
+    std::cout << CompletedCount << " Completed Missions: ";
     for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
         if (!CompletedMission_Buf[mType].empty()) {
             CompletedMission_Buf[mType].pop_back(); CompletedMission_Buf[mType].pop_back();
             std::cout << EnclosingChar[mType][0] << CompletedMission_Buf[mType] << EnclosingChar[mType][1] << ' ';
+            //Keep buffer in a consistent state
+            CompletedMission_Buf[mType] += ", ";
         }
     }
-    std::cout << "\n" << "\n";
+
+    std::cout << "\n\n";
 }
 
 inline void UI::ClearBuffers()
@@ -175,7 +202,8 @@ inline void UI::ClearBuffers()
     for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
         WaitingMission_Buf[mType].clear();
         InExecutionMiss_Rov_Buf[mType].clear();
-        CompletedMission_Buf[mType].clear();
+        //Completed missions are not cleared from buffer
+        //CompletedMission_Buf[mType].clear();
     }
 
     for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
@@ -184,22 +212,42 @@ inline void UI::ClearBuffers()
     }
 }
 
-inline void UI::Wait()
+inline void UI::WaitForUserInput()
 {
     //Default behavior is to wait for input
     //Will also work when user presses the Enter button
     std::cin.get();
 }
 
+inline void UI::PrintStatistics(MarsStation* Station)
+{
+    //TODO: Getters for stats from mars station
+}
+
+
+/*=================================================
+                 Public Functions
+=================================================*/
+
 UI::UI(OutputType OutputT) :
-    OType(OutputT)
+    OType(OutputT),
+    WaitingCount(0),
+    InExecutionCount(0),
+    AvailableCount(0),
+    CheckUpCount(0),
+    CompletedCount(0)
 {
     IFile.open("input.txt");
     OFile.open("output.txt");
 }
 
 UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
-    OType(OutputT)
+    OType(OutputT),
+    WaitingCount(0),
+    InExecutionCount(0),
+    AvailableCount(0),
+    CheckUpCount(0),
+    CompletedCount(0)  
 {
     IFile.open(IFileName + ".txt");
     OFile.open(OFileName + ".txt");
@@ -213,7 +261,20 @@ void UI::ReadAll(MarsStation* Station)
     ReadEvents(Station);
 }
 
-void UI::Print(MarsStation* Station)
+void UI::InitialDisplayMessage()
+{
+    //In all cases UI should output completed missions to OFile
+    OFile << "CD\tID\tFD\tWD\tED\n";
+
+    //Initial message for silent mode
+    if (OType == OutputType::Silent) {
+        std::cout << "Silent Mode\nSimulation Starts...\n";
+    }
+
+    //(OPTIONAL) add initial messages for other modes
+}
+
+void UI::PrintCurrentDay(MarsStation* Station)
 {
     Mission* MissionPtr; 
 
@@ -229,7 +290,7 @@ void UI::Print(MarsStation* Station)
             CompletedMission_Buf[static_cast<size_t>(MissionPtr->GetMissionType())] += std::to_string(MissionPtr->GetID()) + ", ";
     }
 
-    if (OType != OutputType::Silent) {
+    if (OType == OutputType::Interactive || OType == OutputType::StepByStep) {
         //Add all information to buffers
         FillBuffersFromStation(Station);
 
@@ -243,13 +304,20 @@ void UI::Print(MarsStation* Station)
         ClearBuffers();
 
         //Wait for user input before continuing program
-        if (OType == OutputType::StepByStep)
-            Wait();
+        if (OType == OutputType::Interactive)
+            WaitForUserInput();
+
+        else if (OType == OutputType::StepByStep)
+            std::this_thread::sleep_for(std::chrono::seconds(StepByStep_WaitingTime));
     }
 }
 
-void UI::PrintStatistics(MarsStation* Station)
-{}
+void UI::FinalDisplayMessage(MarsStation* Station)
+{
+    PrintStatistics(Station);
+
+    std::cout << "Simulation ends, Output file created\n";
+}
 
 UI::~UI()
 {

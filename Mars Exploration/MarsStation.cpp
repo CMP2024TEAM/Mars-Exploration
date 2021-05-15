@@ -426,6 +426,8 @@ void MarsStation::CheckUpAutoP()
 
 void MarsStation::Simulate()
 {
+	InOut->InitialDisplayMessage();
+
 	while (
 		WaitingEmergencyMissionCount ||
 		WaitingMountainousMissionCount ||
@@ -440,7 +442,7 @@ void MarsStation::Simulate()
 		MoveInExecutiontoComplete();
 		CheckUpAutoP();
 		AssignMissions();
-		InOut->Print(this);
+		InOut->PrintCurrentDay(this);
 		IncreaseDay();
 		while (!CompletedMissions.isEmpty())
 		{
@@ -449,6 +451,8 @@ void MarsStation::Simulate()
 			delete tempMission;
 		}
 	}
+
+	InOut->FinalDisplayMessage(this);
 }
 
 void MarsStation::MissionFailure()
