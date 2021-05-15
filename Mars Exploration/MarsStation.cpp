@@ -428,20 +428,78 @@ void MarsStation::Simulate()
 {
 	while (
 		WaitingEmergencyMissionCount ||
-		WaitingMountainousMissionCount || 
-		WaitingPolarMissionCount || 
-		!EventList.isEmpty()||
+		WaitingMountainousMissionCount ||
+		WaitingPolarMissionCount ||
+		!EventList.isEmpty() ||
 		!InExecutionMissions.isEmpty()
 		)
 	{
 		ExecuteEvent();
 		MoveCheckUpToAvail();
+		MissionFailure();
 		MoveInExecutiontoComplete();
 		CheckUpAutoP();
 		AssignMissions();
 		InOut->Print(this);
 		IncreaseDay();
+		while (!CompletedMissions.isEmpty())
+		{
+			Mission* tempMission;
+			CompletedMissions.pop(tempMission);
+			delete tempMission;
+		}
 	}
+}
+
+void MarsStation::MissionFailure()
+{
+	/* initialize random seed: */
+	srand(time(NULL));
+
+	Queue<Mission*> tempQueue; //  no need or priorety queue
+	Mission* tempMission;
+	Rover* tempRover;
+	double Percentage;
+	//if rand less than 1% then the mission fails
+	while (!InExecutionMissions.isEmpty())
+	{
+		InExecutionMissions.dequeue(tempMission);
+		Percentage = rand() % 100;
+		if (Percentage <= 20)
+		{
+			//Remove the Rover then move it to checkup
+			tempRover = tempMission->GetRover();
+			tempRover->setAvailableAt(Day + tempRover->getCheckUpDuration());
+			tempRover->setStatus(RoverStatus::InCheckUp);
+			switch (tempRover->getType())
+			{
+			case RoverType::Emergency: EmergencyRoversCheckUp.enqueue(tempRover); break;
+			case RoverType::Mountainous: MountinousRoverCheckUp.enqueue(tempRover); break;
+			case RoverType::Polar: PolarRoversCheckUp.enqueue(tempRover); break;
+			default:
+				break;
+			}
+			//Return the mission to waiting list to be assigned later
+			tempMission->SetMissionStatus(MissionStatus::Waiting);
+			tempMission->AssignRover(nullptr);
+			AddMission(tempMission);
+			// CAUTION:this should be in UI NOT HERE
+			std::cout << "\n######################################\n";
+			std::cout << "#Mission Failed We'l Get'em Next Time#\n"; 
+			std::cout << "######################################\n";
+		}
+		else
+		{
+			tempQueue.enqueue(tempMission);
+		}
+
+	}
+	while (!tempQueue.isEmpty())
+	{
+		tempQueue.dequeue(tempMission);
+		InExecutionMissions.enqueue(MyPair<Mission*, int>(tempMission, -1 * tempMission->GetCD()));
+	}
+
 }
 
 Queue<Mission*> MarsStation::GetWaitingMissions(MissionType mType)

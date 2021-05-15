@@ -9,7 +9,8 @@
 #include "CancellationEvent.h"
 #include "PromotionEvent.h"
 #include"UI.h"
-
+#include<stdlib.h>
+#include<time.h>
 class MarsStation
 {
 private:
@@ -100,6 +101,10 @@ public:
 
 	//Simulate: This should iterate all neccessary function 
 	void Simulate();
+
+	//Mission Failure: Random Faluire of a mission because of a rover malfunction
+	void MissionFailure();
+
 	// Getters For UI 
 	Queue<Mission*> GetWaitingMissions(MissionType mType);
 	PriorityQueue<Mission*> GetInExecutionMissions();
