@@ -426,6 +426,8 @@ void MarsStation::CheckUpAutoP()
 
 void MarsStation::Simulate()
 {
+	InOut->InitialDisplayMessage();
+
 	while (
 		WaitingEmergencyMissionCount ||
 		WaitingMountainousMissionCount || 
@@ -439,9 +441,11 @@ void MarsStation::Simulate()
 		MoveInExecutiontoComplete();
 		CheckUpAutoP();
 		AssignMissions();
-		InOut->Print(this);
+		InOut->PrintCurrentDay(this);
 		IncreaseDay();
 	}
+
+	InOut->FinalDisplayMessage(this);
 }
 
 Queue<Mission*> MarsStation::GetWaitingMissions(MissionType mType)
