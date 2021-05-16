@@ -88,6 +88,9 @@ public:
 	// Move rovers in check up to be available to assign a mission 
 	void MoveCheckUpToAvail();
 
+	//Move rovers to checkUp after either a specific number of missions or if the mission failed
+	void MoveToCheckUp(Rover* R);
+
 	// Remove the link between the mission and the rover
 	// Check if this rover needs to have a checkup or not 
 	void DismissMissions(Mission* M);

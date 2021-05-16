@@ -339,6 +339,22 @@ void MarsStation::MoveCheckUpToAvail()
 	}
 }
 
+//Move rovers to checkUp after either a specific number of missions or if the mission failed
+void MarsStation::MoveToCheckUp(Rover* R)
+{
+	R->setStatus(RoverStatus::InCheckUp);
+	R->setAvailableAt(Day + R->getCheckUpDuration());
+	//detemine the type of the rover and put it in the appropiate queue
+	switch (R->getType())
+	{
+	case RoverType::Emergency:EmergencyRoversCheckUp.enqueue(R); break;
+	case RoverType::Mountainous:MountinousRoverCheckUp.enqueue(R); break;
+	case RoverType::Polar:PolarRoversCheckUp.enqueue(R); break;
+	default:break;
+	}
+}
+
+
 // Remove the link between the mission and the rover
 // Check if this rover needs to have a checkup or not 
 void MarsStation::DismissMissions(Mission* M)
@@ -351,15 +367,7 @@ void MarsStation::DismissMissions(Mission* M)
 	//check if this rover needs to have a check up or not
 	if (MissionsBeforeCheckup <= ReturnRover->getCompletedMissions())
 	{
-		ReturnRover->setStatus(RoverStatus::InCheckUp);
-		ReturnRover->setAvailableAt(Day + ReturnRover->getCheckUpDuration());
-		//detemine the type of the rover and put it in the appropiate queue
-		switch (ReturnRover->getType())
-		{
-		case RoverType::Emergency:EmergencyRoversCheckUp.enqueue(ReturnRover); break;
-		case RoverType::Mountainous:MountinousRoverCheckUp.enqueue(ReturnRover); break;
-		case RoverType::Polar:PolarRoversCheckUp.enqueue(ReturnRover); break;
-		}
+		MoveToCheckUp(ReturnRover);
 	}
 	//the rover do not need to have a check up
 	else
@@ -371,6 +379,7 @@ void MarsStation::DismissMissions(Mission* M)
 		case RoverType::Emergency:EmergencyRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
 		case RoverType::Mountainous:MountainousRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
 		case RoverType::Polar:PolarRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
+		default:break;
 		}
 	}
 }
@@ -473,16 +482,7 @@ void MarsStation::MissionFailure()
 		{
 			//Remove the Rover then move it to checkup
 			tempRover = tempMission->GetRover();
-			tempRover->setAvailableAt(Day + tempRover->getCheckUpDuration());
-			tempRover->setStatus(RoverStatus::InCheckUp);
-			switch (tempRover->getType())
-			{
-			case RoverType::Emergency: EmergencyRoversCheckUp.enqueue(tempRover); break;
-			case RoverType::Mountainous: MountinousRoverCheckUp.enqueue(tempRover); break;
-			case RoverType::Polar: PolarRoversCheckUp.enqueue(tempRover); break;
-			default:
-				break;
-			}
+			MoveToCheckUp(tempRover);
 			//Return the mission to waiting list to be assigned later
 			tempMission->SetMissionStatus(MissionStatus::Waiting);
 			tempMission->AssignRover(nullptr);
