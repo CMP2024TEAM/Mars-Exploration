@@ -101,6 +101,7 @@ void MarsStation::AssignMissions()
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cEmergencyRovers--;
+			cEmergencyMissions--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
 			cEmergencyMissions--;
@@ -114,6 +115,7 @@ void MarsStation::AssignMissions()
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cMountainousRovers--;
+			cEmergencyMissions--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
 			cEmergencyMissions--;
@@ -127,6 +129,7 @@ void MarsStation::AssignMissions()
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
 			cPolarRovers--;
+			cEmergencyMissions--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
 			cEmergencyMissions--;
@@ -150,6 +153,7 @@ void MarsStation::AssignMissions()
 			Pol->SetMissionStatus(MissionStatus::InExecution);
 			Pol->SetWaitingDays(Day - Pol->GetFormulationDay());
 			cPolarRovers--;
+			cPolarMissions--;
 			cInExecution++;
 			WaitingPolarMissionCount--;
 			cPolarMissions--;
@@ -173,6 +177,7 @@ void MarsStation::AssignMissions()
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 			cMountainousRovers--;
+			cMountainousMissions--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
 			cMountainousMissions--;
@@ -187,6 +192,7 @@ void MarsStation::AssignMissions()
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
 			cEmergencyRovers--;
+			cMountainousMissions--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
 			cMountainousMissions--;
