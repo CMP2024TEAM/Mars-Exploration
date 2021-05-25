@@ -352,7 +352,7 @@ void MarsStation::MoveCheckUpToAvail()
 			Mflag = false;
 		}
 
-		if (Prover && Prover->getAvailableAt() < Day)
+		if (Prover && Prover->getAvailableAt() > Day)
 		{
 			Pflag = false;
 		}
