@@ -20,6 +20,7 @@ public:
 	int getAvailableAt() const;
 	void setStatus(RoverStatus);
 	RoverStatus getStatus() const;
+	void ResetCompletedMissions();
 private:
 	int Id;
 	RoverType Type;

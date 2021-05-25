@@ -1,8 +1,8 @@
 #include "Mission.h"
 
-int Mission::ID=0;
+int Mission::ID = 0;
 
-Mission::Mission(int FD,int TL,int S,int MD,MissionType T)
+Mission::Mission(int FD, int TL, int S, int MD, MissionType T)
 {
 	SetFormulationDay(FD);
 	SetTargetLocation(TL);
@@ -32,7 +32,7 @@ int Mission::GetTargetLocation()		const
 
 void Mission::SetTargetLocation(int TL)
 {
-	TargetLocation=TL>0?TL:1;
+	TargetLocation = TL > 0 ? TL : 1;
 }
 
 int Mission::GetSignificance()		const
@@ -75,7 +75,7 @@ int Mission::Get_ED()		const
 	if (AssignedRover == nullptr)
 		return 0;
 	else
-		return 2 * ((TargetLocation / AssignedRover->getSpeed())/24) + MissionDuration;
+		return 2 * ((TargetLocation / AssignedRover->getSpeed()) / 24) + MissionDuration;
 }
 
 void Mission::AssignRover(Rover* R)
@@ -100,7 +100,7 @@ int	Mission::GetCD()		const
 
 void Mission::SetMissionStatus(MissionStatus status)
 {
-	Status=status;
+	Status = status;
 }
 
 MissionStatus Mission::GetMissionStatus()		const
@@ -110,7 +110,7 @@ MissionStatus Mission::GetMissionStatus()		const
 
 void Mission::SetMissionType(MissionType T)
 {
-	Type=T;
+	Type = T;
 }
 
 MissionType Mission::GetMissionType()		const
@@ -125,6 +125,15 @@ void Mission::SetED()
 int Mission::GetED() const
 {
 	return ED;
+}
+int Mission::GetPriority() const
+{
+	if (Type != MissionType::Emergency)
+		return 0;
+	else
+	{
+		return(FormulationDay * -1 + Significance * 5 + int(TargetLocation * -0.01) + MissionDuration * -2);
+	}
 }
 Mission::~Mission(void)
 {

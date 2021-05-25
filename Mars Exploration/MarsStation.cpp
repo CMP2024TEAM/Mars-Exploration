@@ -211,7 +211,7 @@ void MarsStation::AddMission(Mission* mission)
 	switch (mission->GetMissionType())
 	{
 	case MissionType::Emergency:
-		WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, mission->GetSignificance()));
+		WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, mission->GetPriority()));
 		WaitingEmergencyMissionCount++;
 		cEmergencyMissions++;
 		break;
@@ -391,6 +391,7 @@ void MarsStation::MoveToCheckUp(Rover* R)
 			break;
 	}
 	cInCheckUp++;
+	R->ResetCompletedMissions();
 }
 
 
@@ -474,7 +475,7 @@ void MarsStation::CheckUpAutoP()
 		{
 			WaitingMountainousMissions.dequeue(M);
 			M->SetMissionType(MissionType::Emergency);
-			WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(M, M->GetSignificance()));
+			WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(M, M->GetPriority()));
 			cAutop++;	//used to calculate the percentage of automatically-promoted missions (relative to the total number of mountainous missions)
 			WaitingEmergencyMissionCount++;
 			WaitingMountainousMissionCount--;
@@ -493,13 +494,17 @@ void MarsStation::CheckUpAutoP()
 void MarsStation::Simulate()
 {
 	InOut->InitialDisplayMessage();
+	
 
 	while (
-		WaitingEmergencyMissionCount ||
-		WaitingMountainousMissionCount ||
-		WaitingPolarMissionCount ||
+		!WaitingEmergencyMissions.isEmpty()||
+		!WaitingMountainousMissions.isEmpty()||
+		!WaitingPolarMissions.isEmpty() ||
 		!EventList.isEmpty() ||
-		!InExecutionMissions.isEmpty()
+		!InExecutionMissions.isEmpty()||
+		!MountinousRoverCheckUp.isEmpty()||
+		!EmergencyRoversCheckUp.isEmpty()||
+		!PolarRoversCheckUp.isEmpty()
 		)
 	{
 		ExecuteEvent();

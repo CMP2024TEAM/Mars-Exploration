@@ -80,3 +80,8 @@ RoverStatus Rover::getStatus() const
 {
 	return Status;
 }
+
+void Rover::ResetCompletedMissions()
+{
+	CompletedMissions = 0;
+}

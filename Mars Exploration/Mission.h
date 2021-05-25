@@ -41,6 +41,7 @@ public:
 	MissionType GetMissionType()		const;
 	void SetED();
 	int GetED() const;
+	int GetPriority()const;
 	~Mission(void);
 };
 
