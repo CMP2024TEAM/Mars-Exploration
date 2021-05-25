@@ -219,7 +219,19 @@ inline void UI::WaitForUserInput()
 
 inline void UI::PrintStatistics(MarsStation* Station)
 {
-    //TODO: Getters for stats from mars station
+    /*
+    OFile << "Missions: " << GetCompletedMissionsCount() << " [M: " << Station->GetMountainouMissionCount()
+        << ", P: " << Station->GetPolarMissionCount() << ", E: " << Station->GetEmergencyMissionCount() << '\n';
+    
+    int R_MCount = Station->GetMountainouRoverCount();
+    int R_PCount = Station->GetPolarRoverCount();
+    int R_ECount = Station->GetEmergencyRoverCount();
+    OFile << "Rovers: " << R_MCount + R_PCount + R_ECount << " [M: " << R_MCount << ", P: " << R_PCount << ", E: " << R_ECount << '\n';
+
+    OFile << "Avg Wait: " << Station->GetAvgWait() << ", Avg Exec: " << Station->GetAvgExec() << '\n';
+
+    OFile << "Auto-Promoted: " << Station->GetAutoPPercent() << "%";
+    */
 }
 
 
@@ -237,6 +249,7 @@ UI::UI(OutputType OutputT) :
 {
     IFile.open("input.txt");
     OFile.open("output.txt");
+    std::cin.ignore();
 }
 
 UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
@@ -249,6 +262,7 @@ UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
 {
     IFile.open(IFileName + ".txt");
     OFile.open(OFileName + ".txt");
+    std::cin.ignore();
 }
 
 void UI::ReadAll(MarsStation* Station)
