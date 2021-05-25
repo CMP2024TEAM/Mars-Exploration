@@ -9,6 +9,8 @@ MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cEmergencyMissions(0), cM
 	WaitingEmergencyMissionCount = 0;
 	WaitingMountainousMissionCount = 0;
 	WaitingPolarMissionCount = 0;
+	cInCheckUp = 0;			
+	cCompletedMissions = 0;
 }
 
 void MarsStation::CreateRover(RoverType type, int speed)
@@ -95,6 +97,7 @@ void MarsStation::AssignMissions()
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
+			cEmergencyRovers--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
 		}
@@ -106,6 +109,7 @@ void MarsStation::AssignMissions()
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
+			cMountainousRovers--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
 		}
@@ -117,6 +121,7 @@ void MarsStation::AssignMissions()
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
 			Emergent->SetMissionStatus(MissionStatus::InExecution);
 			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
+			cPolarRovers--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
 		}
@@ -138,6 +143,7 @@ void MarsStation::AssignMissions()
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Pol, -1 * Pol->GetCD()));
 			Pol->SetMissionStatus(MissionStatus::InExecution);
 			Pol->SetWaitingDays(Day - Pol->GetFormulationDay());
+			cPolarRovers--;
 			cInExecution++;
 			WaitingPolarMissionCount--;
 		}
@@ -159,6 +165,7 @@ void MarsStation::AssignMissions()
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, -1 * Mount->GetCD()));
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
+			cMountainousRovers--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
 
@@ -171,6 +178,7 @@ void MarsStation::AssignMissions()
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, -1 * Mount->GetCD()));
 			Mount->SetMissionStatus(MissionStatus::InExecution);
 			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
+			cEmergencyRovers--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
 		}
@@ -290,43 +298,56 @@ void MarsStation::MoveCheckUpToAvail()
 		EmergencyRoversCheckUp.peekFront(Erover);
 		MountinousRoverCheckUp.peekFront(Mrover);
 		PolarRoversCheckUp.peekFront(Prover);
-
 		//condition to exit the loop
 		//exit if there is no rover in check up
 		if (!Erover && !Mrover && !Prover)
+		{
 			break;
-
+		}
 		//determine if there is a queue that its rover's available day < current Day
 		if (Eflag && Erover && Erover->getAvailableAt() < Day)
+		{
 			Eflag = false;
+		}
 		else if (Erover)
 		{
 			EmergencyRoversCheckUp.dequeue(Erover);
 			EmergencyRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+			cInCheckUp--;
+			cEmergencyRovers++;
 		}
-		else
+		else 
+		{
 			Eflag = false;
-
+		}
 		if (Mflag && Mrover && Mrover->getAvailableAt() < Day)
 			Mflag = false;
 		else if (Mrover)
 		{
 			MountinousRoverCheckUp.dequeue(Erover);
 			MountainousRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+			cInCheckUp--;
+			cMountainousRovers++;
 		}
 		else
+		{
 			Mflag = false;
-
+		}
 		if (Pflag && Prover && Prover->getAvailableAt() < Day)
+		{
 			Pflag = false;
+		}
 		else if (Prover)
 		{
 			PolarRoversCheckUp.dequeue(Erover);
 			PolarRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+			cInCheckUp--;
+			cPolarRovers++;
 		}
 		else
+		{
 			Pflag = false;
-
+		}
 		//Todo Check this statements 
 		/*if (Eflag && !Erover || Erover->getAvailableAt() < Day)
 			Eflag = false;
@@ -347,10 +368,17 @@ void MarsStation::MoveToCheckUp(Rover* R)
 	//detemine the type of the rover and put it in the appropiate queue
 	switch (R->getType())
 	{
-	case RoverType::Emergency:EmergencyRoversCheckUp.enqueue(R); break;
-	case RoverType::Mountainous:MountinousRoverCheckUp.enqueue(R); break;
-	case RoverType::Polar:PolarRoversCheckUp.enqueue(R); break;
-	default:break;
+		case RoverType::Emergency :
+			EmergencyRoversCheckUp.enqueue(R);
+			break;
+		case RoverType::Mountainous:
+			MountinousRoverCheckUp.enqueue(R);
+			break;
+		case RoverType::Polar:
+			PolarRoversCheckUp.enqueue(R);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -368,6 +396,7 @@ void MarsStation::DismissMissions(Mission* M)
 	if (MissionsBeforeCheckup <= ReturnRover->getCompletedMissions())
 	{
 		MoveToCheckUp(ReturnRover);
+		cInCheckUp++;
 	}
 	//the rover do not need to have a check up
 	else
@@ -376,16 +405,25 @@ void MarsStation::DismissMissions(Mission* M)
 		//detemine the type of the rover and put it in the appropiate queue
 		switch (ReturnRover->getType())
 		{
-		case RoverType::Emergency:EmergencyRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
-		case RoverType::Mountainous:MountainousRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
-		case RoverType::Polar:PolarRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed())); break;
-		default:break;
+			case RoverType::Emergency:
+				EmergencyRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
+				cEmergencyRovers++;
+				break;
+			case RoverType::Mountainous:
+				MountainousRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
+				cMountainousRovers++;
+				break;
+			case RoverType::Polar:
+				PolarRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
+				cPolarRovers++;
+				break;
+			default:
+				break;
 		}
 	}
 }
 
 //remove the mission from in-exectution queue then add it to the complete missions after doing its fulfill mission requirements
-
 void MarsStation::MoveInExecutiontoComplete()
 {
 	Mission* M;
@@ -400,11 +438,14 @@ void MarsStation::MoveInExecutiontoComplete()
 			cInExecution--;
 			M->SetMissionStatus(MissionStatus::Completed);
 			CompletedMissions.push(M);
+			cCompletedMissions++;
 			//remove the link between the mission and the rover. Put the rover in the appropiate list
 			DismissMissions(M);
 		}
 		else
+		{
 			break;
+		}
 	}
 }
 
@@ -427,7 +468,9 @@ void MarsStation::CheckUpAutoP()
 			cAutop++;	//used to calculate the percentage of automatically-promoted missions (relative to the total number of mountainous missions)
 		}
 		else
+		{
 			break;
+		}
 	}
 }
 
@@ -560,6 +603,32 @@ Stack<Mission*> MarsStation::GetCompletedMissions()
 {
 	return CompletedMissions;
 }
+
+int MarsStation::GetWaitingMissionsCount()
+{
+	return cEmergencyMissions + cMountainousMissions + cPolarMissions;
+}
+
+int MarsStation::GetInExecitionMissionsCount()
+{
+	return cInExecution;
+}
+
+int MarsStation::GetAvailableRoversCount()
+{
+	return cEmergencyRovers + cMountainousRovers + cPolarRovers;
+}
+
+int MarsStation::GetInCheckupRoversCount()
+{
+	return cInCheckUp;
+}
+
+int MarsStation::GetCompletedMissionsCount()
+{
+	return cCompletedMissions;
+}
+
 
 // Destructor
 MarsStation::~MarsStation()
