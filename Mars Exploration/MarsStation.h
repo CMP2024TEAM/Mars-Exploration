@@ -39,6 +39,7 @@ private:
 	int WaitingPolarMissionCount;
 	// For Stats
 	int cAutop;
+	int cInCheckUp;
 	int cEmergencyMissions;
 	int cMountainousMissions;
 	int cPolarMissions;
@@ -47,6 +48,7 @@ private:
 	int cEmergencyRovers;
 	int cPolarRovers;
 	int cMountainousRovers;
+	int cCompletedMissions;
 	int Day;
 public:
 	// Constructor
@@ -114,7 +116,11 @@ public:
 	PriorityQueue<Rover*> GetAvailableRovers(RoverType rType);
 	Queue<Rover*> GetInCheckupRovers(RoverType rType);
 	Stack<Mission*> GetCompletedMissions();
-
+	int GetWaitingMissionsCount();
+	int GetInExecitionMissionsCount();
+	int GetAvailableRoversCount();
+	int GetInCheckupRoversCount();
+	int GetCompletedMissionsCount();
 	// Create Queue Of elements Stored In Priority Queue
 	template <class T>
 	Queue<T> GetPriorityQueueAsQueue(PriorityQueue<T> missions);

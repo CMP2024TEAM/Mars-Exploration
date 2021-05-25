@@ -102,14 +102,12 @@ inline void UI::ReadEvents(MarsStation* Station)
 
 inline void UI::FillBuffersFromStation(MarsStation* Station)
 {
-    //TODO: Getters for counts from mars station
-    /*
+    // Getters for counts from mars station
     WaitingCount = Station->GetWaitingMissionsCount();
     InExecutionCount = Station->GetInExecitionMissionsCount();
     AvailableCount = Station->GetAvailableRoversCount();
     CheckUpCount = Station->GetInCheckupRoversCount();
     CompletedCount = Station->GetCompletedMissionsCount();
-    */
     Mission* MissionPtr;
     Rover* RoverPtr;
 
