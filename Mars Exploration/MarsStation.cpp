@@ -103,6 +103,7 @@ void MarsStation::AssignMissions()
 			cEmergencyRovers--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
+			cEmergencyMissions--;
 		}
 		else if (!MountainousRovers.isEmpty())
 		{
@@ -115,6 +116,7 @@ void MarsStation::AssignMissions()
 			cMountainousRovers--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
+			cEmergencyMissions--;
 		}
 		else if (!PolarRovers.isEmpty())
 		{
@@ -127,6 +129,7 @@ void MarsStation::AssignMissions()
 			cPolarRovers--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
+			cEmergencyMissions--;
 		}
 		else
 		{
@@ -149,6 +152,7 @@ void MarsStation::AssignMissions()
 			cPolarRovers--;
 			cInExecution++;
 			WaitingPolarMissionCount--;
+			cPolarMissions--;
 		}
 		else
 		{
@@ -171,6 +175,7 @@ void MarsStation::AssignMissions()
 			cMountainousRovers--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
+			cMountainousMissions--;
 
 		}
 		else if (!EmergencyRovers.isEmpty())
@@ -184,6 +189,7 @@ void MarsStation::AssignMissions()
 			cEmergencyRovers--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
+			cMountainousMissions--;
 		}
 		else
 		{
@@ -383,6 +389,7 @@ void MarsStation::MoveToCheckUp(Rover* R)
 		default:
 			break;
 	}
+	cInCheckUp++;
 }
 
 
@@ -399,7 +406,6 @@ void MarsStation::DismissMissions(Mission* M)
 	if (MissionsBeforeCheckup <= ReturnRover->getCompletedMissions())
 	{
 		MoveToCheckUp(ReturnRover);
-		cInCheckUp++;
 	}
 	//the rover do not need to have a check up
 	else
@@ -469,6 +475,10 @@ void MarsStation::CheckUpAutoP()
 			M->SetMissionType(MissionType::Emergency);
 			WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(M, M->GetSignificance()));
 			cAutop++;	//used to calculate the percentage of automatically-promoted missions (relative to the total number of mountainous missions)
+			WaitingEmergencyMissionCount++;
+			WaitingMountainousMissionCount--;
+			cEmergencyMissions++;
+			cMountainousMissions--;
 		}
 		else
 		{
@@ -516,12 +526,12 @@ void MarsStation::MissionFailure()
 	Mission* tempMission;
 	Rover* tempRover;
 	double Percentage;
-	//if rand less than 3% then the mission fails
+	//if rand less than 1% then the mission fails
 	while (!InExecutionMissions.isEmpty())
 	{
 		InExecutionMissions.dequeue(tempMission);
 		Percentage = (double(rand()) / RAND_MAX) * 100;
-		if (Percentage <= 3)
+		if (Percentage <= 0.25)
 		{
 			//Remove the Rover then move it to checkup
 			tempRover = tempMission->GetRover();
