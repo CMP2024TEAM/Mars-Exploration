@@ -70,7 +70,7 @@ void Mission::SetWaitingDays(int WD)
 	WaitingDays = WD > 0 ? WD : 1;
 }
 
-int Mission::GetED()		const
+int Mission::Get_ED()		const
 {
 	if (AssignedRover == nullptr)
 		return 0;
@@ -95,7 +95,7 @@ Rover* Mission::GetRover()		const
 
 int	Mission::GetCD()		const
 {
-	return FormulationDay + GetED() + WaitingDays;
+	return FormulationDay + ED + WaitingDays;
 }
 
 void Mission::SetMissionStatus(MissionStatus status)
@@ -118,6 +118,14 @@ MissionType Mission::GetMissionType()		const
 	return Type;
 }
 
+void Mission::SetED()
+{
+	ED = Get_ED();
+}
+int Mission::GetED() const
+{
+	return ED;
+}
 Mission::~Mission(void)
 {
 }

@@ -14,7 +14,9 @@ private:
 	MissionType Type;
 	MissionStatus Status;
 	Rover* AssignedRover;
-	
+	int ED;
+	int Get_ED()		const;			//execution days=2*(Target location/Rover Speed)+Mission Duration
+
 public:
 
 	Mission(int FD,int TL,int S,int MD,MissionType T);
@@ -29,7 +31,6 @@ public:
 	int GetID()		const;
 	int GetWaitingDays()		const;
 	void SetWaitingDays(int WD);
-	int GetED()		const;			//execution days=2*(Target location/Rover Speed)+Mission Duration
 	int GetCD()		const;			//Compeleting days=FD+WD+ED
 	void AssignRover(Rover* R);
 	Rover* GetRover()		const;
@@ -38,6 +39,8 @@ public:
 	MissionStatus GetMissionStatus ()		const;
 	void SetMissionType(MissionType type);
 	MissionType GetMissionType()		const;
+	void SetED();
+	int GetED() const;
 	~Mission(void);
 };
 
