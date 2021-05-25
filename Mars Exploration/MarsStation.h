@@ -49,6 +49,11 @@ private:
 	int cPolarRovers;
 	int cMountainousRovers;
 	int cCompletedMissions;
+	int TotalEmergencyMissions;
+	int TotalMountainousMissions;
+	int TotalPolarMissions;
+	int TotalExcuationTime;
+	int TotalWaitingTime;
 	int Day;
 public:
 	// Constructor
@@ -107,6 +112,8 @@ public:
 	//Simulate: This should iterate all neccessary function 
 	void Simulate();
 
+	void DeleteCompletedMissions();
+
 	//Mission Failure: Random Faluire of a mission because of a rover malfunction
 	void MissionFailure();
 
@@ -124,7 +131,13 @@ public:
 	// Create Queue Of elements Stored In Priority Queue
 	template <class T>
 	Queue<T> GetPriorityQueueAsQueue(PriorityQueue<T> missions);
-	
+	int GetMountainouRoverCount();
+	int GetPolarRoverCount();
+	int GetEmergencyRoverCount();
+	float GetAutoPPercent();
+	int GetMountainouMissionCount();
+	int GetEmergencyMissionCount();
+	int GetPolarMissionCount();
 	// Destructor
 	~MarsStation();
 };

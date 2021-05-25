@@ -14,6 +14,14 @@ MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cEmergencyMissions(0), cM
 	srand(10);
 	cInCheckUp = 0;			
 	cCompletedMissions = 0;
+	TotalEmergencyMissions = 0;
+	TotalMountainousMissions = 0;
+	TotalPolarMissions = 0;
+	TotalExcuationTime = 0;
+	TotalWaitingTime = 0;
+	// To Remove The Warning Messages Only
+	AutoP = 0;
+	MissionsBeforeCheckup = 0;
 }
 
 void MarsStation::CreateRover(RoverType type, int speed)
@@ -37,7 +45,6 @@ void MarsStation::CreateRover(RoverType type, int speed)
 }
 
 // SetCheckupDuration for each rovar tyoe
-
 void MarsStation::SetCheckupDuration(RoverType type, int Duration)
 {
 	if (type == RoverType::Emergency)
@@ -49,7 +56,6 @@ void MarsStation::SetCheckupDuration(RoverType type, int Duration)
 }
 
 // Set autopromosion
-
 void MarsStation::SetAutoP(int apDuration)
 {
 	AutoP = (apDuration > 0) ? apDuration : 0;
@@ -61,7 +67,6 @@ void MarsStation::SetMissionsBeforeCheckup(int cNum)
 }
 
 // Create Events
-
 void MarsStation::CreateFormulationEvent(MissionType mType, int ED, int ID, int TLOC, int MDUR, int SIG)
 {
 	Event* E = new FormulationEvent(mType, ED, ID, TLOC, MDUR, SIG);
@@ -214,15 +219,18 @@ void MarsStation::AddMission(Mission* mission)
 		WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, mission->GetPriority()));
 		WaitingEmergencyMissionCount++;
 		cEmergencyMissions++;
+		TotalEmergencyMissions++;
 		break;
 	case MissionType::Polar:
 		WaitingPolarMissions.enqueue(mission);
 		WaitingPolarMissionCount++;
+		TotalPolarMissions++;
 		cPolarMissions++;
 		break;
 	case MissionType::Mountainous:
 		WaitingMountainousMissions.enqueue(mission);
 		WaitingMountainousMissionCount++;
+		TotalMountainousMissions++;
 		cMountainousMissions++;
 		break;
 	default:
@@ -261,6 +269,7 @@ bool MarsStation::GetMountainouMission(Mission*& mission, int ID)
 	// If Found Decrease Count And Return True 
 	WaitingMountainousMissionCount--;
 	cMountainousMissions--;
+	TotalMountainousMissions--;
 	return true;
 }
 
@@ -394,9 +403,7 @@ void MarsStation::MoveToCheckUp(Rover* R)
 	R->ResetCompletedMissions();
 }
 
-
-// Remove the link between the mission and the rover
-// Check if this rover needs to have a checkup or not 
+// Remove the link between the mission and the rover then check if this rover needs to have a checkup or not 
 void MarsStation::DismissMissions(Mission* M)
 {
 	Rover* ReturnRover;
@@ -462,7 +469,6 @@ void MarsStation::MoveInExecutiontoComplete()
 
 // Check if there is any mountainous mission that has been waiting more than the auto promotion duration
 // If there is, remove it from the queue of the mountainous then enqeue it in the emergency waiting missions
-
 void MarsStation::CheckUpAutoP()
 {
 	Mission* M;
@@ -481,6 +487,8 @@ void MarsStation::CheckUpAutoP()
 			WaitingMountainousMissionCount--;
 			cEmergencyMissions++;
 			cMountainousMissions--;
+			TotalMountainousMissions--;
+			TotalEmergencyMissions++;
 		}
 		else
 		{
@@ -488,8 +496,6 @@ void MarsStation::CheckUpAutoP()
 		}
 	}
 }
-
-// Getters For UI 
 
 void MarsStation::Simulate()
 {
@@ -515,15 +521,20 @@ void MarsStation::Simulate()
 		AssignMissions();
 		InOut->PrintCurrentDay(this);
 		IncreaseDay();
-		while (!CompletedMissions.isEmpty())
-		{
-			Mission* tempMission;
-			CompletedMissions.pop(tempMission);
-			delete tempMission;
-		}
+		DeleteCompletedMissions();
 	}
 
 	InOut->FinalDisplayMessage(this);
+}
+
+void MarsStation::DeleteCompletedMissions()
+{
+	while (!CompletedMissions.isEmpty())
+	{
+		Mission* tempMission;
+		CompletedMissions.pop(tempMission);
+		delete tempMission;
+	}
 }
 
 void MarsStation::MissionFailure()
@@ -546,7 +557,22 @@ void MarsStation::MissionFailure()
 			tempMission->SetMissionStatus(MissionStatus::Waiting);
 			tempMission->AssignRover(nullptr);
 			AddMission(tempMission);
+			// Update Counts and STATs
 			cInExecution--;
+			switch (tempMission->GetMissionType())
+			{
+			case MissionType::Emergency:
+				TotalEmergencyMissions--;
+				break;
+			case MissionType::Mountainous:
+				TotalMountainousMissions--;
+				break;
+			case MissionType::Polar:
+				TotalPolarMissions--;
+				break;
+			default:
+				break;
+			}
 			// CAUTION:this should be in UI NOT HERE
 			std::cout << "\n######################################\n";
 			std::cout << "#Mission Failed We'l Get'em Next Time#\n";
@@ -646,6 +672,40 @@ int MarsStation::GetCompletedMissionsCount()
 	return cCompletedMissions;
 }
 
+int MarsStation::GetMountainouRoverCount()
+{
+	return cMountainousRovers;
+}
+
+int MarsStation::GetPolarRoverCount()
+{
+	return cPolarRovers;
+}
+
+int MarsStation::GetEmergencyRoverCount()
+{
+	return cEmergencyRovers;
+}
+
+float MarsStation::GetAutoPPercent()
+{
+	return (float) cAutop * 100 / cCompletedMissions ;
+}
+
+int MarsStation::GetMountainouMissionCount()
+{
+	return TotalMountainousMissions;
+}
+
+int MarsStation::GetEmergencyMissionCount()
+{
+	return TotalEmergencyMissions;
+}
+
+int MarsStation::GetPolarMissionCount()
+{
+	return TotalPolarMissions;
+}
 
 // Destructor
 MarsStation::~MarsStation()

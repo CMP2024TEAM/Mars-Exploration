@@ -219,19 +219,20 @@ inline void UI::WaitForUserInput()
 
 inline void UI::PrintStatistics(MarsStation* Station)
 {
-    /*
-    OFile << "Missions: " << GetCompletedMissionsCount() << " [M: " << Station->GetMountainouMissionCount()
-        << ", P: " << Station->GetPolarMissionCount() << ", E: " << Station->GetEmergencyMissionCount() << '\n';
+    
+    OFile << "Missions: " << Station->GetCompletedMissionsCount() << " [M: " << Station->GetMountainouMissionCount()
+        << ", P: " << Station->GetPolarMissionCount() << ", E: " << Station->GetEmergencyMissionCount() << "]"<< '\n';
     
     int R_MCount = Station->GetMountainouRoverCount();
     int R_PCount = Station->GetPolarRoverCount();
     int R_ECount = Station->GetEmergencyRoverCount();
-    OFile << "Rovers: " << R_MCount + R_PCount + R_ECount << " [M: " << R_MCount << ", P: " << R_PCount << ", E: " << R_ECount << '\n';
-
+    
+    OFile << "Rovers: " << R_MCount + R_PCount + R_ECount << " [M: " << R_MCount << ", P: " << R_PCount << ", E: " << R_ECount << "]" << '\n';
+    /*
     OFile << "Avg Wait: " << Station->GetAvgWait() << ", Avg Exec: " << Station->GetAvgExec() << '\n';
-
-    OFile << "Auto-Promoted: " << Station->GetAutoPPercent() << "%";
     */
+    OFile << "Auto-Promoted: " << Station->GetAutoPPercent() << "%";
+   
 }
 
 
