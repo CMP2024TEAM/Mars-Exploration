@@ -320,11 +320,11 @@ void MarsStation::MoveCheckUpToAvail()
 			break;
 		}
 		//determine if there is a queue that its rover's available day < current Day
-		if (Eflag && Erover && Erover->getAvailableAt() < Day)
+		if (Erover && Erover->getAvailableAt() > Day)
 		{
 			Eflag = false;
 		}
-		else if (Erover)
+		else if (Eflag && Erover)
 		{
 			EmergencyRoversCheckUp.dequeue(Erover);
 			EmergencyRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
@@ -335,9 +335,12 @@ void MarsStation::MoveCheckUpToAvail()
 		{
 			Eflag = false;
 		}
-		if (Mflag && Mrover && Mrover->getAvailableAt() < Day)
+
+		if (Mrover && Mrover->getAvailableAt() > Day)
+		{
 			Mflag = false;
-		else if (Mrover)
+		}
+		else if (Mflag && Mrover)
 		{
 			MountinousRoverCheckUp.dequeue(Erover);
 			MountainousRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
@@ -348,11 +351,12 @@ void MarsStation::MoveCheckUpToAvail()
 		{
 			Mflag = false;
 		}
-		if (Pflag && Prover && Prover->getAvailableAt() < Day)
+
+		if (Prover && Prover->getAvailableAt() < Day)
 		{
 			Pflag = false;
 		}
-		else if (Prover)
+		else if (Pflag && Prover)
 		{
 			PolarRoversCheckUp.dequeue(Erover);
 			PolarRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
@@ -363,15 +367,6 @@ void MarsStation::MoveCheckUpToAvail()
 		{
 			Pflag = false;
 		}
-		//Todo Check this statements 
-		/*if (Eflag && !Erover || Erover->getAvailableAt() < Day)
-			Eflag = false;
-		else if (Eflag)
-		{
-			EmergencyRoversCheckUp.dequeue(Erover);
-			EmergencyRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
-		}*/
-
 	}
 }
 
