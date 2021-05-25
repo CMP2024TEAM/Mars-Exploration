@@ -3,25 +3,28 @@
 // Constructor
 MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cEmergencyMissions(0), cMountainousMissions(0), cPolarMissions(0), cEmergencyRovers(0), cPolarRovers(0), cMountainousRovers(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
 {
-	//this should be allocated outside and then return its pointer
-	InOut = tInOut;
-	InOut->ReadAll(this);
-	WaitingEmergencyMissionCount = 0;
-	WaitingMountainousMissionCount = 0;
-	WaitingPolarMissionCount = 0;
 	/* initialize random seed: */
 	//srand(time(NULL));
+	//initail Values
 	srand(10);
-	cInCheckUp = 0;			
+	cInCheckUp = 0;
 	cCompletedMissions = 0;
 	TotalEmergencyMissions = 0;
 	TotalMountainousMissions = 0;
 	TotalPolarMissions = 0;
 	TotalExcuationTime = 0;
 	TotalWaitingTime = 0;
+	WaitingEmergencyMissionCount = 0;
+	WaitingMountainousMissionCount = 0;
+	WaitingPolarMissionCount = 0;
 	// To Remove The Warning Messages Only
 	AutoP = 0;
 	MissionsBeforeCheckup = 0;
+
+	//this should be allocated outside and then return its pointer
+	InOut = tInOut;
+	InOut->ReadAll(this);
+
 }
 
 void MarsStation::CreateRover(RoverType type, int speed)
@@ -340,7 +343,7 @@ void MarsStation::MoveCheckUpToAvail()
 			cInCheckUp--;
 			cEmergencyRovers++;
 		}
-		else 
+		else
 		{
 			Eflag = false;
 		}
@@ -387,17 +390,17 @@ void MarsStation::MoveToCheckUp(Rover* R)
 	//detemine the type of the rover and put it in the appropiate queue
 	switch (R->getType())
 	{
-		case RoverType::Emergency :
-			EmergencyRoversCheckUp.enqueue(R);
-			break;
-		case RoverType::Mountainous:
-			MountinousRoverCheckUp.enqueue(R);
-			break;
-		case RoverType::Polar:
-			PolarRoversCheckUp.enqueue(R);
-			break;
-		default:
-			break;
+	case RoverType::Emergency:
+		EmergencyRoversCheckUp.enqueue(R);
+		break;
+	case RoverType::Mountainous:
+		MountinousRoverCheckUp.enqueue(R);
+		break;
+	case RoverType::Polar:
+		PolarRoversCheckUp.enqueue(R);
+		break;
+	default:
+		break;
 	}
 	cInCheckUp++;
 	R->ResetCompletedMissions();
@@ -423,20 +426,20 @@ void MarsStation::DismissMissions(Mission* M)
 		//detemine the type of the rover and put it in the appropiate queue
 		switch (ReturnRover->getType())
 		{
-			case RoverType::Emergency:
-				EmergencyRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
-				cEmergencyRovers++;
-				break;
-			case RoverType::Mountainous:
-				MountainousRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
-				cMountainousRovers++;
-				break;
-			case RoverType::Polar:
-				PolarRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
-				cPolarRovers++;
-				break;
-			default:
-				break;
+		case RoverType::Emergency:
+			EmergencyRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
+			cEmergencyRovers++;
+			break;
+		case RoverType::Mountainous:
+			MountainousRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
+			cMountainousRovers++;
+			break;
+		case RoverType::Polar:
+			PolarRovers.enqueue(MyPair<Rover*, int>(ReturnRover, ReturnRover->getSpeed()));
+			cPolarRovers++;
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -500,16 +503,16 @@ void MarsStation::CheckUpAutoP()
 void MarsStation::Simulate()
 {
 	InOut->InitialDisplayMessage();
-	
+
 
 	while (
-		!WaitingEmergencyMissions.isEmpty()||
-		!WaitingMountainousMissions.isEmpty()||
+		!WaitingEmergencyMissions.isEmpty() ||
+		!WaitingMountainousMissions.isEmpty() ||
 		!WaitingPolarMissions.isEmpty() ||
 		!EventList.isEmpty() ||
-		!InExecutionMissions.isEmpty()||
-		!MountinousRoverCheckUp.isEmpty()||
-		!EmergencyRoversCheckUp.isEmpty()||
+		!InExecutionMissions.isEmpty() ||
+		!MountinousRoverCheckUp.isEmpty() ||
+		!EmergencyRoversCheckUp.isEmpty() ||
 		!PolarRoversCheckUp.isEmpty()
 		)
 	{
@@ -689,7 +692,7 @@ int MarsStation::GetEmergencyRoverCount()
 
 float MarsStation::GetAutoPPercent()
 {
-	return (float) cAutop * 100 / cCompletedMissions ;
+	return (float)cAutop * 100 / cCompletedMissions;
 }
 
 int MarsStation::GetMountainouMissionCount()
