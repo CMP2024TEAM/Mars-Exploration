@@ -9,6 +9,9 @@ MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cEmergencyMissions(0), cM
 	WaitingEmergencyMissionCount = 0;
 	WaitingMountainousMissionCount = 0;
 	WaitingPolarMissionCount = 0;
+	/* initialize random seed: */
+	//srand(time(NULL));
+	srand(10);
 }
 
 void MarsStation::CreateRover(RoverType type, int speed)
@@ -466,19 +469,16 @@ void MarsStation::Simulate()
 
 void MarsStation::MissionFailure()
 {
-	/* initialize random seed: */
-	srand(time(NULL));
-
 	Queue<Mission*> tempQueue; //  no need or priorety queue
 	Mission* tempMission;
 	Rover* tempRover;
 	double Percentage;
-	//if rand less than 1% then the mission fails
+	//if rand less than 3% then the mission fails
 	while (!InExecutionMissions.isEmpty())
 	{
 		InExecutionMissions.dequeue(tempMission);
-		Percentage = rand() % 100;
-		if (Percentage <= 20)
+		Percentage = (double(rand()) / RAND_MAX) * 100;
+		if (Percentage <= 3)
 		{
 			//Remove the Rover then move it to checkup
 			tempRover = tempMission->GetRover();
@@ -487,9 +487,10 @@ void MarsStation::MissionFailure()
 			tempMission->SetMissionStatus(MissionStatus::Waiting);
 			tempMission->AssignRover(nullptr);
 			AddMission(tempMission);
+			cInExecution--;
 			// CAUTION:this should be in UI NOT HERE
 			std::cout << "\n######################################\n";
-			std::cout << "#Mission Failed We'l Get'em Next Time#\n"; 
+			std::cout << "#Mission Failed We'l Get'em Next Time#\n";
 			std::cout << "######################################\n";
 		}
 		else
