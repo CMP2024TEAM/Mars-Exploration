@@ -238,7 +238,7 @@ void MarsStation::AddMission(Mission* mission)
 	}
 }
 
-// Get Waiting Mountainous Mission With Certain ID (USed In Events Execution)
+// Get Waiting Mountainous Mission With Certain ID (Used In Events Execution)
 bool MarsStation::GetMountainouMission(Mission*& mission, int ID)
 {
 	mission = nullptr;
@@ -457,6 +457,8 @@ void MarsStation::MoveInExecutiontoComplete()
 			M->SetMissionStatus(MissionStatus::Completed);
 			CompletedMissions.push(M);
 			cCompletedMissions++;
+			TotalWaitingTime += M->GetWaitingDays();
+			TotalExcuationTime += M->GetED();
 			//remove the link between the mission and the rover. Put the rover in the appropiate list
 			DismissMissions(M);
 		}
@@ -647,65 +649,76 @@ Stack<Mission*> MarsStation::GetCompletedMissions()
 	return CompletedMissions;
 }
 
-int MarsStation::GetWaitingMissionsCount()
+int MarsStation::GetWaitingMissionsCount()const 
 {
 	return cEmergencyMissions + cMountainousMissions + cPolarMissions;
 }
 
-int MarsStation::GetInExecitionMissionsCount()
+int MarsStation::GetInExecitionMissionsCount()const 
 {
 	return cInExecution;
 }
 
-int MarsStation::GetAvailableRoversCount()
+int MarsStation::GetAvailableRoversCount()const 
 {
 	return cEmergencyRovers + cMountainousRovers + cPolarRovers;
 }
 
-int MarsStation::GetInCheckupRoversCount()
+int MarsStation::GetInCheckupRoversCount() const 
 {
 	return cInCheckUp;
 }
 
-int MarsStation::GetCompletedMissionsCount()
+int MarsStation::GetCompletedMissionsCount() const 
 {
 	return cCompletedMissions;
 }
 
-int MarsStation::GetMountainouRoverCount()
+int MarsStation::GetMountainouRoverCount() const
 {
 	return cMountainousRovers;
 }
 
-int MarsStation::GetPolarRoverCount()
+int MarsStation::GetPolarRoverCount() const 
 {
 	return cPolarRovers;
 }
 
-int MarsStation::GetEmergencyRoverCount()
+int MarsStation::GetEmergencyRoverCount() const 
 {
 	return cEmergencyRovers;
 }
 
-float MarsStation::GetAutoPPercent()
+float MarsStation::GetAutoPPercent()const 
 {
 	return (float) cAutop * 100 / cCompletedMissions ;
 }
 
-int MarsStation::GetMountainouMissionCount()
+int MarsStation::GetMountainouMissionCount() const 
 {
 	return TotalMountainousMissions;
 }
 
-int MarsStation::GetEmergencyMissionCount()
+int MarsStation::GetEmergencyMissionCount() const 
 {
 	return TotalEmergencyMissions;
 }
 
-int MarsStation::GetPolarMissionCount()
+int MarsStation::GetPolarMissionCount()const 
 {
 	return TotalPolarMissions;
 }
+
+float MarsStation::GetAvgWait() const
+{
+	return (float) TotalWaitingTime / cCompletedMissions;
+}
+
+float MarsStation::GetAvgExec() const
+{
+	return (float)TotalExcuationTime /cCompletedMissions;
+}
+
 
 // Destructor
 MarsStation::~MarsStation()

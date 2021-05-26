@@ -123,21 +123,24 @@ public:
 	PriorityQueue<Rover*> GetAvailableRovers(RoverType rType);
 	Queue<Rover*> GetInCheckupRovers(RoverType rType);
 	Stack<Mission*> GetCompletedMissions();
-	int GetWaitingMissionsCount();
-	int GetInExecitionMissionsCount();
-	int GetAvailableRoversCount();
-	int GetInCheckupRoversCount();
-	int GetCompletedMissionsCount();
 	// Create Queue Of elements Stored In Priority Queue
 	template <class T>
 	Queue<T> GetPriorityQueueAsQueue(PriorityQueue<T> missions);
-	int GetMountainouRoverCount();
-	int GetPolarRoverCount();
-	int GetEmergencyRoverCount();
-	float GetAutoPPercent();
-	int GetMountainouMissionCount();
-	int GetEmergencyMissionCount();
-	int GetPolarMissionCount();
+	// Getters For UI 
+	int GetWaitingMissionsCount() const;
+	int GetInExecitionMissionsCount()const;
+	int GetAvailableRoversCount() const;
+	int GetInCheckupRoversCount()const;
+	int GetCompletedMissionsCount()const;
+	int GetMountainouRoverCount() const;
+	int GetPolarRoverCount() const;
+	int GetEmergencyRoverCount() const;
+	float GetAutoPPercent() const;
+	int GetMountainouMissionCount() const;
+	int GetEmergencyMissionCount() const;
+	int GetPolarMissionCount() const;
+	float GetAvgWait() const;
+	float GetAvgExec() const;
 	// Destructor
 	~MarsStation();
 };

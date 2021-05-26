@@ -70,7 +70,7 @@ void Mission::SetWaitingDays(int WD)
 	WaitingDays = WD > 0 ? WD : 1;
 }
 
-int Mission::Get_ED()		const
+int Mission::Get_ED() const
 {
 	if (AssignedRover == nullptr)
 		return 0;
