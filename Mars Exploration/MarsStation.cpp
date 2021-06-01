@@ -578,10 +578,7 @@ void MarsStation::MissionFailure()
 			default:
 				break;
 			}
-			// CAUTION:this should be in UI NOT HERE
-			std::cout << "\n######################################\n";
-			std::cout << "#Mission Failed We'l Get'em Next Time#\n";
-			std::cout << "######################################\n";
+			InOut->LogMissionFailure(tempMission);
 		}
 		else
 		{

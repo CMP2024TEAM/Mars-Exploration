@@ -19,6 +19,7 @@ const char UI::EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
    {'(',')'}
 };
 
+const std::string UI::WarningBreak(BreakLine_Length, '=');
 const std::string UI::LineBreak(BreakLine_Length, '-');
 
 
@@ -142,6 +143,20 @@ inline void UI::FillBuffersFromStation(MarsStation* Station)
 
 inline void UI::FormatBuffersToConsole()
 {
+    //Show failed missions if any failed otherwise don't print anything.
+    if (FailedCount) {
+        std::cout << WarningBreak << '\n';
+        std::cout << "WARNING: " << FailedCount << " Failed Missions: ";
+        for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+            if (!FailedMission_Buf[mType].empty()) {
+                FailedMission_Buf[mType].pop_back(); FailedMission_Buf[mType].pop_back();
+                std::cout << EnclosingChar[mType][0] << FailedMission_Buf[mType] << EnclosingChar[mType][1] << ' ';
+            }
+        }
+
+        std::cout << '\n' << WarningBreak << '\n';
+    }
+    
     std::cout << WaitingCount << " Waiting Misions: ";
     for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
         if (!WaitingMission_Buf[mType].empty()) {
@@ -198,6 +213,7 @@ inline void UI::FormatBuffersToConsole()
 inline void UI::ClearBuffers()
 {
     for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+        FailedMission_Buf[mType].clear();
         WaitingMission_Buf[mType].clear();
         InExecutionMiss_Rov_Buf[mType].clear();
         //Completed missions are not cleared from buffer
@@ -208,6 +224,8 @@ inline void UI::ClearBuffers()
         AvailableRovers_Buf[rType].clear();
         InCheckupRovers_Buf[rType].clear();
     }
+
+    FailedCount = 0;
 }
 
 inline void UI::WaitForUserInput()
@@ -242,6 +260,7 @@ inline void UI::PrintStatistics(MarsStation* Station)
 
 UI::UI(OutputType OutputT) :
     OType(OutputT),
+    FailedCount(0),
     WaitingCount(0),
     InExecutionCount(0),
     AvailableCount(0),
@@ -255,6 +274,7 @@ UI::UI(OutputType OutputT) :
 
 UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
     OType(OutputT),
+    FailedCount(0),
     WaitingCount(0),
     InExecutionCount(0),
     AvailableCount(0),
@@ -285,6 +305,13 @@ void UI::InitialDisplayMessage()
     }
 
     //(OPTIONAL) add initial messages for other modes
+}
+
+void UI::LogMissionFailure(Mission* const FailedMission)
+{
+    FailedMission_Buf[static_cast<int>(FailedMission->GetMissionType())] += std::to_string(FailedMission->GetID()) + ", ";
+
+    ++FailedCount;
 }
 
 void UI::PrintCurrentDay(MarsStation* Station)
