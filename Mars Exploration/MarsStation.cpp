@@ -34,16 +34,16 @@ void MarsStation::CreateRover(RoverType type, int speed)
 	{
 	case RoverType::Emergency:
 		R= new EmergencyRover(speed);
-		EmergencyRovers.enqueue(MyPair<EmergencyRover*, int>(R, speed));
+		EmergencyRovers.enqueue(MyPair<Rover*, int>(R, speed));
 		cEmergencyRovers++;
 		break;
 	case RoverType::Mountainous:
 		R = new MountainousRover(speed);
-		MountainousRovers.enqueue(MyPair<MountainousRover*, int>(R, speed));
+		MountainousRovers.enqueue(MyPair<Rover*, int>(R, speed));
 		cMountainousRovers++;
 		break;
 	case RoverType::Polar:
-		PolarRovers.enqueue(MyPair<PolarRover*, int>(R, speed));
+		PolarRovers.enqueue(MyPair<Rover*, int>(R, speed));
 		cPolarRovers++;
 		break;
 	default:
@@ -208,13 +208,13 @@ void MarsStation::AssignMissions()
 	{
 		if (!MountainousRovers.isEmpty())
 		{
-			WaitingMountainousMissions.dequeue(Mount);
-			MountainousRovers.dequeue(RovMount);
-			Mount->AssignRover(RovMount);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, -1 * Mount->GetCD()));
-			Mount->SetMissionStatus(MissionStatus::InExecution);
-			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
-			Mount->SetED();
+			WaitingMountainousMissions.dequeue(M_ptr);
+			MountainousRovers.dequeue(R_ptr);
+			M_ptr->AssignRover(R_ptr);
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
+			M_ptr->SetMissionStatus(MissionStatus::InExecution);
+			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
+			M_ptr->SetED();
 			cMountainousRovers--;
 			cMountainousMissions--;
 			cInExecution++;
@@ -223,13 +223,13 @@ void MarsStation::AssignMissions()
 		}
 		else if (!EmergencyRovers.isEmpty())
 		{
-			WaitingMountainousMissions.dequeue(Mount);
-			EmergencyRovers.dequeue(RovEmergent);
-			Mount->AssignRover(RovEmergent);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Mount, -1 * Mount->GetCD()));
-			Mount->SetMissionStatus(MissionStatus::InExecution);
-			Mount->SetWaitingDays(Day - Mount->GetFormulationDay());
-			Mount->SetED();
+			WaitingMountainousMissions.dequeue(M_ptr);
+			EmergencyRovers.dequeue(R_ptr);
+			M_ptr->AssignRover(R_ptr);
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
+			M_ptr->SetMissionStatus(MissionStatus::InExecution);
+			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
+			M_ptr->SetED();
 			cEmergencyRovers--;
 			cMountainousMissions--;
 			cInExecution++;
