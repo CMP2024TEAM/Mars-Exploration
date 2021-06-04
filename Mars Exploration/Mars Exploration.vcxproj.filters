@@ -99,4 +99,7 @@
   <ItemGroup>
     <None Include="CMPN102-Project-S2021.pdf" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Test Case 1.txt" />
+  </ItemGroup>
 </Project>
