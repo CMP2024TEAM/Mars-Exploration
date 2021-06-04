@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include "enums.h"
+#include "Mission.h"
 
 class MarsStation;
 
@@ -18,7 +19,8 @@ private:
     /*=================================================
                          Buffers
     =================================================*/
-    int WaitingCount, InExecutionCount, AvailableCount, CheckUpCount, CompletedCount;
+    int FailedCount, WaitingCount, InExecutionCount, AvailableCount, CheckUpCount, CompletedCount;
+    std::string FailedMission_Buf[static_cast<size_t>(MissionType::MAX)];
     std::string WaitingMission_Buf[static_cast<size_t>(MissionType::MAX)];
     std::string InExecutionMiss_Rov_Buf[static_cast<size_t>(MissionType::MAX)];
     std::string CompletedMission_Buf[static_cast<size_t>(MissionType::MAX)];
@@ -29,6 +31,7 @@ private:
     =================================================*/
     static const char EnclosingChar[static_cast<size_t>(MissionType::MAX)][2];
     static const std::string LineBreak;
+    static const std::string WarningBreak;
     /*=================================================
                        Input Utility
     =================================================*/
@@ -58,6 +61,9 @@ public:
 
     //Print initial message to console and header line to file
     void InitialDisplayMessage();
+
+    //Log any occurence of a mission failure
+    void LogMissionFailure(Mission* const FailedMission);
 
     //Get all station info at the end of the day and output to file/console
     void PrintCurrentDay(MarsStation* Station);
