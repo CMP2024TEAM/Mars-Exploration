@@ -7,10 +7,10 @@
 /*=================================================
                     Constants
 =================================================*/
-constexpr auto BreakLine_Length = 50;
-constexpr auto StepByStep_WaitingTime = 1;
+constexpr int BreakLine_Length = 50;
+constexpr int StepByStep_WaitingTime = 1;
 
-const char UI::EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
+const char UI::EnclosingChar[mTypeMax][2] = {
    //Emergency
    {'[',']'},
    //Mountainous
@@ -19,9 +19,8 @@ const char UI::EnclosingChar[static_cast<size_t>(MissionType::MAX)][2] = {
    {'(',')'}
 };
 
-const std::string UI::WarningBreak(BreakLine_Length, '=');
 const std::string UI::LineBreak(BreakLine_Length, '-');
-
+const std::string UI::WarningBreak(BreakLine_Length, '=');
 
 /*=================================================
                    Input Utility
@@ -39,7 +38,7 @@ inline MissionType UI::ParseMissionType(char c_type)
 
 inline void UI::ReadRoverData(MarsStation* Station)
 {
-    for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
+    for (int rType = 0; rType < rTypeMax; ++rType) {
         //Number of rovers in each rover type
         int n;
         IFile >> n;
@@ -55,10 +54,15 @@ inline void UI::ReadRoverData(MarsStation* Station)
 
 inline void UI::ReadCheckupInfo(MarsStation* Station)
 {
+    //Get number of completed missions before rover goes into checkup
+
     int CheckupDays;
     IFile >> CheckupDays;
     Station->SetMissionsBeforeCheckup(CheckupDays);
-    for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
+
+    //Get number of days each rover types needs in checkup 
+
+    for (int rType = 0; rType < rTypeMax; ++rType) {
         IFile >> CheckupDays;
         Station->SetCheckupDuration(RoverType(rType), CheckupDays);
     }
@@ -103,21 +107,29 @@ inline void UI::ReadEvents(MarsStation* Station)
 
 inline void UI::FillBuffersFromStation(MarsStation* Station)
 {
-    // Getters for counts from mars station
+    // Get counts from mars station
+
     WaitingCount = Station->GetWaitingMissionsCount();
     InExecutionCount = Station->GetInExecitionMissionsCount();
     AvailableCount = Station->GetAvailableRoversCount();
     CheckUpCount = Station->GetInCheckupRoversCount();
     CompletedCount = Station->GetCompletedMissionsCount();
+
+    //Temp pointers for dealing with DataStructures
+
     Mission* MissionPtr;
     Rover* RoverPtr;
 
+    //Extract missions from DataStructures containing only one mission type
+
     int mType;
-    for (mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+    for (mType = 0; mType < mTypeMax; ++mType) {
         Queue<Mission*> Waiting_Missions = Station->GetWaitingMissions(static_cast<MissionType>(mType));
         while (Waiting_Missions.dequeue(MissionPtr))
             WaitingMission_Buf[mType] += std::to_string(MissionPtr->GetID()) + ", ";
     }
+
+    //Extract missions from DataStructures containing more than one mission type
 
     PriorityQueue<Mission*> InExec_Missions = Station->GetInExecutionMissions();
     while (InExec_Missions.dequeue(MissionPtr)) {
@@ -125,8 +137,9 @@ inline void UI::FillBuffersFromStation(MarsStation* Station)
         InExecutionMiss_Rov_Buf[mType] += std::to_string(MissionPtr->GetID()) + '/' + std::to_string(MissionPtr->GetRover()->GetID()) + ", ";
     }
 
+    //Extract rovers from DataStructures only one rover type
 
-    for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
+    for (int rType = 0; rType < rTypeMax; ++rType) {
         PriorityQueue<Rover*> Available_Rovers = Station->GetAvailableRovers(static_cast<RoverType>(rType));
         Queue<Rover*> InCheckup_Rovers = Station->GetInCheckupRovers(static_cast<RoverType>(rType));
         while (Available_Rovers.dequeue(RoverPtr))
@@ -147,7 +160,7 @@ inline void UI::FormatBuffersToConsole()
     if (FailedCount) {
         std::cout << WarningBreak << '\n';
         std::cout << "WARNING: " << FailedCount << " Failed Missions: ";
-        for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+        for (int mType = 0; mType < mTypeMax; ++mType) {
             if (!FailedMission_Buf[mType].empty()) {
                 FailedMission_Buf[mType].pop_back(); FailedMission_Buf[mType].pop_back();
                 std::cout << EnclosingChar[mType][0] << FailedMission_Buf[mType] << EnclosingChar[mType][1] << ' ';
@@ -158,9 +171,13 @@ inline void UI::FormatBuffersToConsole()
     }
     
     std::cout << WaitingCount << " Waiting Misions: ";
-    for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+    //Loop over all waiting missions buffers
+    for (int mType = 0; mType < mTypeMax; ++mType) {
+        //Print only non emtpy buffers
         if (!WaitingMission_Buf[mType].empty()) {
+            //Since last two characters are ", " they need to be removed before output
             WaitingMission_Buf[mType].pop_back(); WaitingMission_Buf[mType].pop_back();
+            //Output each cleaned buffer alongside its respective set of enclosing brackets
             std::cout << EnclosingChar[mType][0] << WaitingMission_Buf[mType] << EnclosingChar[mType][1] << ' ';
         }
     }
@@ -168,7 +185,7 @@ inline void UI::FormatBuffersToConsole()
     std::cout << '\n' << LineBreak << '\n';
 
     std::cout << InExecutionCount << " In-Execution Missions/Rovers: ";
-    for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+    for (int mType = 0; mType < mTypeMax; ++mType) {
         if (!InExecutionMiss_Rov_Buf[mType].empty()) {
             InExecutionMiss_Rov_Buf[mType].pop_back(); InExecutionMiss_Rov_Buf[mType].pop_back();
             std::cout << EnclosingChar[mType][0] << InExecutionMiss_Rov_Buf[mType] << EnclosingChar[mType][1] << ' ';
@@ -178,7 +195,7 @@ inline void UI::FormatBuffersToConsole()
     std::cout << '\n' << LineBreak << '\n';
 
     std::cout << AvailableCount << " Available Rovers: ";
-    for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
+    for (int rType = 0; rType < rTypeMax; ++rType) {
         if (!AvailableRovers_Buf[rType].empty()) {
             AvailableRovers_Buf[rType].pop_back(); AvailableRovers_Buf[rType].pop_back();
             std::cout << EnclosingChar[rType][0] << AvailableRovers_Buf[rType] << EnclosingChar[rType][1] << ' ';
@@ -188,7 +205,7 @@ inline void UI::FormatBuffersToConsole()
     std::cout << '\n' << LineBreak << '\n';
 
     std::cout << CheckUpCount << " In-Checkup Rovers: ";
-    for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
+    for (int rType = 0; rType < rTypeMax; ++rType) {
         if (!InCheckupRovers_Buf[rType].empty()) {
             InCheckupRovers_Buf[rType].pop_back(); InCheckupRovers_Buf[rType].pop_back();
             std::cout << EnclosingChar[rType][0] << InCheckupRovers_Buf[rType] << EnclosingChar[rType][1] << ' ';
@@ -198,7 +215,7 @@ inline void UI::FormatBuffersToConsole()
     std::cout << '\n' << LineBreak << '\n';
 
     std::cout << CompletedCount << " Completed Missions: ";
-    for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+    for (int mType = 0; mType < mTypeMax; ++mType) {
         if (!CompletedMission_Buf[mType].empty()) {
             CompletedMission_Buf[mType].pop_back(); CompletedMission_Buf[mType].pop_back();
             std::cout << EnclosingChar[mType][0] << CompletedMission_Buf[mType] << EnclosingChar[mType][1] << ' ';
@@ -206,31 +223,33 @@ inline void UI::FormatBuffersToConsole()
             CompletedMission_Buf[mType] += ", ";
         }
     }
-
+    
     std::cout << "\n\n";
 }
 
 inline void UI::ClearBuffers()
 {
-    for (int mType = 0; mType < static_cast<int>(MissionType::MAX); ++mType) {
+    //Clear missions
+    for (int mType = 0; mType < mTypeMax; ++mType) {
         FailedMission_Buf[mType].clear();
         WaitingMission_Buf[mType].clear();
         InExecutionMiss_Rov_Buf[mType].clear();
         //Completed missions are not cleared from buffer
-        //CompletedMission_Buf[mType].clear();
     }
 
-    for (int rType = 0; rType < static_cast<int>(RoverType::MAX); ++rType) {
+    //Clear Rovers
+    for (int rType = 0; rType < rTypeMax; ++rType) {
         AvailableRovers_Buf[rType].clear();
         InCheckupRovers_Buf[rType].clear();
     }
 
+    //Reset Failed Mission Count
     FailedCount = 0;
 }
 
 inline void UI::WaitForUserInput()
 {
-    //Default behavior is to wait for input
+    //Default behavior is to wait for any input
     //Will also work when user presses the Enter button
     std::cin.get();
 }
@@ -249,8 +268,9 @@ inline void UI::PrintStatistics(MarsStation* Station)
     
     OFile << "Avg Wait: " << Station->GetAvgWait() << ", Avg Exec: " << Station->GetAvgExec() << '\n';
     
-    OFile << "Auto-Promoted: " << Station->GetAutoPPercent() << "%";
-   
+    OFile << "Auto-Promoted: " << Station->GetAutoPPercent() << "%\n";
+
+    OFile << "Mission Failures: " << TotalFailures; 
 }
 
 
@@ -258,22 +278,9 @@ inline void UI::PrintStatistics(MarsStation* Station)
                  Public Functions
 =================================================*/
 
-UI::UI(OutputType OutputT) :
-    OType(OutputT),
-    FailedCount(0),
-    WaitingCount(0),
-    InExecutionCount(0),
-    AvailableCount(0),
-    CheckUpCount(0),
-    CompletedCount(0)
-{
-    IFile.open("input.txt");
-    OFile.open("output.txt");
-    std::cin.ignore();
-}
-
 UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
     OType(OutputT),
+    TotalFailures(0),
     FailedCount(0),
     WaitingCount(0),
     InExecutionCount(0),
@@ -281,8 +288,11 @@ UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
     CheckUpCount(0),
     CompletedCount(0)  
 {
+    //Create/Open files from OS
     IFile.open(IFileName + ".txt");
     OFile.open(OFileName + ".txt");
+
+    //Remove last newline(if exists) from input stream
     std::cin.ignore();
 }
 
@@ -299,19 +309,35 @@ void UI::InitialDisplayMessage()
     //In all cases UI should output completed missions to OFile
     OFile << "CD\tID\tFD\tWD\tED\n";
 
-    //Initial message for silent mode
-    if (OType == OutputType::Silent) {
-        std::cout << "Silent Mode\nSimulation Starts...\n";
+    switch (OType) {
+    //Initial message for Interactive mode
+    case OutputType::Interactive: {
+        std::cout << "Interactive Mode \nSimulation Starts...\nPress any key to move to next day\n";
+        break;
     }
-
-    //(OPTIONAL) add initial messages for other modes
+    //Initial message for StepByStep mode
+    case OutputType::StepByStep: {
+        std::cout << "StepByStep Mode\nSimulation Starts...\nWait " << StepByStep_WaitingTime << " second before each day\n";
+        break;
+    }
+    //Initial message for Silent mode
+    case OutputType::Silent: {
+        std::cout << "Silent Mode\nSimulation Starts...\n";
+        break;
+    }
+    }
 }
 
 void UI::LogMissionFailure(Mission* const FailedMission)
 {
-    FailedMission_Buf[static_cast<int>(FailedMission->GetMissionType())] += std::to_string(FailedMission->GetID()) + ", ";
+    //Add mission to buffer for console output in non silent modes
+    if (OType == OutputType::Interactive || OType == OutputType::StepByStep) {
+        FailedMission_Buf[static_cast<int>(FailedMission->GetMissionType())] += std::to_string(FailedMission->GetID()) + ", ";
+        ++FailedCount;
+    }
 
-    ++FailedCount;
+    //In all cases total failures is printed to output file at the end of simulation
+    ++TotalFailures;
 }
 
 void UI::PrintCurrentDay(MarsStation* Station)
@@ -327,7 +353,7 @@ void UI::PrintCurrentDay(MarsStation* Station)
 
         //Save completed missions in buffer if not silent
         if (OType != OutputType::Silent)
-            CompletedMission_Buf[static_cast<size_t>(MissionPtr->GetMissionType())] += std::to_string(MissionPtr->GetID()) + ", ";
+            CompletedMission_Buf[static_cast<int>(MissionPtr->GetMissionType())] += std::to_string(MissionPtr->GetID()) + ", ";
     }
 
     if (OType == OutputType::Interactive || OType == OutputType::StepByStep) {
@@ -361,6 +387,8 @@ void UI::FinalDisplayMessage(MarsStation* Station)
 
 UI::~UI()
 {
+    //Return input and output files back to OS
+
     IFile.close();
     OFile.close();
 }
