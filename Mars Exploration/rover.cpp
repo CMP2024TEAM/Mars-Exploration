@@ -2,10 +2,9 @@
 int Rover::LastId = 0;
 int Rover::CheckupDuration[3] = {0};
 
-Rover::Rover(RoverType type,int speed)
+Rover::Rover(int speed)
 {
 	Id = ++LastId;
-	Type = type;
 	Status = RoverStatus::Available;
 	CompletedMissions = 0;
 	Speed = speed;
@@ -21,24 +20,14 @@ int Rover::GetID()
 	return Id;
 }
 
-void Rover::setType(RoverType type)
-{
-	Type = type;
-}
-
-RoverType Rover::getType() const
-{
-	return Type;
-}
-
 void Rover::setCheckUpDuration(int c)
 {
-	CheckupDuration[(int)Type] = c;
+	CheckupDuration[(int)getType()] = c;
 }
 
 int Rover::getCheckUpDuration()
 {
-	return CheckupDuration[(int)Type];
+	return CheckupDuration[(int)getType()];
 }
 
 void Rover::setSpeed(int s)

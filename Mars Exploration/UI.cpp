@@ -237,7 +237,7 @@ inline void UI::WaitForUserInput()
 
 inline void UI::PrintStatistics(MarsStation* Station)
 {
-    
+    OFile << "......................." << "\n" << "......................." << "\n";
     OFile << "Missions: " << Station->GetCompletedMissionsCount() << " [M: " << Station->GetMountainouMissionCount()
         << ", P: " << Station->GetPolarMissionCount() << ", E: " << Station->GetEmergencyMissionCount() << "]"<< '\n';
     
