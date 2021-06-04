@@ -11,6 +11,10 @@
 #include"UI.h"
 #include<stdlib.h>
 #include<time.h>
+#include"EmergencyRover.h"
+#include"MountainousRover.h"
+#include"PolarRover.h"
+
 class MarsStation
 {
 private:
