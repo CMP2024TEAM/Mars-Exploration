@@ -27,28 +27,37 @@
     <ClInclude Include="DataStructures\Queue.h" />
     <ClInclude Include="DataStructures\QueueInterface.h" />
     <ClInclude Include="DataStructures\StackInterface.h" />
+    <ClInclude Include="EmergencyRover.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FormulationEvent.h" />
     <ClInclude Include="MarsStation.h" />
     <ClInclude Include="Mission.h" />
+    <ClInclude Include="MountainousRover.h" />
+    <ClInclude Include="PolarRover.h" />
     <ClInclude Include="PromotionEvent.h" />
     <ClInclude Include="Rover.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CancellationEvent.cpp" />
+    <ClCompile Include="EmergencyRover.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FormulationEvent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarsStation.cpp" />
     <ClCompile Include="Mission.cpp" />
+    <ClCompile Include="MountainousRover.cpp" />
+    <ClCompile Include="PolarRover.cpp" />
     <ClCompile Include="PromotionEvent.cpp" />
     <ClCompile Include="Rover.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMPN102-Project-S2021.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Test Case 1.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

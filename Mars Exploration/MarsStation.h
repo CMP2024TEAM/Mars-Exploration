@@ -11,6 +11,10 @@
 #include"UI.h"
 #include<stdlib.h>
 #include<time.h>
+#include"EmergencyRover.h"
+#include"MountainousRover.h"
+#include"PolarRover.h"
+
 class MarsStation
 {
 private:
@@ -18,16 +22,16 @@ private:
 	UI* InOut;
 	// Events
 	Queue<Event*> EventList;
-	PriorityQueue<Mission*> WaitingEmergencyMissions;
+	PriorityQueue<EmergencyMissions*> WaitingEmergencyMissions;
 	Queue<Mission*> WaitingPolarMissions;
 	Queue<Mission*> WaitingMountainousMissions;
-	PriorityQueue<Rover*> EmergencyRovers;
-	PriorityQueue<Rover*> MountainousRovers;
-	PriorityQueue<Rover*> PolarRovers;
+	PriorityQueue<EmergencyRover*> EmergencyRovers;
+	PriorityQueue<MountainousRover*> MountainousRovers;
+	PriorityQueue<PolarRover*> PolarRovers;
 	PriorityQueue<Mission*> InExecutionMissions;
-	Queue<Rover*> EmergencyRoversCheckUp;
-	Queue<Rover*> MountinousRoverCheckUp;
-	Queue<Rover*> PolarRoversCheckUp;
+	Queue<EmergencyRover*> EmergencyRoversCheckUp;
+	Queue<MountainousRover*> MountinousRoverCheckUp;
+	Queue<PolarRover*> PolarRoversCheckUp;
 	Stack<Mission*> CompletedMissions;
 	int AutoP;
 	int MissionsBeforeCheckup;
