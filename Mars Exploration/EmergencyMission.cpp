@@ -5,6 +5,11 @@ EmergencyMission::EmergencyMission(int FD, int TL, int MD, int S) :Mission(FD, T
 
 }
 
+EmergencyMission::EmergencyMission(Mission* M):Mission(M->GetFormulationDay(),M->GetTargetLocation(),M->GetMissionDuration(),M->GetSignificance())
+{
+	SetID(M->GetID());
+}
+
 int EmergencyMission::GetPriority() const
 {
 	return(GetFormulationDay() * -1 + GetSignificance() * 5 + int(GetTargetLocation() * -0.01) + GetMissionDuration() * -2);

@@ -90,9 +90,6 @@ public:
 	// Get Waiting Mountainous Mission With Certain ID (USed In Events Execution)
 	bool GetMountainouMission(Mission*& mission, int ID);
 
-	// Start a new day
-	void IncreaseDay();
-
 	// Get Current day
 	int GetCurrentDay();
 

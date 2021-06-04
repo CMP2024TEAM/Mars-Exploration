@@ -4,10 +4,9 @@
 class Mission
 {
 private:
-	int Id;
+	int ID;
 	int FormulationDay;	
 	int TargetLocation;		//The distance (in kilometers)
-	static int ID;
 	int Significance;		//representing the importance of the mission
 	int MissionDuration;
 	int WaitingDays;
@@ -28,6 +27,7 @@ public:
 	int GetMissionDuration()		const;
 	void SetMissionDuration(int MD);
 	int GetID()		const;
+	void SetID(int id);
 	int GetWaitingDays()		const;
 	void SetWaitingDays(int WD);
 	int GetCD()		const;			//Compeleting days=FD+WD+ED
