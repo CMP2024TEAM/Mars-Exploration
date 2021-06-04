@@ -566,35 +566,35 @@ void MarsStation::DeleteCompletedMissions()
 {
 	while (!CompletedMissions.isEmpty())
 	{
-		Mission* tempMission;
-		CompletedMissions.pop(tempMission);
-		delete tempMission;
+		Mission* M_ptr;
+		CompletedMissions.pop(M_ptr);
+		delete M_ptr;
 	}
 }
 
 void MarsStation::MissionFailure()
 {
-	Queue<Mission*> tempQueue; //  no need or priorety queue
-	Mission* tempMission;
-	Rover* tempRover;
+	Queue<Mission*> M_Queue; //  no need for priorety queue
+	Mission* M_ptr;
+	Rover* R_ptr;
 	double Percentage;
-	//if rand less than 1% then the mission fails
+	//if rand less than 0.25% then the mission fails
 	while (!InExecutionMissions.isEmpty())
 	{
-		InExecutionMissions.dequeue(tempMission);
+		InExecutionMissions.dequeue(M_ptr);
 		Percentage = (double(rand()) / RAND_MAX) * 100;
 		if (Percentage <= 0.25)
 		{
 			//Remove the Rover then move it to checkup
-			tempRover = tempMission->GetRover();
-			MoveToCheckUp(tempRover);
+			R_ptr = M_ptr->GetRover();
+			MoveToCheckUp(R_ptr);
 			//Return the mission to waiting list to be assigned later
-			tempMission->SetMissionStatus(MissionStatus::Waiting);
-			tempMission->AssignRover(nullptr);
-			AddMission(tempMission);
+			M_ptr->SetMissionStatus(MissionStatus::Waiting);
+			M_ptr->AssignRover(nullptr);
+			AddMission(M_ptr);
 			// Update Counts and STATs
 			cInExecution--;
-			switch (tempMission->GetMissionType())
+			switch (M_ptr->GetMissionType())
 			{
 			case MissionType::Emergency:
 				TotalEmergencyMissions--;
@@ -608,18 +608,19 @@ void MarsStation::MissionFailure()
 			default:
 				break;
 			}
-			InOut->LogMissionFailure(tempMission);
+			InOut->LogMissionFailure(M_ptr);
 		}
 		else
 		{
-			tempQueue.enqueue(tempMission);
+			M_Queue.enqueue(M_ptr);
 		}
 
 	}
-	while (!tempQueue.isEmpty())
+	while (!M_Queue.isEmpty())
 	{
-		tempQueue.dequeue(tempMission);
-		InExecutionMissions.enqueue(MyPair<Mission*, int>(tempMission, -1 * tempMission->GetCD()));
+		//enqueue our mission after we check wich one failed we only enqueue those which didn't fail
+		M_Queue.dequeue(M_ptr);
+		InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
 	}
 
 }
