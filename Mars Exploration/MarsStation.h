@@ -14,6 +14,9 @@
 #include"EmergencyRover.h"
 #include"MountainousRover.h"
 #include"PolarRover.h"
+#include "EmergencyMission.h"
+#include "MountainousMission.h"
+#include "PolarMission.h"
 
 class MarsStation
 {
