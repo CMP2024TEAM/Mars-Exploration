@@ -2,11 +2,12 @@
 
 int Mission::ID = 0;
 
-Mission::Mission(int FD, int TL,int MD)
+Mission::Mission(int FD, int TL, int MD, int S)
 {
 	SetFormulationDay(FD);
 	SetTargetLocation(TL);
 	SetMissionDuration(MD);
+	SetSignificance(S);
 	Status = MissionStatus::Waiting;
 	AssignedRover = nullptr;
 	ID++;
@@ -31,6 +32,16 @@ int Mission::GetTargetLocation()		const
 void Mission::SetTargetLocation(int TL)
 {
 	TargetLocation = TL > 0 ? TL : 1;
+}
+
+int Mission::GetSignificance()		const
+{
+	return Significance;
+}
+
+void Mission::SetSignificance(int S)
+{
+	Significance = S > 0 ? S : 1;
 }
 
 int Mission::GetMissionDuration()		const

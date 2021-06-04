@@ -8,6 +8,7 @@ private:
 	int FormulationDay;	
 	int TargetLocation;		//The distance (in kilometers)
 	static int ID;
+	int Significance;		//representing the importance of the mission
 	int MissionDuration;
 	int WaitingDays;
 	MissionStatus Status;
@@ -17,11 +18,13 @@ private:
 
 public:
 
-	Mission(int FD,int TL,int MD);
+	Mission(int FD, int TL, int MD, int S);
 	int GetFormulationDay()		const;
 	void SetFormulationDay(int FD);
 	int GetTargetLocation ()		const;
 	void SetTargetLocation (int TL);
+	int GetSignificance()		const;
+	void SetSignificance(int S);
 	int GetMissionDuration()		const;
 	void SetMissionDuration(int MD);
 	int GetID()		const;
