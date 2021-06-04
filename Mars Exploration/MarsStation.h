@@ -25,16 +25,16 @@ private:
 	UI* InOut;
 	// Events
 	Queue<Event*> EventList;
-	PriorityQueue<EmergencyMissions*> WaitingEmergencyMissions;
+	PriorityQueue<Mission*> WaitingEmergencyMissions;
 	Queue<Mission*> WaitingPolarMissions;
 	Queue<Mission*> WaitingMountainousMissions;
-	PriorityQueue<EmergencyRover*> EmergencyRovers;
-	PriorityQueue<MountainousRover*> MountainousRovers;
-	PriorityQueue<PolarRover*> PolarRovers;
+	PriorityQueue<Rover*> EmergencyRovers;
+	PriorityQueue<Rover*> MountainousRovers;
+	PriorityQueue<Rover*> PolarRovers;
 	PriorityQueue<Mission*> InExecutionMissions;
-	Queue<EmergencyRover*> EmergencyRoversCheckUp;
-	Queue<MountainousRover*> MountinousRoverCheckUp;
-	Queue<PolarRover*> PolarRoversCheckUp;
+	Queue<Rover*> EmergencyRoversCheckUp;
+	Queue<Rover*> MountinousRoverCheckUp;
+	Queue<Rover*> PolarRoversCheckUp;
 	Stack<Mission*> CompletedMissions;
 	int AutoP;
 	int MissionsBeforeCheckup;
