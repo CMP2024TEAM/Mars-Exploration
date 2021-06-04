@@ -5,7 +5,13 @@
 #include "enums.h"
 #include "Mission.h"
 
+//Forward class declaration
 class MarsStation;
+
+//Maximum number of Mission types
+constexpr int mTypeMax = static_cast<int>(MissionType::MAX);
+//Maximum number of Rover Types
+constexpr int rTypeMax = static_cast<int>(RoverType::MAX);
 
 class UI {
 private:
@@ -18,20 +24,25 @@ private:
 
     /*=================================================
                          Buffers
-    =================================================*/
-    int FailedCount, WaitingCount, InExecutionCount, AvailableCount, CheckUpCount, CompletedCount;
-    std::string FailedMission_Buf[static_cast<size_t>(MissionType::MAX)];
-    std::string WaitingMission_Buf[static_cast<size_t>(MissionType::MAX)];
-    std::string InExecutionMiss_Rov_Buf[static_cast<size_t>(MissionType::MAX)];
-    std::string CompletedMission_Buf[static_cast<size_t>(MissionType::MAX)];
-    std::string AvailableRovers_Buf[static_cast<size_t>(RoverType::MAX)];
-    std::string InCheckupRovers_Buf[static_cast<size_t>(RoverType::MAX)];
+    =================================================*/  
+    int TotalFailures, FailedCount, WaitingCount, InExecutionCount, AvailableCount, CheckUpCount, CompletedCount;
+    std::string FailedMission_Buf[mTypeMax];
+    std::string WaitingMission_Buf[mTypeMax];
+    std::string InExecutionMiss_Rov_Buf[mTypeMax];
+    std::string CompletedMission_Buf[mTypeMax];
+    std::string AvailableRovers_Buf[rTypeMax];
+    std::string InCheckupRovers_Buf[rTypeMax];
+
     /*=================================================
                         Constants
     =================================================*/
-    static const char EnclosingChar[static_cast<size_t>(MissionType::MAX)][2];
+    //The respective enclosing character for each mission type
+    static const char EnclosingChar[mTypeMax][2];
+    //Linebreak between each line of output
     static const std::string LineBreak;
+    //Linebreak between each critical line of output
     static const std::string WarningBreak;
+
     /*=================================================
                        Input Utility
     =================================================*/
@@ -40,21 +51,25 @@ private:
     void ReadCheckupInfo(MarsStation* Station);
     void ReadAutoPromotion(MarsStation* Station);
     void ReadEvents(MarsStation* Station);
+
     /*=================================================
                       Output Utility
     =================================================*/
     //Add all other information to buffers. This DOES NOT load completed
     //Mission information
     void FillBuffersFromStation(MarsStation* Station);
+    //Output buffer content to console in proper format
     void FormatBuffersToConsole();
+    //Clear all buffer content and reset counts. This DOES NOT clear completed
+    //Missions buffers
     void ClearBuffers();
     //Waits for some input (To be used by interactive mode)
     void WaitForUserInput();
     //Print final statistics at the end of the simulation
     void PrintStatistics(MarsStation* Station);
+
 public:
-    UI(OutputType OutputT);
-    UI(OutputType OutputT, std::string IFileName, std::string OFileName);
+    UI(OutputType OutputT, std::string IFileName = "input", std::string OFileName = "output");
     
     //Read all parameters from input file
     void ReadAll(MarsStation* Station); 
