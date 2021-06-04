@@ -29,8 +29,27 @@ MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cEmergencyMissions(0), cM
 
 void MarsStation::CreateRover(RoverType type, int speed)
 {
-	Rover* R = new Rover(type, speed);
-	if (type == RoverType::Emergency)
+	Rover* R;
+	switch (type)
+	{
+	case RoverType::Emergency:
+		R= new EmergencyRover(speed);
+		EmergencyRovers.enqueue(MyPair<EmergencyRover*, int>(R, speed));
+		cEmergencyRovers++;
+		break;
+	case RoverType::Mountainous:
+		R = new MountainousRover(speed);
+		MountainousRovers.enqueue(MyPair<MountainousRover*, int>(R, speed));
+		cMountainousRovers++;
+		break;
+	case RoverType::Polar:
+		PolarRovers.enqueue(MyPair<PolarRover*, int>(R, speed));
+		cPolarRovers++;
+		break;
+	default:
+		throw("Unkonwn Rover Type");
+	}
+	/*if (type == RoverType::Emergency)
 	{
 		EmergencyRovers.enqueue(MyPair<Rover*, int>(R, speed));
 		cEmergencyRovers++;
@@ -44,18 +63,33 @@ void MarsStation::CreateRover(RoverType type, int speed)
 	{
 		PolarRovers.enqueue(MyPair<Rover*, int>(R, speed));
 		cPolarRovers++;
-	}
+	}*/
 }
 
 // SetCheckupDuration for each rovar tyoe
 void MarsStation::SetCheckupDuration(RoverType type, int Duration)
 {
-	if (type == RoverType::Emergency)
+	switch (type)
+	{
+	case RoverType::Emergency:
+		Rover::CheckupDuration[0] = Duration;
+		break;
+	case RoverType::Mountainous:
+		Rover::CheckupDuration[1] = Duration;
+		break;
+	case RoverType::Polar:
+		Rover::CheckupDuration[2] = Duration;
+		break;
+	default:
+		throw("Unkonwn Rover Type");
+		break;
+	}
+	/*if (type == RoverType::Emergency)
 		Rover::CheckupDuration[0] = Duration;
 	if (type == RoverType::Mountainous)
 		Rover::CheckupDuration[1] = Duration;
 	if (type == RoverType::Polar)
-		Rover::CheckupDuration[2] = Duration;
+		Rover::CheckupDuration[2] = Duration;*/
 }
 
 // Set autopromosion
@@ -91,24 +125,20 @@ void MarsStation::CreatePromotionEvent(int ED, int ID)
 // Call this function at the start of every new day
 void MarsStation::AssignMissions()
 {
-	Mission* Emergent;
-	Mission* Mount;
-	Mission* Pol;
-	Rover* RovEmergent;
-	Rover* RovMount;
-	Rover* RovPol;
+	Mission* M_ptr;
+	Rover* R_ptr;
 	// Assigning Emergency Missions
 	while (!WaitingEmergencyMissions.isEmpty())
 	{
 		if (!EmergencyRovers.isEmpty())
 		{
-			WaitingEmergencyMissions.dequeue(Emergent);
-			EmergencyRovers.dequeue(RovEmergent);
-			Emergent->AssignRover(RovEmergent);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
-			Emergent->SetMissionStatus(MissionStatus::InExecution);
-			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
-			Emergent->SetED();
+			WaitingEmergencyMissions.dequeue(M_ptr);
+			EmergencyRovers.dequeue(R_ptr);
+			M_ptr->AssignRover(R_ptr);
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 *M_ptr->GetCD()));
+			M_ptr->SetMissionStatus(MissionStatus::InExecution);
+			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
+			M_ptr->SetED();
 			cEmergencyRovers--;
 			cEmergencyMissions--;
 			cInExecution++;
@@ -116,13 +146,13 @@ void MarsStation::AssignMissions()
 		}
 		else if (!MountainousRovers.isEmpty())
 		{
-			WaitingEmergencyMissions.dequeue(Emergent);
-			MountainousRovers.dequeue(RovMount);
-			Emergent->AssignRover(RovMount);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
-			Emergent->SetMissionStatus(MissionStatus::InExecution);
-			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
-			Emergent->SetED();
+			WaitingEmergencyMissions.dequeue(M_ptr);
+			MountainousRovers.dequeue(R_ptr);
+			M_ptr->AssignRover(R_ptr);
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
+			M_ptr->SetMissionStatus(MissionStatus::InExecution);
+			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
+			M_ptr->SetED();
 			cMountainousRovers--;
 			cEmergencyMissions--;
 			cInExecution++;
@@ -130,13 +160,13 @@ void MarsStation::AssignMissions()
 		}
 		else if (!PolarRovers.isEmpty())
 		{
-			WaitingEmergencyMissions.dequeue(Emergent);
-			PolarRovers.dequeue(RovPol);
-			Emergent->AssignRover(RovPol);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Emergent, -1 * Emergent->GetCD()));
-			Emergent->SetMissionStatus(MissionStatus::InExecution);
-			Emergent->SetWaitingDays(Day - Emergent->GetFormulationDay());
-			Emergent->SetED();
+			WaitingEmergencyMissions.dequeue(M_ptr);
+			PolarRovers.dequeue(R_ptr);
+			M_ptr->AssignRover(R_ptr);
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
+			M_ptr->SetMissionStatus(MissionStatus::InExecution);
+			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
+			M_ptr->SetED();
 			cPolarRovers--;
 			cEmergencyMissions--;
 			cInExecution++;
@@ -154,13 +184,13 @@ void MarsStation::AssignMissions()
 	{
 		if (!PolarRovers.isEmpty())
 		{
-			WaitingPolarMissions.dequeue(Pol);
-			PolarRovers.dequeue(RovPol);
-			Pol->AssignRover(RovPol);
-			InExecutionMissions.enqueue(MyPair<Mission*, int>(Pol, -1 * Pol->GetCD()));
-			Pol->SetMissionStatus(MissionStatus::InExecution);
-			Pol->SetWaitingDays(Day - Pol->GetFormulationDay());
-			Pol->SetED();
+			WaitingPolarMissions.dequeue(M_ptr);
+			PolarRovers.dequeue(R_ptr);
+			M_ptr->AssignRover(R_ptr);
+			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
+			M_ptr->SetMissionStatus(MissionStatus::InExecution);
+			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
+			M_ptr->SetED();
 			cPolarRovers--;
 			cPolarMissions--;
 			cInExecution++;
