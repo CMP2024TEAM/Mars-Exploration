@@ -5,11 +5,10 @@ class Rover
 public:
 	static int LastId;
 	static int CheckupDuration[3];
-	Rover(RoverType,int);
-	~Rover();
+	Rover(int);
+	virtual ~Rover();
 	int GetID();
-	void setType(RoverType);
-	RoverType getType() const;
+	virtual RoverType getType() const = 0;
 	void setCheckUpDuration(int);
 	int getCheckUpDuration();
 	void setSpeed(int);
@@ -23,7 +22,6 @@ public:
 	void ResetCompletedMissions();
 private:
 	int Id;
-	RoverType Type;
 	int Speed;
 	int CompletedMissions;
 	int AvailableAt;
