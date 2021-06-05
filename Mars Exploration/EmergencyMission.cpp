@@ -1,23 +1,18 @@
 #include "EmergencyMission.h"
 
-EmergencyMission::EmergencyMission(int FD, int TL, int MD, int S) :Mission(FD, TL, MD)
+EmergencyMission::EmergencyMission(int FD, int TL, int MD, int S) :Mission(FD, TL, MD,S)
 {
-	SetSignificance(S);
+
 }
 
-int EmergencyMission::GetSignificance()		const
+EmergencyMission::EmergencyMission(Mission* M):Mission(M->GetFormulationDay(),M->GetTargetLocation(),M->GetMissionDuration(),M->GetSignificance())
 {
-	return Significance;
-}
-
-void EmergencyMission::SetSignificance(int S)
-{
-	Significance = S > 0 ? S : 1;
+	SetID(M->GetID());
 }
 
 int EmergencyMission::GetPriority() const
 {
-	return(GetFormulationDay() * -1 + Significance * 5 + int(GetTargetLocation() * -0.01) + GetMissionDuration() * -2);
+	return(GetFormulationDay() * -1 + GetSignificance() * 5 + int(GetTargetLocation() * -0.01) + GetMissionDuration() * -2);
 }
 
 MissionType EmergencyMission::GetMissionType()	const

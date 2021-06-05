@@ -1,14 +1,13 @@
 #pragma once
 #include "Mission.h"
+#include "MountainousMission.h"
 class EmergencyMission :
     public Mission
 {
-private:
-    int Significance;		//representing the importance of the mission
 public:
     EmergencyMission(int FD, int TL, int MD,int S);
-    int GetSignificance()		const;
-    void SetSignificance(int S);
+    //copy constructor to be used in Auto P process
+    EmergencyMission(Mission* M);
     int GetPriority()const;
     virtual MissionType GetMissionType() const ;
     ~EmergencyMission();

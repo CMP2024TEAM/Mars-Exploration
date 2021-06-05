@@ -319,11 +319,13 @@ bool MarsStation::RequestRover(RoverType r_type)
 // Add Mission To its corresponding list
 void MarsStation::AddMission(Mission* mission)
 {
+	EmergencyMission* EMission;
 	// Check Type Of Mission Then Add To Corrersponding List
 	switch (mission->GetMissionType())
 	{
 	case MissionType::Emergency:
-		WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, mission->GetPriority()));
+		EMission = dynamic_cast<EmergencyMission*>(mission);
+		WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, EMission->GetPriority()));
 		WaitingEmergencyMissionCount++;
 		cEmergencyMissions++;
 		TotalEmergencyMissions++;
@@ -378,12 +380,6 @@ bool MarsStation::GetMountainouMission(Mission*& mission, int ID)
 	cMountainousMissions--;
 	TotalMountainousMissions--;
 	return true;
-}
-
-// Start a new day
-void MarsStation::IncreaseDay()
-{
-	Day++;
 }
 
 // Get Current day
@@ -681,6 +677,7 @@ void MarsStation::MoveInExecutiontoComplete()
 void MarsStation::CheckUpAutoP()
 {
 	Mission* M;
+	EmergencyMission* E;
 	while (true)
 	{
 		M = nullptr;
@@ -689,15 +686,13 @@ void MarsStation::CheckUpAutoP()
 		if (M && M->GetWaitingDays() > AutoP)
 		{
 			WaitingMountainousMissions.dequeue(M);
-			M->SetMissionType(MissionType::Emergency);
-			WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(M, M->GetPriority()));
+			E = new EmergencyMission(M);
+			delete M;
+			AddMission(E);
 			cAutop++;	//used to calculate the percentage of automatically-promoted missions (relative to the total number of mountainous missions)
-			WaitingEmergencyMissionCount++;
 			WaitingMountainousMissionCount--;
-			cEmergencyMissions++;
 			cMountainousMissions--;
 			TotalMountainousMissions--;
-			TotalEmergencyMissions++;
 		}
 		else
 		{
@@ -729,7 +724,7 @@ void MarsStation::Simulate()
 		CheckUpAutoP();
 		AssignMissions();
 		InOut->PrintCurrentDay(this);
-		IncreaseDay();
+		Day++;
 		DeleteCompletedMissions();
 	}
 
