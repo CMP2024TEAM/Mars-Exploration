@@ -7,4 +7,7 @@ public:
 
 private:
 	virtual RoverType getType() const;
+	virtual bool Fixed()const;
+	virtual void ModifyHealth(int);
+	virtual void RestoreHealth();
 };

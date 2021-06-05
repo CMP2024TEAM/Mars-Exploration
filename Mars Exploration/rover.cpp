@@ -9,6 +9,7 @@ Rover::Rover(int speed)
 	CompletedMissions = 0;
 	Speed = speed;
 	AvailableAt = 0;
+	Requsted = 0;
 }
 Rover::~Rover()
 {
@@ -73,4 +74,30 @@ RoverStatus Rover::getStatus() const
 void Rover::ResetCompletedMissions()
 {
 	CompletedMissions = 0;
+}
+
+int Rover::GetHealth() const
+{
+	return Health;
+}
+
+void Rover::DecrementSpeed()
+{
+	Speed /= 2;
+	if (Speed < 1) Speed = 1;
+}
+
+void Rover::IncrementRequsted()
+{
+	Requsted++;
+}
+
+int Rover::GetRequsted()
+{
+	return Requsted;
+}
+
+void Rover::ResetRequsted()
+{
+	Requsted = 0;
 }

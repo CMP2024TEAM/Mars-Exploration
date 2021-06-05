@@ -35,6 +35,9 @@ private:
 	Queue<Rover*> EmergencyRoversCheckUp;
 	Queue<Rover*> MountinousRoverCheckUp;
 	Queue<Rover*> PolarRoversCheckUp;
+	Queue<Rover*> EmergencyRoversMaintenance;
+	Queue<Rover*> MountinousRoverMaintenance;
+	Queue<Rover*> PolarRoversMaintenance;
 	Stack<Mission*> CompletedMissions;
 	int AutoP;
 	int MissionsBeforeCheckup;
@@ -47,6 +50,7 @@ private:
 	// For Stats
 	int cAutop;
 	int cInCheckUp;
+	int cInMaintenance;
 	int cEmergencyMissions;
 	int cMountainousMissions;
 	int cPolarMissions;
@@ -83,7 +87,10 @@ public:
 	
 	// Call this function at the start of every new day
 	void AssignMissions();
-	
+
+	//Request a rover more than five times will free the rover from maintencae but will decrese its speed
+	bool RequestRover(RoverType);
+
 	// Add Mission To its corresponding list
 	void AddMission(Mission* mission);
 	
@@ -102,8 +109,14 @@ public:
 	// Move rovers in check up to be available to assign a mission 
 	void MoveCheckUpToAvail();
 
+	//Move Rovers in Maintenace to be available to assign a mission 
+	void MoveMaintenaceToAvail();
+
 	//Move rovers to checkUp after either a specific number of missions or if the mission failed
 	void MoveToCheckUp(Rover* R);
+
+	//Moves Rover to maintenace if Health is 0
+	void MoveToMainetenace(Rover* R);
 
 	// Remove the link between the mission and the rover
 	// Check if this rover needs to have a checkup or not 
