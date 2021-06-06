@@ -253,7 +253,7 @@ bool MarsStation::RequestRover(RoverType r_type)
 	switch (r_type)
 	{
 	case RoverType::Emergency:
-		if (EmergencyRoversMaintenance.peekFront(R))
+		if (!EmergencyRoversMaintenance.peekFront(R))
 			return RequestRover(RoverType::Mountainous);
 		else
 		{
@@ -273,8 +273,11 @@ bool MarsStation::RequestRover(RoverType r_type)
 		}
 		break;
 	case RoverType::Mountainous:
-		if (MountinousRoverMaintenance.peekFront(R))
-			return RequestRover(RoverType::Emergency);
+		if (!MountinousRoverMaintenance.peekFront(R))
+		{
+			if (!EmergencyRoversMaintenance.isEmpty())
+				return RequestRover(RoverType::Emergency);
+		}
 		else
 		{
 			R->IncrementRequsted();
@@ -293,7 +296,7 @@ bool MarsStation::RequestRover(RoverType r_type)
 		}
 		break;
 	case RoverType::Polar:
-		if (MountinousRoverMaintenance.peekFront(R))
+		if (!MountinousRoverMaintenance.peekFront(R))
 			return false;
 		else
 		{
@@ -315,6 +318,7 @@ bool MarsStation::RequestRover(RoverType r_type)
 	default:
 		break;
 	}
+	return false;
 }
 
 // Add Mission To its corresponding list

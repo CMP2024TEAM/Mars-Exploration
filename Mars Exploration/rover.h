@@ -23,7 +23,7 @@ public:
 	virtual bool Fixed()const = 0 ; //if health is full
 	virtual void ModifyHealth(int)= 0;//-1000 for failure -2 per km
 	virtual void RestoreHealth() = 0;//Resests Health
-	int GetHealth()const;
+	int virtual GetHealth()const;
 	void DecrementSpeed();
 	void IncrementRequsted();
 	int GetRequsted();
