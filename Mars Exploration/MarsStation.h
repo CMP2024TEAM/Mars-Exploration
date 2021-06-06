@@ -37,7 +37,7 @@ private:
 	Queue<Rover*> PolarRoversCheckUp;
 	Queue<Rover*> EmergencyRoversMaintenance;
 	Queue<Rover*> MountinousRoverMaintenance;
-	Queue<Rover*> PolarRoversMaintenance;
+	Queue<Rover*> PolarRoverMaintenance;
 	Stack<Mission*> CompletedMissions;
 	int AutoP;
 	int MissionsBeforeCheckup;

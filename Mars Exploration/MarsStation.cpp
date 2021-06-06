@@ -260,6 +260,7 @@ bool MarsStation::RequestRover(RoverType r_type)
 			R->IncrementRequsted();
 			if (R->GetRequsted() >= 5)
 			{
+				EmergencyRoversMaintenance.dequeue(R);
 				R->RestoreHealth();
 				R->ResetRequsted();
 				R->DecrementSpeed();
@@ -283,6 +284,7 @@ bool MarsStation::RequestRover(RoverType r_type)
 			R->IncrementRequsted();
 			if (R->GetRequsted() >= 5)
 			{
+				MountinousRoverMaintenance.dequeue(R);
 				R->RestoreHealth();
 				R->ResetRequsted();
 				R->DecrementSpeed();
@@ -296,13 +298,14 @@ bool MarsStation::RequestRover(RoverType r_type)
 		}
 		break;
 	case RoverType::Polar:
-		if (!MountinousRoverMaintenance.peekFront(R))
+		if (!PolarRoverMaintenance.peekFront(R))
 			return false;
 		else
 		{
 			R->IncrementRequsted();
 			if (R->GetRequsted() >= 5)
 			{
+
 				R->RestoreHealth();
 				R->ResetRequsted();
 				R->DecrementSpeed();
@@ -518,8 +521,8 @@ void MarsStation::MoveMaintenaceToAvail()
 			EmergencyRoversMaintenance.peekFront(R);
 			if (R->getAvailableAt() == Day)
 			{
-
 				EmergencyRoversMaintenance.dequeue(R);
+				R->ResetRequsted();
 				R->RestoreHealth();
 				R->setStatus(RoverStatus::Available);
 				EmergencyRovers.enqueue(MyPair<Rover*,int>(R,R->getSpeed()));
@@ -528,13 +531,14 @@ void MarsStation::MoveMaintenaceToAvail()
 			else
 				break;
 		}
-		while (!PolarRoversMaintenance.isEmpty())
+		while (!PolarRoverMaintenance.isEmpty())
 		{
-			PolarRoversMaintenance.peekFront(R);
+			PolarRoverMaintenance.peekFront(R);
 			if (R->getAvailableAt() == Day)
 			{
 
-				PolarRoversMaintenance.dequeue(R);
+				PolarRoverMaintenance.dequeue(R);
+				R->ResetRequsted();
 				R->RestoreHealth();
 				R->setStatus(RoverStatus::Available);
 				PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
@@ -549,6 +553,7 @@ void MarsStation::MoveMaintenaceToAvail()
 			{
 
 				MountinousRoverMaintenance.dequeue(R);
+				R->ResetRequsted();
 				R->RestoreHealth();
 				R->setStatus(RoverStatus::Available);
 				MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
@@ -597,12 +602,14 @@ void MarsStation::MoveToMainetenace(Rover* R)
 		MountinousRoverMaintenance.enqueue(R);
 		break;
 	case RoverType::Polar:
-		PolarRoversMaintenance.enqueue(R);
+		PolarRoverMaintenance.enqueue(R);
 		break;
 	default:
 		break;
 	}
 	cInMaintenance++;
+	std::cout <<"\n========================================="
+		"\nRover was moved to maintence<" << R->GetID() << '>' << "\n=========================================\n";
 }
 
 // Remove the link between the mission and the rover then check if this rover needs to have a checkup or not 
