@@ -32,7 +32,7 @@ private:
     std::string CompletedMission_Buf[mTypeMax];
     std::string AvailableRovers_Buf[rTypeMax];
     std::string InCheckupRovers_Buf[rTypeMax];
-    std::string MaintenanceRovers_Buf[rTypeMax];
+    std::string InMaintenanceRovers_Buf[rTypeMax];
 
     /*=================================================
                         Constants

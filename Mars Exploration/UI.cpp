@@ -113,7 +113,7 @@ inline void UI::FillBuffersFromStation(MarsStation* Station)
     InExecutionCount = Station->GetInExecitionMissionsCount();
     AvailableCount = Station->GetAvailableRoversCount();
     CheckUpCount = Station->GetInCheckupRoversCount();
-    MaintenanceCount = Station->GetMaintenanceRoversCount();
+    MaintenanceCount = Station->GetInMaintenanceRoversCount();
     CompletedCount = Station->GetCompletedMissionsCount();
 
     //Temp pointers for dealing with Data Structures
@@ -149,9 +149,9 @@ inline void UI::FillBuffersFromStation(MarsStation* Station)
         while (InCheckup_Rovers.dequeue(RoverPtr))
             InCheckupRovers_Buf[rType] += std::to_string(RoverPtr->GetID()) + ", ";
 
-        Queue<Rover*> Maintenance_Rovers = Station->GetInMaintenanceRovers(static_cast<RoverType>(rType));
-        while (Maintenance_Rovers.dequeue(RoverPtr))
-            MaintenanceRovers_Buf[rType] += std::to_string(RoverPtr->GetID()) + ", ";
+        Queue<Rover*> InMaintenance_Rovers = Station->GetInMaintenanceRovers(static_cast<RoverType>(rType));
+        while (InMaintenance_Rovers.dequeue(RoverPtr))
+            InMaintenanceRovers_Buf[rType] += std::to_string(RoverPtr->GetID()) + ", ";
     }
 }
 
@@ -222,9 +222,9 @@ inline void UI::FormatBuffersToConsole()
 
     std::cout << MaintenanceCount << " In-Maintenance Rovers: ";
     for (int rType = 0; rType < rTypeMax; ++rType) {
-        if (!MaintenanceRovers_Buf[rType].empty()) {
-            MaintenanceRovers_Buf[rType].pop_back(); MaintenanceRovers_Buf[rType].pop_back();
-            std::cout << EnclosingChar[rType][0] << MaintenanceRovers_Buf[rType] << EnclosingChar[rType][1] << ' ';
+        if (!InMaintenanceRovers_Buf[rType].empty()) {
+            InMaintenanceRovers_Buf[rType].pop_back(); InMaintenanceRovers_Buf[rType].pop_back();
+            std::cout << EnclosingChar[rType][0] << InMaintenanceRovers_Buf[rType] << EnclosingChar[rType][1] << ' ';
         }
     }
     
@@ -257,7 +257,7 @@ inline void UI::ClearBuffers()
     for (int rType = 0; rType < rTypeMax; ++rType) {
         AvailableRovers_Buf[rType].clear();
         InCheckupRovers_Buf[rType].clear();
-        MaintenanceRovers_Buf[rType].clear();
+        InMaintenanceRovers_Buf[rType].clear();
     }
 
     //Reset Failed Mission Count
