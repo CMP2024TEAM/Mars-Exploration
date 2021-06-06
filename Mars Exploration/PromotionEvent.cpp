@@ -16,7 +16,8 @@ void PromotionEvent::Execute(MarsStation* Station) const
 	Mission* mission;
 	Station->GetMountainouMission(mission, MissionId);
 	if (mission != nullptr) {
-		mission->SetMissionType(MissionType::Emergency);
-		Station->AddMission(mission);
+		Mission* newmission = new EmergencyMission(mission);
+		Station->AddMission(newmission);
+		delete mission;
 	}
 }

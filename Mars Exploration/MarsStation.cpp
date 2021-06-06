@@ -44,6 +44,7 @@ void MarsStation::CreateRover(RoverType type, int speed)
 		cMountainousRovers++;
 		break;
 	case RoverType::Polar:
+		R = new PolarRover(speed);
 		PolarRovers.enqueue(MyPair<Rover*, int>(R, speed));
 		cPolarRovers++;
 		break;
@@ -319,11 +320,11 @@ bool MarsStation::RequestRover(RoverType r_type)
 // Add Mission To its corresponding list
 void MarsStation::AddMission(Mission* mission)
 {
-	EmergencyMission* EMission;
 	// Check Type Of Mission Then Add To Corrersponding List
 	switch (mission->GetMissionType())
 	{
 	case MissionType::Emergency:
+		EmergencyMission* EMission;
 		EMission = dynamic_cast<EmergencyMission*>(mission);
 		WaitingEmergencyMissions.enqueue(MyPair<Mission*, int>(mission, EMission->GetPriority()));
 		WaitingEmergencyMissionCount++;

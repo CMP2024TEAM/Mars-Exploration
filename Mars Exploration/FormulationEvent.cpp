@@ -17,6 +17,21 @@ FormulationEvent::~FormulationEvent()
 void FormulationEvent::Execute(MarsStation* Station) const
 {
 	// Create Mission And Add it To The Station
-	Mission* mission= new Mission(EventDay,TargetLocation,Significance,Duration,mType);
+	Mission* mission;
+	switch (mType)
+	{
+	case MissionType::Emergency:
+		mission = new EmergencyMission(EventDay, TargetLocation, Significance, Duration);
+		break;
+	case MissionType::Mountainous:
+		mission = new MountainousMission(EventDay, TargetLocation, Significance, Duration);
+		break;
+	case MissionType::Polar:
+		mission = new PolarMission(EventDay, TargetLocation, Significance, Duration);
+		break;
+	default:
+		throw("Unknown Mission Type");
+		break;
+	}
 	Station->AddMission(mission);
 }
