@@ -113,14 +113,15 @@ inline void UI::FillBuffersFromStation(MarsStation* Station)
     InExecutionCount = Station->GetInExecitionMissionsCount();
     AvailableCount = Station->GetAvailableRoversCount();
     CheckUpCount = Station->GetInCheckupRoversCount();
+    MaintenanceCount = Station->GetMaintenanceRoversCount();
     CompletedCount = Station->GetCompletedMissionsCount();
 
-    //Temp pointers for dealing with DataStructures
+    //Temp pointers for dealing with Data Structures
 
     Mission* MissionPtr;
     Rover* RoverPtr;
 
-    //Extract missions from DataStructures containing only one mission type
+    //Extract missions from Data Structures containing only one mission type
 
     int mType;
     for (mType = 0; mType < mTypeMax; ++mType) {
@@ -129,7 +130,7 @@ inline void UI::FillBuffersFromStation(MarsStation* Station)
             WaitingMission_Buf[mType] += std::to_string(MissionPtr->GetID()) + ", ";
     }
 
-    //Extract missions from DataStructures containing more than one mission type
+    //Extract missions from Data Structures containing more than one mission type
 
     PriorityQueue<Mission*> InExec_Missions = Station->GetInExecutionMissions();
     while (InExec_Missions.dequeue(MissionPtr)) {
@@ -137,15 +138,20 @@ inline void UI::FillBuffersFromStation(MarsStation* Station)
         InExecutionMiss_Rov_Buf[mType] += std::to_string(MissionPtr->GetID()) + '/' + std::to_string(MissionPtr->GetRover()->GetID()) + ", ";
     }
 
-    //Extract rovers from DataStructures only one rover type
+    //Extract rovers from Data Structures containing only one rover type
 
     for (int rType = 0; rType < rTypeMax; ++rType) {
-        PriorityQueue<Rover*> Available_Rovers = Station->GetAvailableRovers(static_cast<RoverType>(rType));
-        Queue<Rover*> InCheckup_Rovers = Station->GetInCheckupRovers(static_cast<RoverType>(rType));
+        PriorityQueue<Rover*> Available_Rovers = Station->GetAvailableRovers(static_cast<RoverType>(rType));            
         while (Available_Rovers.dequeue(RoverPtr))
             AvailableRovers_Buf[rType] += std::to_string(RoverPtr->GetID()) + ", ";
+
+        Queue<Rover*> InCheckup_Rovers = Station->GetInCheckupRovers(static_cast<RoverType>(rType));
         while (InCheckup_Rovers.dequeue(RoverPtr))
             InCheckupRovers_Buf[rType] += std::to_string(RoverPtr->GetID()) + ", ";
+
+        Queue<Rover*> Maintenance_Rovers = Station->GetInMaintenanceRovers(static_cast<RoverType>(rType));
+        while (Maintenance_Rovers.dequeue(RoverPtr))
+            MaintenanceRovers_Buf[rType] += std::to_string(RoverPtr->GetID()) + ", ";
     }
 }
 
@@ -214,6 +220,16 @@ inline void UI::FormatBuffersToConsole()
 
     std::cout << '\n' << LineBreak << '\n';
 
+    std::cout << MaintenanceCount << " In-Maintenance Rovers: ";
+    for (int rType = 0; rType < rTypeMax; ++rType) {
+        if (!MaintenanceRovers_Buf[rType].empty()) {
+            MaintenanceRovers_Buf[rType].pop_back(); MaintenanceRovers_Buf[rType].pop_back();
+            std::cout << EnclosingChar[rType][0] << MaintenanceRovers_Buf[rType] << EnclosingChar[rType][1] << ' ';
+        }
+    }
+    
+    std::cout << '\n' << LineBreak << '\n';
+
     std::cout << CompletedCount << " Completed Missions: ";
     for (int mType = 0; mType < mTypeMax; ++mType) {
         if (!CompletedMission_Buf[mType].empty()) {
@@ -241,6 +257,7 @@ inline void UI::ClearBuffers()
     for (int rType = 0; rType < rTypeMax; ++rType) {
         AvailableRovers_Buf[rType].clear();
         InCheckupRovers_Buf[rType].clear();
+        MaintenanceRovers_Buf[rType].clear();
     }
 
     //Reset Failed Mission Count
@@ -256,7 +273,7 @@ inline void UI::WaitForUserInput()
 
 inline void UI::PrintStatistics(MarsStation* Station)
 {
-    OFile << "......................." << "\n" << "......................." << "\n";
+    OFile << '\n' << LineBreak << "\n\n";
     OFile << "Missions: " << Station->GetCompletedMissionsCount() << " [M: " << Station->GetMountainouMissionCount()
         << ", P: " << Station->GetPolarMissionCount() << ", E: " << Station->GetEmergencyMissionCount() << "]"<< '\n';
     
@@ -286,6 +303,7 @@ UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
     InExecutionCount(0),
     AvailableCount(0),
     CheckUpCount(0),
+    MaintenanceCount(0),
     CompletedCount(0)  
 {
     //Create/Open files from OS
@@ -317,7 +335,7 @@ void UI::InitialDisplayMessage()
     }
     //Initial message for StepByStep mode
     case OutputType::StepByStep: {
-        std::cout << "StepByStep Mode\nSimulation Starts...\nWait " << StepByStep_WaitingTime << " second before each day\n";
+        std::cout << "StepByStep Mode\nSimulation Starts...\nWait " << StepByStep_WaitingTime << " second(s) before each day\n";
         break;
     }
     //Initial message for Silent mode
@@ -373,6 +391,7 @@ void UI::PrintCurrentDay(MarsStation* Station)
         if (OType == OutputType::Interactive)
             WaitForUserInput();
 
+        //Wait "StepByStep_WaitingTime" seconds before continuing program
         else if (OType == OutputType::StepByStep)
             std::this_thread::sleep_for(std::chrono::seconds(StepByStep_WaitingTime));
     }

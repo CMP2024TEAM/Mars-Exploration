@@ -25,13 +25,14 @@ private:
     /*=================================================
                          Buffers
     =================================================*/  
-    int TotalFailures, FailedCount, WaitingCount, InExecutionCount, AvailableCount, CheckUpCount, CompletedCount;
+    int TotalFailures, FailedCount, WaitingCount, InExecutionCount, AvailableCount, CheckUpCount, MaintenanceCount, CompletedCount;
     std::string FailedMission_Buf[mTypeMax];
     std::string WaitingMission_Buf[mTypeMax];
     std::string InExecutionMiss_Rov_Buf[mTypeMax];
     std::string CompletedMission_Buf[mTypeMax];
     std::string AvailableRovers_Buf[rTypeMax];
     std::string InCheckupRovers_Buf[rTypeMax];
+    std::string MaintenanceRovers_Buf[rTypeMax];
 
     /*=================================================
                         Constants
