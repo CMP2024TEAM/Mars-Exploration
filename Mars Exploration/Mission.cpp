@@ -1,4 +1,5 @@
 #include "Mission.h"
+#include "cmath"
 
 Mission::Mission(int FD, int TL,int id, int MD, int S)
 {
@@ -78,7 +79,7 @@ int Mission::Get_ED() const
 	if (AssignedRover == nullptr)
 		return 0;
 	else
-		return 2 * ((TargetLocation / AssignedRover->getSpeed()) / 25) + MissionDuration;
+		return ceil(2 * ((float(TargetLocation) / AssignedRover->getSpeed()) / 25) + MissionDuration);
 }
 
 void Mission::AssignRover(Rover* R)
