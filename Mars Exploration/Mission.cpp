@@ -1,6 +1,6 @@
 #include "Mission.h"
 
-Mission::Mission(int FD, int TL, int MD, int S)
+Mission::Mission(int FD, int TL,int id, int MD, int S)
 {
 	SetFormulationDay(FD);
 	SetTargetLocation(TL);
@@ -10,6 +10,7 @@ Mission::Mission(int FD, int TL, int MD, int S)
 	AssignedRover = nullptr;
 	ID=0;
 	SetWaitingDays(1);
+	SetID(id);
 }
 
 int Mission::GetFormulationDay()			const

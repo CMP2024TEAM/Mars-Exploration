@@ -68,6 +68,17 @@ inline void UI::ReadCheckupInfo(MarsStation* Station)
     }
 }
 
+inline void UI::ReadHealthInfo(MarsStation* Station)
+{
+    //Get Maximum Health of each rover type
+
+    int MaximumRoverHealth;
+    for (int rType = 0; rType < rTypeMax; ++rType) {
+        IFile >> MaximumRoverHealth;
+        Station->SetRoverMaxHealth(RoverType(rType), MaximumRoverHealth);
+    }
+}
+
 inline void UI::ReadAutoPromotion(MarsStation* Station)
 {
     int AutoP;
@@ -318,6 +329,7 @@ void UI::ReadAll(MarsStation* Station)
 {
     ReadRoverData(Station);
     ReadCheckupInfo(Station);
+    ReadHealthInfo(Station);
     ReadAutoPromotion(Station);
     ReadEvents(Station);
 }

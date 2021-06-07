@@ -50,6 +50,7 @@ private:
     MissionType ParseMissionType(char c_type);
     void ReadRoverData(MarsStation* Station);
     void ReadCheckupInfo(MarsStation* Station);
+    void ReadHealthInfo(MarsStation* Station);
     void ReadAutoPromotion(MarsStation* Station);
     void ReadEvents(MarsStation* Station);
 

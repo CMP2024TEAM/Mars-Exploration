@@ -4,7 +4,7 @@ class PolarMission :
     public Mission
 {
 public:
-    PolarMission(int FD, int TL, int MD, int S);
+    PolarMission(int FD, int TL, int id, int MD, int S);
     virtual MissionType GetMissionType() const;
     ~PolarMission();
 };

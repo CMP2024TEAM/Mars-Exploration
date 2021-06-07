@@ -1,6 +1,6 @@
 #include "PolarMission.h"
 
-PolarMission::PolarMission(int FD, int TL, int MD, int S) :Mission(FD, TL, MD, S)
+PolarMission::PolarMission(int FD, int TL, int id, int MD, int S) :Mission(FD, TL,id, MD, S)
 {
 
 }

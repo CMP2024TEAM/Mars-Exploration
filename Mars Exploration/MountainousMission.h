@@ -4,7 +4,7 @@ class MountainousMission :
     public Mission
 {
 public:
-    MountainousMission(int FD, int TL, int MD, int S);
+    MountainousMission(int FD, int TL,int id,int MD, int S);
     virtual MissionType GetMissionType() const;
     ~MountainousMission();
 };
