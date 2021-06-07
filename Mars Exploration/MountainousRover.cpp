@@ -1,5 +1,5 @@
 #include"MountainousRover.h"
-int health = 0;
+int MountainousRover::health = 0;
 MountainousRover::MountainousRover(int s) : Rover(s)
 {
 	Health = health;

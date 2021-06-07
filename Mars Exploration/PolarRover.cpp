@@ -1,5 +1,5 @@
 #include"PolarRover.h"
-int health = 0;
+int PolarRover::health = 0;
 PolarRover::PolarRover(int s) : Rover(s)
 {
 	Health = health;

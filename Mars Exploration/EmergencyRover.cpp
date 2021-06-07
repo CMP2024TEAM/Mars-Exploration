@@ -1,5 +1,5 @@
 #include"EmergencyRover.h"
-int health = 0;
+int EmergencyRover::health = 0;
 EmergencyRover::EmergencyRover(int s) : Rover(s)
 {
 	Health = health;
