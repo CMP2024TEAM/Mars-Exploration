@@ -12,6 +12,10 @@ void EmergencyRover::Set_Health(int h)
 {
 	health = h;
 }
+int EmergencyRover::GetMaxHealth() const
+{
+	return health;
+}
 RoverType EmergencyRover::getType() const
 {
 	return RoverType::Emergency;

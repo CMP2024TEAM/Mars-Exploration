@@ -24,6 +24,7 @@ public:
 	virtual void ModifyHealth(int)= 0;//-1000 for failure -2 per km
 	virtual void RestoreHealth() = 0;//Resests Health
 	int virtual GetHealth()const;
+	int virtual GetMaxHealth() const;
 	void DecrementSpeed();
 	void IncrementRequsted();
 	int GetRequsted();

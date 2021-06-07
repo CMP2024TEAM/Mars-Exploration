@@ -5,6 +5,7 @@ public:
 	MountainousRover(int s);
 	~MountainousRover();
 	static void Set_Health(int);
+	int virtual GetMaxHealth() const;
 
 private:
 	virtual RoverType getType() const;

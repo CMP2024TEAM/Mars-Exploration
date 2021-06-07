@@ -136,6 +136,7 @@ void MarsStation::AssignMissions()
 			WaitingEmergencyMissions.dequeue(M_ptr);
 			EmergencyRovers.dequeue(R_ptr);
 			M_ptr->AssignRover(R_ptr);
+
 			M_ptr->SetMissionStatus(MissionStatus::InExecution);
 			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
 			M_ptr->SetED();
@@ -574,7 +575,7 @@ void MarsStation::MoveToCheckUp(Rover* R)
 void MarsStation::MoveToMainetenace(Rover* R)
 {
 	R->setStatus(RoverStatus::InMaintenance);
-	R->setAvailableAt(Day + R->GetHealth() / 1000);
+	R->setAvailableAt(Day + R->GetMaxHealth() / 1000);
 	//detemine the type of the rover and put it in the appropiate queue
 	switch (R->getType())
 	{

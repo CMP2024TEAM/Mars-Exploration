@@ -5,6 +5,7 @@ public:
 	PolarRover(int s);
 	~PolarRover();
 	static void Set_Health(int);
+	int virtual GetMaxHealth() const;
 
 private:
 	virtual RoverType getType() const;

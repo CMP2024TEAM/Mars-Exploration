@@ -12,6 +12,10 @@ void MountainousRover::Set_Health(int h)
 {
 	health = h;
 }
+int MountainousRover::GetMaxHealth() const
+{
+	return health;
+}
 RoverType MountainousRover::getType() const
 {
 	return RoverType::Mountainous;

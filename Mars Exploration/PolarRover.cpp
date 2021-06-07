@@ -12,6 +12,10 @@ void PolarRover::Set_Health(int h)
 {
 	health = h;
 }
+int PolarRover::GetMaxHealth() const
+{
+	return health;
+}
 RoverType PolarRover::getType() const
 {
 	return RoverType::Polar;
