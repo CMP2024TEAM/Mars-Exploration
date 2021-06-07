@@ -1,13 +1,13 @@
 #include "EmergencyMission.h"
 
-EmergencyMission::EmergencyMission(int FD, int TL, int MD, int S) :Mission(FD, TL, MD,S)
+EmergencyMission::EmergencyMission(int FD, int TL, int id, int MD, int S) :Mission(FD, TL,id, MD,S)
 {
 
 }
 
-EmergencyMission::EmergencyMission(Mission* M):Mission(M->GetFormulationDay(),M->GetTargetLocation(),M->GetMissionDuration(),M->GetSignificance())
+EmergencyMission::EmergencyMission(Mission* M):Mission(M->GetFormulationDay(),M->GetTargetLocation(),M->GetID(),M->GetMissionDuration(),M->GetSignificance())
 {
-	SetID(M->GetID());
+
 }
 
 int EmergencyMission::GetPriority() const

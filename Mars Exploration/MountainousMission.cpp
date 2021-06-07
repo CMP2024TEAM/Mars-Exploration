@@ -1,6 +1,6 @@
 #include "MountainousMission.h"
 
-MountainousMission::MountainousMission(int FD, int TL, int MD, int S) :Mission(FD,TL,MD,S)
+MountainousMission::MountainousMission(int FD, int TL,int id, int MD, int S) :Mission(FD,TL,id,MD,S)
 {
 
 }

@@ -17,7 +17,7 @@ private:
 
 public:
 
-	Mission(int FD, int TL, int MD, int S);
+	Mission(int FD, int TL,int id ,int MD, int S);
 	int GetFormulationDay()		const;
 	void SetFormulationDay(int FD);
 	int GetTargetLocation ()		const;
