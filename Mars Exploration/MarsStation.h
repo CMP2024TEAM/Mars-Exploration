@@ -77,7 +77,7 @@ public:
 	void SetCheckupDuration(RoverType type, int Duration);
 	
 	//Initialize Rover Health
-	void SetRoverMaxHealth(int,int,int);
+	void SetRoverMaxHealth(RoverType(rType), int MaximumRoverHealth);
 
 	// Set autopromosion
 	void SetAutoP(int apDuration);

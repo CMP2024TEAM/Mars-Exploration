@@ -74,11 +74,23 @@ void MarsStation::SetCheckupDuration(RoverType type, int Duration)
 	}
 }
 
-void MarsStation::SetRoverMaxHealth(int E, int M, int P)
+void MarsStation::SetRoverMaxHealth(RoverType(rType), int MaximumRoverHealth)
 {
-	EmergencyRover::Set_Health(E);
-	MountainousRover::Set_Health(M);
-	PolarRover::Set_Health(E);
+	switch (rType)
+	{
+	case RoverType::Emergency:
+		EmergencyRover::Set_Health(MaximumRoverHealth);
+		break;
+	case RoverType::Mountainous:
+		MountainousRover::Set_Health(MaximumRoverHealth);
+		break;
+	case RoverType::Polar:
+		PolarRover::Set_Health(MaximumRoverHealth);
+		break;
+	default:
+		throw("Type Not Found...");
+		break;
+	}
 }
 
 // Set autopromosion
