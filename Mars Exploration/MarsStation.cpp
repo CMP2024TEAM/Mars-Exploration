@@ -123,60 +123,68 @@ void MarsStation::CreatePromotionEvent(int ED, int ID)
 	EventList.enqueue(E);
 }
 
-// Call this function at the start of every new day
+// Call this function at the start of every new day 
+// AssignMission:Assigne each waiting mission to its right Rover
+// Request Rover from Maintenace if Needed
 void MarsStation::AssignMissions()
 {
-	Mission* M_ptr;
-	Rover* R_ptr;
+	Mission* M_ptr; //Mission pointer
+	Rover* R_ptr;	//Rover Pointer
 	// Assigning Emergency Missions
 	while (!WaitingEmergencyMissions.isEmpty())
 	{
+		//Check for Emergncy Rovers First
 		if (!EmergencyRovers.isEmpty())
 		{
+			//Remove Rover/Mission From Queue
 			WaitingEmergencyMissions.dequeue(M_ptr);
 			EmergencyRovers.dequeue(R_ptr);
+			//Assign Mission/Rover
 			M_ptr->AssignRover(R_ptr);
-
 			M_ptr->SetMissionStatus(MissionStatus::InExecution);
 			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
 			M_ptr->SetED();
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
-			
+			//Modify Counts
 			cEmergencyRovers--;
 			cEmergencyMissions--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
-		}
+		}//Check for Mountinous Rovers Second
 		else if (!MountainousRovers.isEmpty())
 		{
+			//Remove Rover/Mission From Queue
 			WaitingEmergencyMissions.dequeue(M_ptr);
 			MountainousRovers.dequeue(R_ptr);
+			//Assign Mission/Rover
 			M_ptr->AssignRover(R_ptr);
 			M_ptr->SetMissionStatus(MissionStatus::InExecution);
 			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
 			M_ptr->SetED();
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
-			
+			//Modify Counts
 			cMountainousRovers--;
 			cEmergencyMissions--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
-		}
+		}//Check for Polar Rovers
 		else if (!PolarRovers.isEmpty())
 		{
+			//Remove Rover/Mission From Queue
 			WaitingEmergencyMissions.dequeue(M_ptr);
 			PolarRovers.dequeue(R_ptr);
 			M_ptr->AssignRover(R_ptr);
+			//Assign Mission/Rover
 			M_ptr->SetMissionStatus(MissionStatus::InExecution);
 			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
 			M_ptr->SetED();
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
-			
+			//Modify Counts
 			cPolarRovers--;
 			cEmergencyMissions--;
 			cInExecution++;
 			WaitingEmergencyMissionCount--;
-		}
+		}//Not Found Any Rover Request One!
 		else
 		{
 			if (!RequestRover(RoverType::Emergency))
@@ -190,19 +198,21 @@ void MarsStation::AssignMissions()
 	{
 		if (!PolarRovers.isEmpty())
 		{
+			//Remove Rover/Mission From Queue
 			WaitingPolarMissions.dequeue(M_ptr);
 			PolarRovers.dequeue(R_ptr);
+			//Assign Mission/Rover
 			M_ptr->AssignRover(R_ptr);
 			M_ptr->SetMissionStatus(MissionStatus::InExecution);
 			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
 			M_ptr->SetED();
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
-			
+			//Modify Counts
 			cPolarRovers--;
 			cPolarMissions--;
 			cInExecution++;
 			WaitingPolarMissionCount--;
-		}
+		}//Not Found Any Rover Request One!
 		else
 		{
 			if (!RequestRover(RoverType::Polar))
@@ -214,37 +224,42 @@ void MarsStation::AssignMissions()
 
 	while (!WaitingMountainousMissions.isEmpty())
 	{
+		//Check Mountinous Rovers First
 		if (!MountainousRovers.isEmpty())
 		{
+			//Remove Rover/Mission From Queue
 			WaitingMountainousMissions.dequeue(M_ptr);
 			MountainousRovers.dequeue(R_ptr);
+			//Assign Mission/Rover
 			M_ptr->AssignRover(R_ptr);
 			M_ptr->SetMissionStatus(MissionStatus::InExecution);
 			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
 			M_ptr->SetED();
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
-			
+			//Modify Counts
 			cMountainousRovers--;
 			cMountainousMissions--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
 
-		}
+		}//Check Emergency Rovers Second
 		else if (!EmergencyRovers.isEmpty())
 		{
+			//Remove Rover/Mission From Queue
 			WaitingMountainousMissions.dequeue(M_ptr);
 			EmergencyRovers.dequeue(R_ptr);
+			//Assign Mission/Rover
 			M_ptr->AssignRover(R_ptr);
 			M_ptr->SetMissionStatus(MissionStatus::InExecution);
 			M_ptr->SetWaitingDays(Day - M_ptr->GetFormulationDay());
 			M_ptr->SetED();
 			InExecutionMissions.enqueue(MyPair<Mission*, int>(M_ptr, -1 * M_ptr->GetCD()));
-			
+			//Modify Counts
 			cEmergencyRovers--;
 			cMountainousMissions--;
 			cInExecution++;
 			WaitingMountainousMissionCount--;
-		}
+		}//Not Found Any Rover Request One!
 		else
 		{
 			if (!RequestRover(RoverType::Mountainous))
@@ -252,10 +267,10 @@ void MarsStation::AssignMissions()
 		}
 	}
 }
-
+//Free Rover if Requested > Five Times return true if Freed false otherwise
 bool MarsStation::RequestRover(RoverType r_type)
 {
-	Rover* R;
+	Rover* R; //Rover Ptr
 	switch (r_type)
 	{
 	case RoverType::Emergency:
@@ -266,12 +281,14 @@ bool MarsStation::RequestRover(RoverType r_type)
 			R->IncrementRequsted();
 			if (R->GetRequsted() >= 5)
 			{
+				//Free Rover
 				EmergencyRoversMaintenance.dequeue(R);
 				R->RestoreHealth();
 				R->ResetRequsted();
 				R->DecrementSpeed();
 				R->setAvailableAt(Day);
 				R->setStatus(RoverStatus::Available);
+				//Modify Counts
 				cInMaintenance--;
 				cEmergencyRovers++;
 				EmergencyRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
@@ -291,12 +308,14 @@ bool MarsStation::RequestRover(RoverType r_type)
 			R->IncrementRequsted();
 			if (R->GetRequsted() >= 5)
 			{
+				//free Rover
 				MountinousRoverMaintenance.dequeue(R);
 				R->RestoreHealth();
 				R->ResetRequsted();
 				R->DecrementSpeed();
 				R->setAvailableAt(Day);
 				R->setStatus(RoverStatus::Available);
+				//Modify Counts
 				cInMaintenance--;
 				cMountainousRovers++;
 				MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
@@ -313,12 +332,14 @@ bool MarsStation::RequestRover(RoverType r_type)
 			R->IncrementRequsted();
 			if (R->GetRequsted() >= 5)
 			{
+				//free Rover
 				PolarRoverMaintenance.dequeue(R);
 				R->RestoreHealth();
 				R->ResetRequsted();
 				R->DecrementSpeed();
 				R->setAvailableAt(Day);
 				R->setStatus(RoverStatus::Available);
+				//Modify Counts
 				cInMaintenance--;
 				cPolarRovers++;
 				PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
@@ -494,7 +515,9 @@ void MarsStation::MoveCheckUpToAvail()
 
 void MarsStation::MoveMaintenaceToAvail()
 {
-	Rover* R;
+	Rover* R; //Rover ptr
+	//Check if Rover finished Recovring Health(Maintenance)
+	//Check Emerngecy
 	while (!EmergencyRoversMaintenance.isEmpty())
 	{
 		EmergencyRoversMaintenance.peekFront(R);
@@ -505,12 +528,13 @@ void MarsStation::MoveMaintenaceToAvail()
 			R->RestoreHealth();
 			R->setStatus(RoverStatus::Available);
 			EmergencyRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+			//Modify Counts
 			cEmergencyRovers++;
 			cInMaintenance--;
 		}
 		else
 			break;
-	}
+	}//Check Polar
 	while (!PolarRoverMaintenance.isEmpty())
 	{
 		PolarRoverMaintenance.peekFront(R);
@@ -522,12 +546,13 @@ void MarsStation::MoveMaintenaceToAvail()
 			R->RestoreHealth();
 			R->setStatus(RoverStatus::Available);
 			PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+			//Modify Counts
 			cInMaintenance--;
 			cPolarRovers++;
 		}
 		else
 			break;
-	}
+	}//Check Mountinous
 	while (!MountinousRoverMaintenance.isEmpty())
 	{
 		MountinousRoverMaintenance.peekFront(R);
@@ -539,6 +564,7 @@ void MarsStation::MoveMaintenaceToAvail()
 			R->RestoreHealth();
 			R->setStatus(RoverStatus::Available);
 			MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+			//Modify Counts
 			cInMaintenance--;
 			cMountainousRovers++;
 		}
@@ -571,11 +597,11 @@ void MarsStation::MoveToCheckUp(Rover* R)
 	cInCheckUp++;
 	R->ResetCompletedMissions();
 }
-
+//IF Health is 0 Start Fixing the Rover
 void MarsStation::MoveToMainetenace(Rover* R)
 {
 	R->setStatus(RoverStatus::InMaintenance);
-	R->setAvailableAt(Day + R->GetMaxHealth() / 1000);
+	R->setAvailableAt(Day + R->GetMaxHealth() / 1000); //Maintenance Time + Current Day
 	//detemine the type of the rover and put it in the appropiate queue
 	switch (R->getType())
 	{
@@ -591,6 +617,7 @@ void MarsStation::MoveToMainetenace(Rover* R)
 	default:
 		break;
 	}
+	//Modify Counts
 	cInMaintenance++;
 }
 
@@ -694,12 +721,13 @@ void MarsStation::CheckUpAutoP()
 		}
 	}
 }
-
+//The Main Core of the Class which will be called in main
 void MarsStation::Simulate()
 {
+	//Print
 	InOut->InitialDisplayMessage();
 
-
+	//Simulate Untill All Lists Are Empty
 	while (
 		!WaitingEmergencyMissions.isEmpty() ||
 		!WaitingMountainousMissions.isEmpty() ||
@@ -714,6 +742,7 @@ void MarsStation::Simulate()
 		!PolarRoverMaintenance.isEmpty()
 		)
 	{
+		//Main Functions
 		ExecuteEvent();
 		MoveCheckUpToAvail();
 		MoveMaintenaceToAvail();
@@ -721,16 +750,19 @@ void MarsStation::Simulate()
 		MoveInExecutiontoComplete();
 		CheckUpAutoP();
 		AssignMissions();
+		//CurrentDay Info Print
 		InOut->PrintCurrentDay(this);
 		Day++;
+		//Free Missions Every Day for Memory
 		DeleteCompletedMissions();
 	}
-
+	//Print
 	InOut->FinalDisplayMessage(this);
 }
 
 void MarsStation::DeleteCompletedMissions()
 {
+	//deallocate Memory
 	while (!CompletedMissions.isEmpty())
 	{
 		Mission* M_ptr;
@@ -742,9 +774,9 @@ void MarsStation::DeleteCompletedMissions()
 void MarsStation::MissionFailure()
 {
 	Queue<Mission*> M_Queue; //  no need for priorety queue
-	Mission* M_ptr;
-	Rover* R_ptr;
-	double Percentage;
+	Mission* M_ptr;		//Mission ptr
+	Rover* R_ptr;		//Rover ptr
+	double Percentage;	//100%
 	//if rand less than 1% then the mission fails
 	while (!InExecutionMissions.isEmpty())
 	{
@@ -777,10 +809,12 @@ void MarsStation::MissionFailure()
 			default:
 				break;
 			}
+			//Print
 			InOut->LogMissionFailure(M_ptr);
 		}
 		else
 		{
+			//Retrun back if not faild
 			M_Queue.enqueue(M_ptr);
 		}
 

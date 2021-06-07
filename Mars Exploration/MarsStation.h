@@ -23,7 +23,7 @@ class MarsStation
 private:
 	// User Interface
 	UI* InOut;
-	// Events
+	// Lists
 	Queue<Event*> EventList;
 	PriorityQueue<Mission*> WaitingEmergencyMissions;
 	Queue<Mission*> WaitingPolarMissions;
