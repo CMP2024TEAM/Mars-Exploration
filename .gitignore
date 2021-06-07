@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /Mars Exploration/DataStructures/Test.cpp
 
 .output.txt
+*.txt
