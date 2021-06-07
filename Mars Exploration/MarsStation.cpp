@@ -932,6 +932,26 @@ float MarsStation::GetAvgExec() const
 	return (float)TotalExcuationTime / cCompletedMissions;
 }
 
+int MarsStation::GetInMaintenanceRoversCount() const
+{
+	return cInMaintenance;
+}
+
+Queue<Rover*> MarsStation::GetInMaintenanceRovers(RoverType type) const
+{
+	switch (type)
+	{
+	case RoverType::Emergency:
+		return EmergencyRoversMaintenance;
+	case RoverType::Mountainous:
+		return MountinousRoverMaintenance;
+	case RoverType::Polar:
+		return PolarRoverMaintenance;
+	default:
+		throw("Unkonwn Rover Type");
+	}
+}
+
 
 // Destructor
 MarsStation::~MarsStation()

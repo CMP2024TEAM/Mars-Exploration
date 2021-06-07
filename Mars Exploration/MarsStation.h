@@ -158,6 +158,8 @@ public:
 	int GetPolarMissionCount() const;
 	float GetAvgWait() const;
 	float GetAvgExec() const;
+	int GetInMaintenanceRoversCount() const;
+	Queue<Rover*> GetInMaintenanceRovers(RoverType type) const;
 	// Destructor
 	~MarsStation();
 };
