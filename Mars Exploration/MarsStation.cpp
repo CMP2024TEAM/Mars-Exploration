@@ -1004,4 +1004,16 @@ MarsStation::~MarsStation()
 	{
 		delete M;
 	}
+	while (EmergencyRoversMaintenance.dequeue(R))
+	{
+		delete R;
+	}
+	while (MountinousRoverMaintenance.dequeue(R))
+	{
+		delete R;
+	}
+	while (PolarRoverMaintenance.dequeue(R))
+	{
+		delete R;
+	}
 }
