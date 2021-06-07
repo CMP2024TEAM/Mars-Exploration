@@ -21,13 +21,13 @@ void FormulationEvent::Execute(MarsStation* Station) const
 	switch (mType)
 	{
 	case MissionType::Emergency:
-		mission = new EmergencyMission(EventDay, TargetLocation, Significance, Duration);
+		mission = new EmergencyMission(EventDay, TargetLocation, MissionId, Significance, Duration);
 		break;
 	case MissionType::Mountainous:
-		mission = new MountainousMission(EventDay, TargetLocation, Significance, Duration);
+		mission = new MountainousMission(EventDay, TargetLocation, MissionId, Significance, Duration);
 		break;
 	case MissionType::Polar:
-		mission = new PolarMission(EventDay, TargetLocation, Significance, Duration);
+		mission = new PolarMission(EventDay, TargetLocation, MissionId, Significance, Duration);
 		break;
 	default:
 		throw("Unknown Mission Type");

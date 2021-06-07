@@ -13,5 +13,6 @@ private:
     int TargetLocation;
     int Duration;
     int Significance;
+
 };
 
