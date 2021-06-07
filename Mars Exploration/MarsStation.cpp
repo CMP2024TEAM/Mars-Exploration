@@ -4,9 +4,9 @@
 MarsStation::MarsStation(UI* tInOut) :cInExecution(0), cEmergencyMissions(0), cMountainousMissions(0), cPolarMissions(0), cEmergencyRovers(0), cPolarRovers(0), cMountainousRovers(0), cExcecuteTime(0), cWaitTime(0), cAutop(0), Day(1)
 {
 	/* initialize random seed: */
-	//srand(time(NULL));
+	srand(time(NULL));
 	//initail Values
-	srand(10);
+	//srand(10); for const seed debuging
 	cInCheckUp = 0;
 	cInMaintenance = 0;
 	cCompletedMissions = 0;
@@ -768,12 +768,12 @@ void MarsStation::MissionFailure()
 	Mission* M_ptr;
 	Rover* R_ptr;
 	double Percentage;
-	//if rand less than 0.25% then the mission fails
+	//if rand less than 3% then the mission fails
 	while (!InExecutionMissions.isEmpty())
 	{
 		InExecutionMissions.dequeue(M_ptr);
 		Percentage = (double(rand()) / RAND_MAX) * 100;
-		if (Percentage <= 0.25)
+		if (Percentage <= 3)
 		{
 			//Remove the Rover then move it to checkup or maintenace
 			R_ptr = M_ptr->GetRover();
