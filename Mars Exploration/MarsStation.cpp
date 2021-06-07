@@ -546,6 +546,7 @@ void MarsStation::MoveMaintenaceToAvail()
 				R->setStatus(RoverStatus::Available);
 				PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				cInMaintenance--;
+				cPolarRovers++;
 			}
 			else
 				break;
@@ -562,6 +563,7 @@ void MarsStation::MoveMaintenaceToAvail()
 				R->setStatus(RoverStatus::Available);
 				MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				cInMaintenance--;
+				cMountainousRovers++;
 			}
 			else
 				break;
