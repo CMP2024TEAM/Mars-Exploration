@@ -521,7 +521,7 @@ void MarsStation::MoveMaintenaceToAvail()
 		while (!EmergencyRoversMaintenance.isEmpty())
 		{
 			EmergencyRoversMaintenance.peekFront(R);
-			if (R->getAvailableAt() == Day)
+			if (R->getAvailableAt() <= Day)
 			{
 				EmergencyRoversMaintenance.dequeue(R);
 				R->ResetRequsted();
@@ -537,7 +537,7 @@ void MarsStation::MoveMaintenaceToAvail()
 		while (!PolarRoverMaintenance.isEmpty())
 		{
 			PolarRoverMaintenance.peekFront(R);
-			if (R->getAvailableAt() == Day)
+			if (R->getAvailableAt() <= Day)
 			{
 
 				PolarRoverMaintenance.dequeue(R);
@@ -553,7 +553,7 @@ void MarsStation::MoveMaintenaceToAvail()
 		while (!MountinousRoverMaintenance.isEmpty())
 		{
 			MountinousRoverMaintenance.peekFront(R);
-			if (R->getAvailableAt() == Day)
+			if (R->getAvailableAt() <= Day)
 			{
 
 				MountinousRoverMaintenance.dequeue(R);
@@ -734,6 +734,7 @@ void MarsStation::Simulate()
 	{
 		ExecuteEvent();
 		MoveCheckUpToAvail();
+		MoveMaintenaceToAvail();
 		MissionFailure();
 		MoveInExecutiontoComplete();
 		CheckUpAutoP();
