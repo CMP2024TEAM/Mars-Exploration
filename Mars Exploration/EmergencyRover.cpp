@@ -1,11 +1,16 @@
 #include"EmergencyRover.h"
+int health = 0;
 EmergencyRover::EmergencyRover(int s) : Rover(s)
 {
-	Health = 7000;
+	Health = health;
 }
 
 EmergencyRover::~EmergencyRover()
 {
+}
+void EmergencyRover::Set_Health(int h)
+{
+	health = h;
 }
 RoverType EmergencyRover::getType() const
 {
@@ -14,17 +19,17 @@ RoverType EmergencyRover::getType() const
 
 bool EmergencyRover::Fixed() const
 {
-	return (Health>=7000);
+	return (Health>=health);
 }
 
 void EmergencyRover::ModifyHealth(int h)
 {
 	Health += h;
-	Health = (Health > 7000) ? 7000 : Health;
+	Health = (Health > health) ? health : Health;
 	Health = (Health < 0) ? 0 : Health;
 }
 
 void EmergencyRover::RestoreHealth()
 {
-	Health = 7000;
+	Health = health;
 }

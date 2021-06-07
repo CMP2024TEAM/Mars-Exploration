@@ -86,7 +86,6 @@ void Rover::DecrementSpeed()
 {
 	Speed /= 2;
 	if (Speed < 1) Speed = 1;
-	std::cout << "\nRover speed was decremented to " << Speed << " ID= " << Id <<std::endl;;
 }
 
 void Rover::IncrementRequsted()

@@ -1,12 +1,16 @@
 #include"MountainousRover.h"
-
+int health = 0;
 MountainousRover::MountainousRover(int s) : Rover(s)
 {
-	Health = 6000;
+	Health = health;
 }
 
 MountainousRover::~MountainousRover()
 {
+}
+void MountainousRover::Set_Health(int h)
+{
+	health = h;
 }
 RoverType MountainousRover::getType() const
 {
@@ -15,17 +19,17 @@ RoverType MountainousRover::getType() const
 
 bool MountainousRover::Fixed() const
 {
-	return (Health >= 6000);
+	return (Health >= health);
 }
 
 void MountainousRover::ModifyHealth(int h)
 {
 	Health += h;
-	Health = (Health > 6000) ? 6000 : Health;
+	Health = (Health > health) ? health : Health;
 	Health = (Health < 0) ? 0 : Health;
 }
 
 void MountainousRover::RestoreHealth()
 {
-	Health = 6000;
+	Health = health;
 }

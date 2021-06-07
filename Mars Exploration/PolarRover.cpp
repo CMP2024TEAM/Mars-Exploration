@@ -1,11 +1,16 @@
 #include"PolarRover.h"
+int health = 0;
 PolarRover::PolarRover(int s) : Rover(s)
 {
-	Health = 5000;
+	Health = health;
 }
 
 PolarRover::~PolarRover()
 {
+}
+void PolarRover::Set_Health(int h)
+{
+	health = h;
 }
 RoverType PolarRover::getType() const
 {
@@ -14,17 +19,17 @@ RoverType PolarRover::getType() const
 
 bool PolarRover::Fixed() const
 {
-	return (Health >= 5000);
+	return (Health >= health);
 }
 
 void PolarRover::ModifyHealth(int h)
 {
 	Health += h;
-	Health = (Health > 5000) ? 5000 : Health;
+	Health = (Health > health) ? health : Health;
 	Health = (Health < 0) ? 0 : Health;
 }
 
 void PolarRover::RestoreHealth()
 {
-	Health = 5000;
+	Health = health;
 }

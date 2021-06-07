@@ -76,6 +76,9 @@ public:
 	// SetCheckupDuration for each rovar tyoe
 	void SetCheckupDuration(RoverType type, int Duration);
 	
+	//Initialize Rover Health
+	void SetRoverMaxHealth(int,int,int);
+
 	// Set autopromosion
 	void SetAutoP(int apDuration);
 	void SetMissionsBeforeCheckup(int cNum);

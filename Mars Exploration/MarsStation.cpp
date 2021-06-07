@@ -51,21 +51,7 @@ void MarsStation::CreateRover(RoverType type, int speed)
 	default:
 		throw("Unkonwn Rover Type");
 	}
-	/*if (type == RoverType::Emergency)
-	{
-		EmergencyRovers.enqueue(MyPair<Rover*, int>(R, speed));
-		cEmergencyRovers++;
-	}
-	if (type == RoverType::Mountainous)
-	{
-		MountainousRovers.enqueue(MyPair<Rover*, int>(R, speed));
-		cMountainousRovers++;
-	}
-	if (type == RoverType::Polar)
-	{
-		PolarRovers.enqueue(MyPair<Rover*, int>(R, speed));
-		cPolarRovers++;
-	}*/
+
 }
 
 // SetCheckupDuration for each rovar tyoe
@@ -86,12 +72,13 @@ void MarsStation::SetCheckupDuration(RoverType type, int Duration)
 		throw("Unkonwn Rover Type");
 		break;
 	}
-	/*if (type == RoverType::Emergency)
-		Rover::CheckupDuration[0] = Duration;
-	if (type == RoverType::Mountainous)
-		Rover::CheckupDuration[1] = Duration;
-	if (type == RoverType::Polar)
-		Rover::CheckupDuration[2] = Duration;*/
+}
+
+void MarsStation::SetRoverMaxHealth(int E, int M, int P)
+{
+	EmergencyRover::Set_Health(E);
+	MountainousRover::Set_Health(M);
+	PolarRover::Set_Health(E);
 }
 
 // Set autopromosion
@@ -608,8 +595,6 @@ void MarsStation::MoveToMainetenace(Rover* R)
 		break;
 	}
 	cInMaintenance++;
-	std::cout <<"\n========================================="
-		"\nRover was moved to maintence<" << R->GetID() << '>' << "\n=========================================\n";
 }
 
 // Remove the link between the mission and the rover then check if this rover needs to have a checkup or not 
