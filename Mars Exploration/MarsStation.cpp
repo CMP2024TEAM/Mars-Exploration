@@ -758,6 +758,7 @@ void MarsStation::MissionFailure()
 			//Return the mission to waiting list to be assigned later
 			M_ptr->SetMissionStatus(MissionStatus::Waiting);
 			M_ptr->AssignRover(nullptr);
+			M_ptr->SetFormulationDay(Day);
 			AddMission(M_ptr);
 			// Update Counts and STATs
 			cInExecution--;
