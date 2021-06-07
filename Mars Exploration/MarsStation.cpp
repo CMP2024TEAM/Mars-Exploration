@@ -422,152 +422,122 @@ void MarsStation::ExecuteEvent()
 // Move rovers in check up to be available to assign a mission 
 void MarsStation::MoveCheckUpToAvail()
 {
-	Rover* Erover;
-	Rover* Mrover;
-	Rover* Prover;
-	bool Eflag = true, Mflag = true, Pflag = true;		//determine if the Available day of the rover is less than the current day
-	//check the first rover in each list if it is the day to move it then do it else end the function
-	while (Eflag || Mflag || Pflag)
+	Rover* R;
+	while (!EmergencyRoversCheckUp.isEmpty())
 	{
-		Erover = nullptr;
-		Mrover = nullptr;
-		Prover = nullptr;
-		EmergencyRoversCheckUp.peekFront(Erover);
-		MountinousRoverCheckUp.peekFront(Mrover);
-		PolarRoversCheckUp.peekFront(Prover);
-		//condition to exit the loop
-		//exit if there is no rover in check up
-		if (!Erover && !Mrover && !Prover)
+		EmergencyRoversCheckUp.peekFront(R);
+		if (R->getAvailableAt() <= Day)
 		{
-			break;
-		}
-		//determine if there is a queue that its rover's available day < current Day
-		if (Erover && Erover->getAvailableAt() > Day)
-		{
-			Eflag = false;
-		}
-		else if (Eflag && Erover)
-		{
-			EmergencyRoversCheckUp.dequeue(Erover);
-			if (Erover->GetHealth() <= 0)
+			EmergencyRoversCheckUp.dequeue(R);
+			if (R->GetHealth() <= 0)
 			{
-				MoveToMainetenace(Erover);
+				MoveToMainetenace(R);
 			}
-			else {
-				EmergencyRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+			else
+			{
+				EmergencyRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				cEmergencyRovers++;
 			}
 			cInCheckUp--;
-
 		}
 		else
+			break;
+	}
+	while (!MountinousRoverCheckUp.isEmpty())
+	{
+		MountinousRoverCheckUp.peekFront(R);
+		if (R->getAvailableAt() <= Day)
 		{
-			Eflag = false;
-		}
-
-		if (Mrover && Mrover->getAvailableAt() > Day)
-		{
-			Mflag = false;
-		}
-		else if (Mflag && Mrover)
-		{
-			MountinousRoverCheckUp.dequeue(Erover);
-			if (Erover->GetHealth() <= 0)
+			MountinousRoverCheckUp.dequeue(R);
+			if (R->GetHealth() <= 0)
 			{
-				MoveToMainetenace(Erover);
+				MoveToMainetenace(R);
 			}
 			else
 			{
-				MountainousRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+				MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				cMountainousRovers++;
 			}
-
 			cInCheckUp--;
-
 		}
 		else
+			break;
+	}
+	while (!PolarRoversCheckUp.isEmpty())
+	{
+		PolarRoversCheckUp.peekFront(R);
+		if (R->getAvailableAt() <= Day)
 		{
-			Mflag = false;
-		}
-
-		if (Prover && Prover->getAvailableAt() > Day)
-		{
-			Pflag = false;
-		}
-		else if (Pflag && Prover)
-		{
-			PolarRoversCheckUp.dequeue(Erover);
-			if (Erover->GetHealth() <= 0)
+			PolarRoversCheckUp.dequeue(R);
+			if (R->GetHealth() <= 0)
 			{
-				MoveToMainetenace(Erover);
+				MoveToMainetenace(R);
 			}
 			else
 			{
-				PolarRovers.enqueue(MyPair<Rover*, int>(Erover, Erover->getSpeed()));
+				PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				cPolarRovers++;
 			}
 			cInCheckUp--;
 		}
 		else
-		{
-			Pflag = false;
-		}
+			break;
 	}
 }
 
 void MarsStation::MoveMaintenaceToAvail()
 {
-	Rover* R;	
-		while (!EmergencyRoversMaintenance.isEmpty())
+	Rover* R;
+	while (!EmergencyRoversMaintenance.isEmpty())
+	{
+		EmergencyRoversMaintenance.peekFront(R);
+		if (R->getAvailableAt() <= Day)
 		{
-			EmergencyRoversMaintenance.peekFront(R);
-			if (R->getAvailableAt() <= Day)
-			{
-				EmergencyRoversMaintenance.dequeue(R);
-				R->ResetRequsted();
-				R->RestoreHealth();
-				R->setStatus(RoverStatus::Available);
-				EmergencyRovers.enqueue(MyPair<Rover*,int>(R,R->getSpeed()));
-				cEmergencyRovers++;
-				cInMaintenance--;
-			}
-			else
-				break;
+			EmergencyRoversMaintenance.dequeue(R);
+			R->ResetRequsted();
+			R->RestoreHealth();
+			R->setStatus(RoverStatus::Available);
+			EmergencyRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+			cEmergencyRovers++;
+			cInMaintenance--;
 		}
-		while (!PolarRoverMaintenance.isEmpty())
+		else
+			break;
+	}
+	while (!PolarRoverMaintenance.isEmpty())
+	{
+		PolarRoverMaintenance.peekFront(R);
+		if (R->getAvailableAt() <= Day)
 		{
-			PolarRoverMaintenance.peekFront(R);
-			if (R->getAvailableAt() <= Day)
-			{
 
-				PolarRoverMaintenance.dequeue(R);
-				R->ResetRequsted();
-				R->RestoreHealth();
-				R->setStatus(RoverStatus::Available);
-				PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
-				cInMaintenance--;
-				cPolarRovers++;
-			}
-			else
-				break;
+			PolarRoverMaintenance.dequeue(R);
+			R->ResetRequsted();
+			R->RestoreHealth();
+			R->setStatus(RoverStatus::Available);
+			PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+			cInMaintenance--;
+			cPolarRovers++;
 		}
-		while (!MountinousRoverMaintenance.isEmpty())
+		else
+			break;
+	}
+	while (!MountinousRoverMaintenance.isEmpty())
+	{
+		MountinousRoverMaintenance.peekFront(R);
+		if (R->getAvailableAt() <= Day)
 		{
-			MountinousRoverMaintenance.peekFront(R);
-			if (R->getAvailableAt() <= Day)
-			{
 
-				MountinousRoverMaintenance.dequeue(R);
-				R->ResetRequsted();
-				R->RestoreHealth();
-				R->setStatus(RoverStatus::Available);
-				MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
-				cInMaintenance--;
-				cMountainousRovers++;
-			}
-			else
-				break;
+			MountinousRoverMaintenance.dequeue(R);
+			R->ResetRequsted();
+			R->RestoreHealth();
+			R->setStatus(RoverStatus::Available);
+			MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+			cInMaintenance--;
+			cMountainousRovers++;
 		}
+		else
+			break;
+	}
 
 }
 
@@ -630,7 +600,7 @@ void MarsStation::DismissMissions(Mission* M)
 	{
 		MoveToCheckUp(ReturnRover);
 	}
-	else if (ReturnRover->GetHealth()<=0)
+	else if (ReturnRover->GetHealth() <= 0)
 	{
 		MoveToMainetenace(ReturnRover);
 	}
@@ -731,9 +701,9 @@ void MarsStation::Simulate()
 		!InExecutionMissions.isEmpty() ||
 		!MountinousRoverCheckUp.isEmpty() ||
 		!EmergencyRoversCheckUp.isEmpty() ||
-		!PolarRoversCheckUp.isEmpty()||
-		!EmergencyRoversMaintenance.isEmpty()||
-		!MountinousRoverMaintenance.isEmpty()||
+		!PolarRoversCheckUp.isEmpty() ||
+		!EmergencyRoversMaintenance.isEmpty() ||
+		!MountinousRoverMaintenance.isEmpty() ||
 		!PolarRoverMaintenance.isEmpty()
 		)
 	{
