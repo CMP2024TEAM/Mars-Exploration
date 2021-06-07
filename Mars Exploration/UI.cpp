@@ -36,6 +36,17 @@ inline MissionType UI::ParseMissionType(char c_type)
     }
 }
 
+inline void UI::ReadHealthInfo(MarsStation* Station)
+{
+    //Get Maximum Health of each rover type
+
+    int MaximumRoverHealth;
+    for (int rType = 0; rType < rTypeMax; ++rType) {
+        IFile >> MaximumRoverHealth;
+        Station->SetRoverMaxHealth(RoverType(rType), MaximumRoverHealth);
+    }
+}
+
 inline void UI::ReadRoverData(MarsStation* Station)
 {
     for (int rType = 0; rType < rTypeMax; ++rType) {
@@ -65,17 +76,6 @@ inline void UI::ReadCheckupInfo(MarsStation* Station)
     for (int rType = 0; rType < rTypeMax; ++rType) {
         IFile >> CheckupDays;
         Station->SetCheckupDuration(RoverType(rType), CheckupDays);
-    }
-}
-
-inline void UI::ReadHealthInfo(MarsStation* Station)
-{
-    //Get Maximum Health of each rover type
-
-    int MaximumRoverHealth;
-    for (int rType = 0; rType < rTypeMax; ++rType) {
-        IFile >> MaximumRoverHealth;
-        Station->SetRoverMaxHealth(RoverType(rType), MaximumRoverHealth);
     }
 }
 
@@ -327,9 +327,9 @@ UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
 
 void UI::ReadAll(MarsStation* Station)
 {
-    ReadRoverData(Station);
-    ReadCheckupInfo(Station);
     ReadHealthInfo(Station);
+    ReadRoverData(Station);
+    ReadCheckupInfo(Station);   
     ReadAutoPromotion(Station);
     ReadEvents(Station);
 }
