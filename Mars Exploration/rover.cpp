@@ -82,6 +82,11 @@ int Rover::GetHealth() const
 	return Health;
 }
 
+int Rover::GetMaxHealth() const
+{
+	return 0;
+}
+
 void Rover::DecrementSpeed()
 {
 	Speed /= 2;
