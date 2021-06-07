@@ -71,6 +71,7 @@ private:
     void PrintStatistics(MarsStation* Station);
 
 public:
+    UI(std::string IFileName = "input", std::string OFileName = "output");
     UI(OutputType OutputT, std::string IFileName = "input", std::string OFileName = "output");
     
     //Read all parameters from input file

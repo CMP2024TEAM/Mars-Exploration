@@ -306,6 +306,35 @@ inline void UI::PrintStatistics(MarsStation* Station)
                  Public Functions
 =================================================*/
 
+UI::UI(std::string IFileName, std::string OFileName) : 
+    TotalFailures(0),
+    FailedCount(0),
+    WaitingCount(0),
+    InExecutionCount(0),
+    AvailableCount(0),
+    CheckUpCount(0),
+    MaintenanceCount(0),
+    CompletedCount(0)
+{
+    //Create/Open files from OS
+    IFile.open(IFileName + ".txt");
+    OFile.open(OFileName + ".txt");
+
+    std::cout << "Enter which output mode should UI run in:\n0 for Interactive  |  1 for StepByStep  |  2 for silent\n";
+
+    int x;
+    std::cin >> x;
+    switch (x) {
+    case 0:OType = OutputType::Interactive; break;
+    case 1:OType = OutputType::StepByStep; break;
+    case 2:OType = OutputType::Silent; break;
+    default:OType = OutputType::Silent; break;
+    }
+
+    //Remove last newline(if exists) from input stream
+    std::cin.ignore();
+}
+
 UI::UI(OutputType OutputT, std::string IFileName, std::string OFileName) :
     OType(OutputT),
     TotalFailures(0),
