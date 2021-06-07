@@ -266,6 +266,7 @@ bool MarsStation::RequestRover(RoverType r_type)
 				R->setAvailableAt(Day);
 				R->setStatus(RoverStatus::Available);
 				cInMaintenance--;
+				cEmergencyRovers++;
 				EmergencyRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				return true;
 			}
@@ -290,6 +291,7 @@ bool MarsStation::RequestRover(RoverType r_type)
 				R->setAvailableAt(Day);
 				R->setStatus(RoverStatus::Available);
 				cInMaintenance--;
+				cMountainousRovers++;
 				MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				return true;
 			}
@@ -304,13 +306,14 @@ bool MarsStation::RequestRover(RoverType r_type)
 			R->IncrementRequsted();
 			if (R->GetRequsted() >= 5)
 			{
-
+				PolarRoverMaintenance.dequeue(R);
 				R->RestoreHealth();
 				R->ResetRequsted();
 				R->DecrementSpeed();
 				R->setAvailableAt(Day);
 				R->setStatus(RoverStatus::Available);
 				cInMaintenance--;
+				cPolarRovers++;
 				PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
 				return true;
 			}
@@ -526,6 +529,7 @@ void MarsStation::MoveMaintenaceToAvail()
 				R->setStatus(RoverStatus::Available);
 				EmergencyRovers.enqueue(MyPair<Rover*,int>(R,R->getSpeed()));
 				cEmergencyRovers++;
+				cInMaintenance--;
 			}
 			else
 				break;
@@ -541,6 +545,7 @@ void MarsStation::MoveMaintenaceToAvail()
 				R->RestoreHealth();
 				R->setStatus(RoverStatus::Available);
 				PolarRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+				cInMaintenance--;
 			}
 			else
 				break;
@@ -556,6 +561,7 @@ void MarsStation::MoveMaintenaceToAvail()
 				R->RestoreHealth();
 				R->setStatus(RoverStatus::Available);
 				MountainousRovers.enqueue(MyPair<Rover*, int>(R, R->getSpeed()));
+				cInMaintenance--;
 			}
 			else
 				break;
