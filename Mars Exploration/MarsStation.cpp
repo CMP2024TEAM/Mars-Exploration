@@ -677,7 +677,7 @@ void MarsStation::CheckUpAutoP()
 		M = nullptr;
 		WaitingMountainousMissions.peekFront(M);
 		//check if there is any mountainous mission , if any , compare the waiting days with the autoP
-		if (M && M->GetWaitingDays() > AutoP)
+		if (M && (Day-M->GetFormulationDay()) >= AutoP)
 		{
 			WaitingMountainousMissions.dequeue(M);
 			E = new EmergencyMission(M);
