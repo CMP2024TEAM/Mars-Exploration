@@ -729,7 +729,10 @@ void MarsStation::Simulate()
 		!InExecutionMissions.isEmpty() ||
 		!MountinousRoverCheckUp.isEmpty() ||
 		!EmergencyRoversCheckUp.isEmpty() ||
-		!PolarRoversCheckUp.isEmpty()
+		!PolarRoversCheckUp.isEmpty()||
+		!EmergencyRoversMaintenance.isEmpty()||
+		!MountinousRoverMaintenance.isEmpty()||
+		!PolarRoverMaintenance.isEmpty()
 		)
 	{
 		ExecuteEvent();
