@@ -10,7 +10,7 @@ Mission::Mission(int FD, int TL,int id, int MD, int S)
 	Status = MissionStatus::Waiting;
 	AssignedRover = nullptr;
 	ID=0;
-	SetWaitingDays(1);
+	SetWaitingDays(0);
 	SetID(id);
 }
 
@@ -71,7 +71,7 @@ int Mission::GetWaitingDays()		const
 
 void Mission::SetWaitingDays(int WD)
 {
-	WaitingDays = WD > 0 ? WD : 1;
+	WaitingDays = WD >= 0 ? WD : 0;
 }
 
 int Mission::Get_ED() const
